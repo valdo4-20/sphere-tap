@@ -602,6 +602,13 @@
       font-size: 11px;
     }
 
+    .floating-brand {
+      position: absolute;
+      top: calc(12px + env(safe-area-inset-top));
+      inset-inline: 20px;
+      bottom: auto;
+    }
+
     .sphere-tap-shell > .topbar {
       height: 52px;
       min-height: 52px;
@@ -609,7 +616,7 @@
 
     .sphere-tap-shell .content {
       width: calc(100% - 32px);
-      padding-top: calc(24px + env(safe-area-inset-top));
+      padding-top: calc(48px + env(safe-area-inset-top));
       padding-bottom: 12px;
       font-size: 11px;
     }
