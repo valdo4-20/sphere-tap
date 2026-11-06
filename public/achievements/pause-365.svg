@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" class="achievement-medal-artwork is-unlocked" data-rarity="diamond" viewBox="0 0 128 128" shape-rendering="geometricPrecision" role="img" aria-label="365 dias de respiro"><title>365 dias de respiro</title><defs><linearGradient id="_R_0_-metal" x1="18%" y1="8%" x2="82%" y2="94%"><stop offset="0" stop-color="var(--medal-highlight)"></stop><stop offset=".3" stop-color="var(--medal-light)"></stop><stop offset=".57" stop-color="var(--medal-base)"></stop><stop offset=".82" stop-color="var(--medal-dark)"></stop><stop offset="1" stop-color="var(--medal-highlight)"></stop></linearGradient><radialGradient id="_R_0_-enamel" cx="34%" cy="22%" r="82%"><stop offset="0" stop-color="var(--medal-enamel-light)"></stop><stop offset=".62" stop-color="var(--medal-enamel)"></stop><stop offset="1" stop-color="var(--medal-enamel-dark)"></stop></radialGradient><linearGradient id="_R_0_-aura-crystal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c4ffef"></stop><stop offset=".3" stop-color="#99dfff"></stop><stop offset=".62" stop-color="#ecbaff"></stop><stop offset="1" stop-color="#ffebc5"></stop></linearGradient></defs><style>.achievement-medal-artwork {
+  --medal-highlight: #f1c987;
+  --medal-light: #d99b61;
+  --medal-base: #a96542;
+  --medal-dark: #633d32;
+  --medal-edge-light: #f5d4a0;
+  --medal-enamel-light: #d89161;
+  --medal-enamel: #9b533d;
+  --medal-enamel-dark: #552d31;
+  --medal-segment-one: rgb(255 220 161 / 11%);
+  --medal-segment-two: rgb(30 18 25 / 9%);
+  --medal-engraving: rgb(255 239 206 / 72%);
+  --medal-engraving-soft: rgb(255 249 229 / 34%);
+  --medal-core: rgb(77 41 41 / 54%);
+  --medal-icon: #fff5da;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.achievement-medal-artwork[data-rarity='silver'].is-unlocked {
+  --medal-highlight: #f4f8fb;
+  --medal-light: #c3cbd2;
+  --medal-base: #8795a1;
+  --medal-dark: #47545f;
+  --medal-edge-light: #f6f9fc;
+  --medal-enamel-light: #aebbc5;
+  --medal-enamel: #74818d;
+  --medal-enamel-dark: #3e4a57;
+  --medal-core: rgb(53 66 78 / 60%);
+  --medal-icon: #f9fdff;
+}
+
+.achievement-medal-artwork[data-rarity='gold'].is-unlocked {
+  --medal-highlight: #fff3b0;
+  --medal-light: #e9bd55;
+  --medal-base: #c18a27;
+  --medal-dark: #6d4819;
+  --medal-edge-light: #fff2aa;
+  --medal-enamel-light: #f2cd64;
+  --medal-enamel: #bd8425;
+  --medal-enamel-dark: #704918;
+  --medal-core: rgb(97 61 18 / 56%);
+  --medal-icon: #fff9dc;
+}
+
+.achievement-medal-artwork[data-rarity='amethyst'].is-unlocked {
+  --medal-highlight: #ead8ff;
+  --medal-light: #c4a0ef;
+  --medal-base: #8a60bd;
+  --medal-dark: #493264;
+  --medal-edge-light: #f1e4ff;
+  --medal-enamel-light: #b28bdf;
+  --medal-enamel: #7953ac;
+  --medal-enamel-dark: #45305f;
+  --medal-core: rgb(53 35 79 / 60%);
+  --medal-icon: #fff7ff;
+}
+
+.achievement-medal-artwork[data-rarity='platinum'].is-unlocked {
+  --medal-highlight: #e8ffff;
+  --medal-light: #a8dadd;
+  --medal-base: #6197a5;
+  --medal-dark: #365366;
+  --medal-edge-light: #f0ffff;
+  --medal-enamel-light: #9bd4d8;
+  --medal-enamel: #5c9ba6;
+  --medal-enamel-dark: #35586b;
+  --medal-core: rgb(36 73 89 / 58%);
+  --medal-icon: #f1ffff;
+}
+
+.achievement-medal-artwork[data-rarity='ruby'].is-unlocked {
+  --medal-highlight: #ffd4dc;
+  --medal-light: #e47f91;
+  --medal-base: #b74860;
+  --medal-dark: #642a3b;
+  --medal-edge-light: #ffe8ec;
+  --medal-enamel-light: #dc7086;
+  --medal-enamel: #a63d58;
+  --medal-enamel-dark: #5a2638;
+  --medal-core: rgb(75 25 43 / 60%);
+  --medal-icon: #fff5f6;
+}
+
+.achievement-medal-artwork[data-rarity='emerald'].is-unlocked {
+  --medal-highlight: #c8f5dd;
+  --medal-light: #78c99e;
+  --medal-base: #398a66;
+  --medal-dark: #20503f;
+  --medal-edge-light: #e2fff0;
+  --medal-enamel-light: #69b990;
+  --medal-enamel: #347c5d;
+  --medal-enamel-dark: #1e4c3c;
+  --medal-core: rgb(22 67 48 / 60%);
+  --medal-icon: #f2fff7;
+}
+
+.achievement-medal-artwork[data-rarity='sapphire'].is-unlocked {
+  --medal-highlight: #d0e5ff;
+  --medal-light: #83b5f0;
+  --medal-base: #477fbd;
+  --medal-dark: #263d68;
+  --medal-edge-light: #e7f3ff;
+  --medal-enamel-light: #78a9df;
+  --medal-enamel: #3e70ac;
+  --medal-enamel-dark: #243b65;
+  --medal-core: rgb(26 46 83 / 60%);
+  --medal-icon: #f5f9ff;
+}
+
+.achievement-medal-artwork[data-rarity='topaz'].is-unlocked {
+  --medal-highlight: #ffd1b5;
+  --medal-light: #ff8945;
+  --medal-base: #db4d16;
+  --medal-dark: #722308;
+  --medal-edge-light: #ffe2d1;
+  --medal-enamel-light: #ff9a53;
+  --medal-enamel: #bf4210;
+  --medal-enamel-dark: #6e240e;
+  --medal-core: rgb(95 30 10 / 72%);
+  --medal-icon: #fff3e8;
+}
+
+.achievement-medal-artwork[data-rarity='diamond'].is-unlocked {
+  --medal-highlight: #ffffff;
+  --medal-light: #b8f5ff;
+  --medal-base: #64bfd3;
+  --medal-dark: #24526e;
+  --medal-edge-light: #efffff;
+  --medal-enamel-light: #e4ffff;
+  --medal-enamel: #69c5dc;
+  --medal-enamel-dark: #285b7c;
+  --medal-core: rgb(27 97 125 / 48%);
+  --medal-icon: #f6ffff;
+  filter: drop-shadow(0 0 8px rgb(111 231 255 / 48%));
+}
+
+.achievement-medal-artwork.is-locked {
+  --medal-highlight: #e2e4e5;
+  --medal-light: #a8abad;
+  --medal-base: #6e7275;
+  --medal-dark: #393d40;
+  --medal-edge-light: #d5d8d9;
+  --medal-enamel-light: #999d9f;
+  --medal-enamel: #666a6d;
+  --medal-enamel-dark: #383c3f;
+  --medal-segment-one: rgb(255 255 255 / 7%);
+  --medal-segment-two: rgb(0 0 0 / 8%);
+  --medal-engraving: rgb(242 244 244 / 74%);
+  --medal-engraving-soft: rgb(255 255 255 / 32%);
+  --medal-core: rgb(44 47 49 / 62%);
+  --medal-icon: #f4f5f5;
+}
+.achievement-medal-artwork[data-rarity='crystal'].is-unlocked {
+  --medal-highlight:#fff7ff;--medal-light:#aef9ec;--medal-base:#9bc5fa;--medal-dark:#674985;--medal-edge-light:#eeebff;
+  --medal-enamel-light:#e4c6ff;--medal-enamel:#7ed8dd;--medal-enamel-dark:#74579d;--medal-core:rgb(90 62 125 / 45%);--medal-icon:#fff;
+  filter:drop-shadow(0 0 6px rgb(161 226 255 / 28%));
+}
+.achievement-rarity-tag.is-crystal,.fitness-achievement-rarity.is-crystal,.profile-achievement-tile-rarity.is-crystal { color:#c8f9f2;background:linear-gradient(110deg,rgb(126 231 229 / 14%),rgb(211 156 249 / 20%),rgb(166 193 255 / 15%));border-color:rgb(203 213 255 / 35%); }
+
+/* Satin surfaces keep the engraving visible without a luminous halo. */
+.achievement-medal-artwork.is-unlocked { filter:none; }
+.achievement-medal-artwork[data-rarity='diamond'].is-unlocked { --medal-highlight:#c3d5dc;--medal-light:#a3c1cc;--medal-base:#7398a3;--medal-dark:#314b59;--medal-edge-light:#bdcfd5;--medal-enamel-light:#91acb7;--medal-enamel:#648795;--medal-enamel-dark:#344e5b;--medal-core:#3d626f;--medal-icon:#e2edf0;filter:none; }
+.achievement-medal-artwork[data-rarity='obsidian'].is-unlocked { --medal-highlight:#a4a0b0;--medal-light:#777381;--medal-base:#303039;--medal-dark:#14141b;--medal-edge-light:#8d8999;--medal-enamel-light:#55505e;--medal-enamel:#292731;--medal-enamel-dark:#17151e;--medal-core:#24212b;--medal-icon:#d8d1e3;filter:none; }
+
+/* Gemstones catch light on their cut; ordinary metals remain satin. */
+.achievement-medal-artwork[data-rarity='diamond'].is-unlocked {
+  --medal-highlight:#ffffff;--medal-light:#d5f6ff;--medal-base:#8cc5dc;
+  --medal-dark:#31516e;--medal-edge-light:#ffffff;
+  --medal-enamel-light:#edfaff;--medal-enamel:#9acddd;--medal-enamel-dark:#426780;
+  --medal-core:#426477;--medal-icon:#fff;
+}
+.medal-gem-glint{animation:medal-gem-glint 5.5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.medal-gem-glint-1{animation-delay:-2.7s}
+.medal-gem-sheen{animation:medal-gem-sheen 9s ease-in-out infinite;transform-origin:64px 59px}
+@keyframes medal-gem-glint{0%,65%,100%{opacity:.25;transform:scale(.65)}78%{opacity:1;transform:scale(1.15)}}
+@keyframes medal-gem-sheen{0%,100%{opacity:.35;transform:rotate(-22deg)}50%{opacity:.8;transform:rotate(22deg)}}
+@media(prefers-reduced-motion:reduce){.medal-gem-glint,.medal-gem-sheen{animation:none}}
+</style><g><circle cx="64" cy="62.5" r="57.5" fill="#050607" opacity=".78"></circle><circle cx="64" cy="61.5" r="57.5" fill="var(--medal-dark)"></circle><circle cx="64" cy="59" r="57.5" fill="url(#_R_0_-metal)" stroke="var(--medal-dark)" stroke-width="1.5"></circle><circle cx="64" cy="59" r="53.5" fill="none" stroke="var(--medal-edge-light)" stroke-width="1.5"></circle><circle cx="64" cy="59" r="51" fill="none" stroke="var(--medal-dark)" stroke-width="1" opacity=".8"></circle><circle cx="64" cy="59" r="50.5" fill="url(#_R_0_-enamel)" stroke="var(--medal-dark)" stroke-width="1.4"></circle><path d="M64 9 A50 50 0 0 1 114 59 L64 59Z" fill="var(--medal-segment-one)"></path><path d="M114 59 A50 50 0 0 1 64 109 L64 59Z" fill="var(--medal-segment-two)"></path><path d="M64 109 A50 50 0 0 1 14 59 L64 59Z" fill="var(--medal-segment-one)"></path><path d="M14 59 A50 50 0 0 1 64 9 L64 59Z" fill="var(--medal-segment-two)"></path><g data-gemstone-effect="diamond" class="medal-gem-cut"><defs><linearGradient id="cut-library-25000-gem-sheen" x1="0" y1="0" x2="1" y2="1"><stop stop-color="white" stop-opacity="0"/><stop offset=".42" stop-color="white" stop-opacity="0"/><stop offset=".5" stop-color="white" stop-opacity=".55"/><stop offset=".58" stop-color="white" stop-opacity="0"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient></defs><polygon points="115.00,59.00 113.26,72.20 102.67,64.09" fill="var(--medal-highlight)" opacity=".62" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="115.00,59.00 102.67,64.09 102.67,53.91" fill="var(--medal-light)" opacity=".28"/><polygon points="113.26,72.20 108.17,84.50 100.03,73.92" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="113.26,72.20 100.03,73.92 102.67,64.09" fill="var(--medal-light)" opacity=".28"/><polygon points="108.17,84.50 100.06,95.06 94.94,82.74" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="108.17,84.50 94.94,82.74 100.03,73.92" fill="var(--medal-light)" opacity=".28"/><polygon points="100.06,95.06 89.50,103.17 87.74,89.94" fill="var(--medal-highlight)" opacity=".62" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="100.06,95.06 87.74,89.94 94.94,82.74" fill="var(--medal-light)" opacity=".28"/><polygon points="89.50,103.17 77.20,108.26 78.92,95.03" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="89.50,103.17 78.92,95.03 87.74,89.94" fill="var(--medal-light)" opacity=".28"/><polygon points="77.20,108.26 64.00,110.00 69.09,97.67" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="77.20,108.26 69.09,97.67 78.92,95.03" fill="var(--medal-light)" opacity=".28"/><polygon points="64.00,110.00 50.80,108.26 58.91,97.67" fill="var(--medal-highlight)" opacity=".62" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="64.00,110.00 58.91,97.67 69.09,97.67" fill="var(--medal-light)" opacity=".28"/><polygon points="50.80,108.26 38.50,103.17 49.08,95.03" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="50.80,108.26 49.08,95.03 58.91,97.67" fill="var(--medal-light)" opacity=".28"/><polygon points="38.50,103.17 27.94,95.06 40.26,89.94" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="38.50,103.17 40.26,89.94 49.08,95.03" fill="var(--medal-light)" opacity=".28"/><polygon points="27.94,95.06 19.83,84.50 33.06,82.74" fill="var(--medal-highlight)" opacity=".62" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="27.94,95.06 33.06,82.74 40.26,89.94" fill="var(--medal-light)" opacity=".28"/><polygon points="19.83,84.50 14.74,72.20 27.97,73.92" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="19.83,84.50 27.97,73.92 33.06,82.74" fill="var(--medal-light)" opacity=".28"/><polygon points="14.74,72.20 13.00,59.00 25.33,64.09" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="14.74,72.20 25.33,64.09 27.97,73.92" fill="var(--medal-light)" opacity=".28"/><polygon points="13.00,59.00 14.74,45.80 25.33,53.91" fill="var(--medal-highlight)" opacity=".62" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="13.00,59.00 25.33,53.91 25.33,64.09" fill="var(--medal-light)" opacity=".28"/><polygon points="14.74,45.80 19.83,33.50 27.97,44.08" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="14.74,45.80 27.97,44.08 25.33,53.91" fill="var(--medal-light)" opacity=".28"/><polygon points="19.83,33.50 27.94,22.94 33.06,35.26" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="19.83,33.50 33.06,35.26 27.97,44.08" fill="var(--medal-light)" opacity=".28"/><polygon points="27.94,22.94 38.50,14.83 40.26,28.06" fill="var(--medal-highlight)" opacity=".62" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="27.94,22.94 40.26,28.06 33.06,35.26" fill="var(--medal-light)" opacity=".28"/><polygon points="38.50,14.83 50.80,9.74 49.08,22.97" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="38.50,14.83 49.08,22.97 40.26,28.06" fill="var(--medal-light)" opacity=".28"/><polygon points="50.80,9.74 64.00,8.00 58.91,20.33" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="50.80,9.74 58.91,20.33 49.08,22.97" fill="var(--medal-light)" opacity=".28"/><polygon points="64.00,8.00 77.20,9.74 69.09,20.33" fill="var(--medal-highlight)" opacity=".62" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="64.00,8.00 69.09,20.33 58.91,20.33" fill="var(--medal-light)" opacity=".28"/><polygon points="77.20,9.74 89.50,14.83 78.92,22.97" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="77.20,9.74 78.92,22.97 69.09,20.33" fill="var(--medal-light)" opacity=".28"/><polygon points="89.50,14.83 100.06,22.94 87.74,28.06" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="89.50,14.83 87.74,28.06 78.92,22.97" fill="var(--medal-light)" opacity=".28"/><polygon points="100.06,22.94 108.17,33.50 94.94,35.26" fill="var(--medal-highlight)" opacity=".62" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="100.06,22.94 94.94,35.26 87.74,28.06" fill="var(--medal-light)" opacity=".28"/><polygon points="108.17,33.50 113.26,45.80 100.03,44.08" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="108.17,33.50 100.03,44.08 94.94,35.26" fill="var(--medal-light)" opacity=".28"/><polygon points="113.26,45.80 115.00,59.00 102.67,53.91" fill="var(--medal-dark)" opacity=".46" stroke="var(--medal-edge-light)" stroke-width=".45" stroke-opacity=".55"/><polygon points="113.26,45.80 102.67,53.91 100.03,44.08" fill="var(--medal-light)" opacity=".28"/><circle class="medal-gem-sheen" cx="64" cy="59" r="45" fill="none" stroke="url(#cut-library-25000-gem-sheen)" stroke-width="11"/><path class="medal-gem-glint medal-gem-glint-0" d="M31.041072481811582 22.785877589537904h6M34.04107248181158 19.785877589537904v6" stroke="var(--medal-edge-light)" stroke-width="1.2" stroke-linecap="round"/><path class="medal-gem-glint medal-gem-glint-1" d="M102.18641396206158 81.64242268278062h6M105.18641396206158 78.64242268278062v6" stroke="var(--medal-edge-light)" stroke-width="1.2" stroke-linecap="round"/></g><circle cx="64" cy="59" r="43.5" fill="none" stroke="var(--medal-engraving)" stroke-width="1.3"></circle><circle cx="64" cy="59" r="38.5" fill="none" stroke="var(--medal-engraving-soft)" stroke-width=".8"></circle><path d="M64 14v8m0 74v8M19 59h8m74 0h8M32.2 27.2l5.7 5.7m52.2 52.2 5.7 5.7m0-63.6-5.7 5.7m-52.2 52.2-5.7 5.7" fill="none" stroke="var(--medal-engraving)" stroke-width="1.5" stroke-linecap="round"></path><circle cx="64" cy="60.5" r="25.5" fill="var(--medal-dark)" opacity=".85"></circle><circle cx="64" cy="59" r="25.5" fill="var(--medal-core)" stroke="var(--medal-highlight)" stroke-width="1.4"></circle><circle cx="64" cy="59" r="21.5" fill="none" stroke="var(--medal-engraving-soft)" stroke-width=".9"></circle><svg x="48" y="44.5" width="32" height="32" color="var(--medal-dark)" stroke-width="2.8" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></g></svg><svg x="48" y="43" width="32" height="32" color="var(--medal-icon)" stroke-width="1.8" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></g></svg><path d="M28 25a48 48 0 0 1 34-17" fill="none" stroke="white" stroke-width="1.2" opacity=".54" stroke-linecap="round"></path></g></svg>

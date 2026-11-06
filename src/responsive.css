@@ -1,0 +1,872 @@
+.tap-dialog.medal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none;
+}
+
+.tap-dialog.medal-overlay::backdrop {
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.medal-overlay .dialog-header {
+  position: absolute;
+  inset: env(safe-area-inset-top) 0 auto;
+  z-index: 3;
+  width: min(760px, 100%);
+  margin-inline: auto;
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.medal-overlay .dialog-header h2 {
+  font-size: clamp(16px, 5vw, 23px);
+}
+
+.medal-overlay .dialog-body {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  padding: 0;
+  overflow: auto;
+}
+
+.medal-overlay-stage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: 100%;
+  width: 100%;
+  place-items: center;
+  padding: 76px 20px max(52px, env(safe-area-inset-bottom));
+}
+
+.medal-aura-backdrop {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 42%, color-mix(in srgb, var(--rarity-color) 20%, transparent), transparent 58%);
+}
+
+.medal-overlay-stage::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: min(96vw, 680px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--rarity-color) 23%, transparent), transparent 68%);
+  filter: blur(12px);
+  animation: medal-aura-breathe 3.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.medal-aura-backdrop .aura-engine {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: .9;
+}
+
+.medal-aura-backdrop .aura-engine .aura-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes medal-aura-breathe {
+  0%, 100% { opacity: .55; transform: scale(.88); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.medal-overlay .profile-medal-detail.rarity-detail {
+  z-index: 1;
+  width: min(440px, 100%);
+  padding: 14px;
+  border-radius: 0;
+  background: transparent;
+}
+
+.medal-overlay .rarity-detail::before {
+  display: none;
+}
+
+.medal-overlay .profile-detail-medal {
+  width: min(280px, 72vw, 34dvh);
+  height: min(280px, 72vw, 34dvh);
+  margin: 0 auto 4px;
+}
+
+.medal-overlay .profile-detail-medal .medal-volume {
+  animation-duration: .35s;
+}
+
+.walking-live {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(22px, 5vh, 42px);
+  overflow: hidden;
+  padding: max(24px, env(safe-area-inset-top)) 22px max(28px, env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.walking-live-aura {
+  position: absolute;
+  z-index: -1;
+  inset: 4% -35%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--walk-color) 20%, transparent), transparent 68%);
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+.walking-live-header {
+  display: flex;
+  width: min(460px, 100%);
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+
+.walking-live-header .quiet-button {
+  position: absolute;
+  top: max(18px, env(safe-area-inset-top));
+  right: 16px;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.walking-live-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.walking-live-indicator.is-running {
+  background: #64d9a8;
+  box-shadow: 0 0 14px #64d9a880;
+}
+
+.walking-live-clock {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  color: var(--walk-color);
+}
+
+.walking-live-clock > span {
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(48px, 15vw, 82px);
+  line-height: 1;
+  letter-spacing: -.045em;
+  color: var(--text);
+}
+
+.walking-live-clock > small {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: .16em;
+}
+
+.walking-live-stats {
+  display: grid;
+  width: min(460px, 100%);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.walking-live-stats > div {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 14px 5px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--panel) 64%, transparent);
+  color: var(--walk-color);
+}
+
+.walking-live-stats b {
+  overflow-wrap: anywhere;
+  color: var(--text);
+  font-size: clamp(14px, 4vw, 19px);
+  font-variant-numeric: tabular-nums;
+}
+
+.walking-live-stats small {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.walking-live-gps {
+  max-width: 340px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.walking-live-actions {
+  display: flex;
+  width: min(380px, 100%);
+  justify-content: center;
+  gap: 10px;
+}
+
+.walking-live-actions .button {
+  flex: 1;
+  min-height: 48px;
+}
+
+.walking-live-shell .topbar {
+  display: none !important;
+}
+
+[data-theme="light"] .walking-live-stats > div {
+  background: color-mix(in srgb, var(--panel) 82%, white);
+}
+
+@media (max-width: 600px) {
+  .walking-live {
+    gap: clamp(20px, 5vh, 34px);
+    padding-inline: 16px;
+  }
+
+  .walking-live-header {
+    justify-content: flex-start;
+    padding-left: 4px;
+  }
+
+  .walking-live-header .quiet-button {
+    right: 10px;
+    min-height: 38px;
+    padding-inline: 8px;
+  }
+
+  .walking-live-stats > div {
+    gap: 6px;
+    padding: 13px 3px;
+    border-radius: 15px;
+  }
+}
+
+[data-theme="light"] .aura-viewport::after {
+  display: none;
+}
+
+[data-theme="light"] .aura-viewport .aura-engine .aura-canvas {
+  opacity: .72;
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 12px;
+  }
+
+  .sphere-tap-shell .page-title {
+    font-size: clamp(22px, 6vw, 30px) !important;
+  }
+
+  .sphere-tap-shell .tap-card {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .sphere-tap-shell .button.primary,
+  .sphere-tap-shell .button.secondary {
+    min-height: 42px;
+    padding: 9px 14px;
+    font-size: 12px;
+  }
+
+  .sphere-tap-shell .quiet-button {
+    min-height: 40px;
+    padding-block: 6px;
+  }
+
+  .sphere-tap-shell .icon-button {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    min-height: 42px;
+  }
+
+  .today-page > .aura-top,
+  .today-focused > .aura-top {
+    min-height: calc(100svh - 190px) !important;
+    grid-template-rows: auto minmax(220px, 1fr) auto;
+    gap: 8px;
+    padding: 8px 0 16px;
+  }
+
+  .today-page .aura-counter-wrap {
+    min-height: 220px !important;
+  }
+
+  .today-page .aura-touch {
+    width: min(68vw, 260px) !important;
+    height: 230px !important;
+    gap: 8px !important;
+  }
+
+  .today-page .rolling-number {
+    font-size: clamp(64px, 18vw, 82px) !important;
+  }
+
+  .today-page .home-greeting-aura {
+    font-size: clamp(24px, 6vw, 32px) !important;
+  }
+
+  .today-focused .category-picker > summary {
+    min-height: 42px;
+    padding: 8px 12px;
+  }
+
+  .profile-hero {
+    padding: 18px 10px;
+  }
+
+  .walking-start-bar .walk-start-prominent {
+    min-height: 46px;
+    padding: 11px 16px;
+    font-size: 12px;
+  }
+}
+
+.compact-entry-dialog {
+  width: min(500px, calc(100% - 28px));
+  max-width: 500px;
+  max-height: min(680px, calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
+  border-radius: 20px;
+}
+
+.compact-entry-dialog .dialog-header {
+  gap: 12px;
+  padding: 11px 16px;
+}
+
+.compact-entry-dialog .dialog-header h2 {
+  font-size: clamp(17px, 4vw, 21px);
+}
+
+.compact-entry-dialog .dialog-header .icon-button {
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+}
+
+.compact-entry-dialog .dialog-body {
+  padding: 14px 18px 18px;
+}
+
+.compact-entry-dialog .dialog-body form {
+  gap: 10px;
+}
+
+.compact-entry-dialog .dialog-body form > label,
+.compact-entry-dialog .dialog-body .form-grid > label {
+  gap: 5px;
+  font-size: 11px;
+}
+
+.compact-entry-dialog .dialog-body :is(input, select, textarea) {
+  min-height: 42px;
+  padding: 9px 12px;
+  border-radius: 15px;
+  font-size: 13px;
+  text-align: left;
+}
+
+.compact-entry-dialog .dialog-body textarea {
+  min-height: 64px;
+}
+
+.compact-entry-dialog .dialog-body .form-grid {
+  gap: 10px;
+}
+
+.compact-entry-dialog .dialog-body .field-help {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.compact-entry-dialog .dialog-body .button.full {
+  min-height: 42px;
+  margin-top: 2px;
+}
+
+.compact-entry-dialog .dialog-body form > label,
+.compact-entry-dialog .dialog-body .form-grid > label {
+  justify-items: stretch;
+  text-align: left;
+}
+
+.aura-pulse-layer {
+  position: absolute;
+  z-index: 6;
+  inset: -18%;
+  pointer-events: none;
+  animation: aura-pulse-life 1.35s cubic-bezier(.2,.65,.25,1) both;
+}
+
+.aura-pulse-layer .aura-tap-glow {
+  opacity: 1;
+}
+
+.aura-pulse-layer.is-alert .aura-warning-glow {
+  opacity: .8;
+}
+
+@keyframes aura-pulse-life {
+  0% { opacity: 0; transform: scale(.93); }
+  18% { opacity: .68; transform: scale(1.015); }
+  52% { opacity: .42; transform: scale(1.055); }
+  100% { opacity: 0; transform: scale(1.11); }
+}
+
+#root .walking-live-shell > header.topbar {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Align headings, labels and controls consistently without changing data order. */
+.wallet-page > .wallet-period-selector {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+  justify-content: center;
+  margin: 24px auto 0;
+}
+
+.wallet-page > .wallet-period-selector > button {
+  min-width: 60px;
+  padding: 8px 14px;
+}
+
+.sphere-tap-shell :is(.page-intro, .section-heading) {
+  justify-content: center;
+  text-align: center;
+}
+
+.sphere-tap-shell :is(.page-intro, .section-heading) > * {
+  text-align: center;
+}
+
+.sphere-tap-shell .section-heading {
+  flex-wrap: wrap;
+}
+
+.sphere-tap-shell :is(button, .button, .quiet-button) {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.sphere-tap-shell :is(label, .field-help, .page-description, .hero-copy p) {
+  text-align: center;
+}
+
+.sphere-tap-shell :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  text-align: center;
+}
+
+.sphere-tap-shell .form-grid > label,
+.sphere-tap-shell form > label {
+  justify-items: center;
+}
+
+.sphere-tap-shell .page-title,
+.sphere-tap-shell .section-heading h1,
+.sphere-tap-shell .section-heading h2 {
+  animation: heading-arrive .42s cubic-bezier(.2, .75, .25, 1) both;
+}
+
+.sphere-tap-shell .page-description,
+.sphere-tap-shell .section-heading p {
+  animation: text-arrive .38s ease-out .06s both;
+}
+
+.sphere-tap-shell .content .button,
+.sphere-tap-shell .content .quiet-button {
+  transition: transform .18s ease, background-color .18s ease, border-color .18s ease;
+}
+
+@keyframes heading-arrive {
+  from { opacity: 0; transform: translateY(8px); filter: blur(3px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes text-arrive {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+::view-transition-old(root) {
+  animation: .16s ease both view-exit;
+}
+
+::view-transition-new(root) {
+  animation: .24s cubic-bezier(.2, .75, .25, 1) both view-enter;
+}
+
+@keyframes view-exit {
+  to { opacity: 0; transform: translateY(-4px) scale(.995); }
+}
+
+@keyframes view-enter {
+  from { opacity: 0; transform: translateY(7px) scale(.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 420px) {
+  #root .sphere-tap-shell.app-shell > header.topbar,
+  #root .sphere-tap-shell.app-shell > header.topbar.nav-collapsed,
+  #root .sphere-tap-shell.app-shell > header.topbar.nav-hidden {
+    inset-inline: 8px !important;
+    width: calc(100% - 16px) !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .compact-entry-dialog {
+    width: calc(100% - 20px);
+    max-height: calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  .compact-entry-dialog .dialog-body {
+    padding: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura-pulse-layer {
+    animation-duration: .01ms;
+  }
+
+  #root .sphere-tap-shell.app-shell > header.topbar > nav.nav-glass::before,
+  #root .sphere-tap-shell.app-shell > header.topbar > nav.nav-glass > button.nav-link {
+    transition: none !important;
+  }
+}
+
+@media (max-height: 700px) and (max-width: 600px) {
+  .today-page > .aura-top,
+  .today-focused > .aura-top {
+    min-height: calc(100svh - 160px) !important;
+    grid-template-rows: auto minmax(190px, 1fr) auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .medal-overlay-stage::before,
+    .sphere-tap-shell .page-title,
+    .sphere-tap-shell .section-heading h1,
+    .sphere-tap-shell .section-heading h2,
+    .sphere-tap-shell .page-description,
+    .sphere-tap-shell .section-heading p {
+      animation: none !important;
+    }
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none !important;
+    }
+  }
+
+@media (max-width: 600px) {
+    body {
+      font-size: 11px;
+    }
+
+    .sphere-tap-shell > .topbar {
+      height: 52px;
+      min-height: 52px;
+    }
+
+    .sphere-tap-shell .content {
+      width: calc(100% - 32px);
+      padding-top: calc(24px + env(safe-area-inset-top));
+      padding-bottom: 12px;
+      font-size: 11px;
+    }
+
+    .sphere-tap-shell :is(.page-title, .section-heading h1) {
+      font-size: clamp(21px, 6vw, 27px) !important;
+      line-height: 1.15;
+    }
+
+    .sphere-tap-shell :is(.section-heading h2, .page-intro h2) {
+      font-size: 18px !important;
+      line-height: 1.2;
+    }
+
+    .sphere-tap-shell :is(.page-description, .field-help, .compact-explanation) {
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .sphere-tap-shell .content p {
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .sphere-tap-shell .content h3 {
+      font-size: 16px;
+    }
+
+    .sphere-tap-shell .tap-card {
+      padding: 12px;
+      border-radius: 16px;
+    }
+
+    .sphere-tap-shell .section-heading {
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .sphere-tap-shell .section-heading > svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .sphere-tap-shell .content :is(.button, .quiet-button) {
+      min-height: 40px;
+      padding: 7px 11px;
+      font-size: 11px;
+      gap: 6px;
+    }
+
+    .sphere-tap-shell .content :is(.button, .quiet-button) svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .sphere-tap-shell .icon-button {
+      width: 40px;
+      min-width: 40px;
+      height: 40px;
+      min-height: 40px;
+    }
+
+    .sphere-tap-shell .compact-explanation > summary,
+    .sphere-tap-shell .today-records > summary {
+      min-height: 40px;
+      font-size: 11px;
+    }
+
+    .today-page > .aura-top,
+    .today-focused > .aura-top {
+      min-height: calc(100svh - 168px) !important;
+      gap: 6px;
+      padding-block: 4px 10px;
+    }
+
+    .today-page .aura-counter-wrap {
+      min-height: 190px !important;
+    }
+
+    .today-page .aura-touch {
+      width: min(58vw, 218px) !important;
+      height: 194px !important;
+      gap: 6px !important;
+    }
+
+    .today-page .rolling-number {
+      font-size: clamp(54px, 15vw, 66px) !important;
+    }
+
+    .today-page .home-greeting-aura {
+      font-size: clamp(22px, 5.7vw, 27px) !important;
+    }
+
+    .today-focused .category-picker > summary {
+      min-height: 38px;
+      padding: 6px 11px;
+      font-size: 11px;
+    }
+
+    .today-care-actions {
+      gap: 7px;
+      margin-top: 4px;
+    }
+
+    .today-care-actions > :is(.button, .quiet-button) {
+      min-height: 40px;
+      padding-inline: 10px;
+      font-size: 10px;
+    }
+
+    .wallet-page {
+      width: 100%;
+      max-width: 520px;
+      margin-inline: auto;
+    }
+
+    .wallet-page > .wallet-period-selector {
+      margin: 16px auto 0;
+    }
+
+    .wallet-page > .wallet-period-selector > button {
+      min-width: 54px;
+      min-height: 38px;
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+
+    .wallet-page .wallet-balance {
+      padding: 18px 0;
+    }
+
+    .wallet-page .wallet-balance > strong {
+      margin: 8px 0;
+      font-size: clamp(25px, 7vw, 32px) !important;
+      line-height: 1.18;
+    }
+
+    .wallet-page .wallet-balance > small,
+    .wallet-page .wallet-balance > p {
+      font-size: 10px;
+      line-height: 1.45;
+    }
+
+    .wallet-page .wallet-totals {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      padding: 14px 0;
+      margin-bottom: 12px;
+    }
+
+    .wallet-page .wallet-totals > div {
+      min-width: 0;
+      align-items: center;
+      text-align: center;
+    }
+
+    .wallet-page .wallet-totals small {
+      font-size: 9px;
+      line-height: 1.35;
+    }
+
+    .wallet-page .wallet-totals b {
+      max-width: 100%;
+      font-size: clamp(14px, 4.2vw, 17px) !important;
+      line-height: 1.2;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .wallet-page .wallet-date {
+      width: min(240px, 100%);
+      margin: 10px auto;
+      font-size: 10px;
+    }
+
+    .wallet-page .wallet-date input {
+      min-height: 40px;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .wallet-page .field-help {
+      text-align: center;
+    }
+
+    .wallet-page .entry-row {
+      min-height: 48px;
+      gap: 8px;
+      padding-block: 8px;
+      font-size: 11px;
+    }
+
+    .sphere-tap-shell.app-shell > header.topbar > nav.nav-glass {
+      right: auto !important;
+      left: 50% !important;
+      width: min(292px, calc(100vw - 56px)) !important;
+      max-width: none !important;
+      min-height: 50px;
+      padding: 3px 4px;
+      bottom: calc(8px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+    }
+
+    .sphere-tap-shell.app-shell > header.topbar > nav.nav-glass > .nav-link {
+      min-width: 0;
+      min-height: 42px;
+      padding: 2px 3px;
+      gap: 2px;
+      font-size: 8px;
+      line-height: 1.1;
+    }
+
+    .sphere-tap-shell.app-shell > header.topbar > nav.nav-glass > .nav-link > svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .profile-hero {
+      padding: 16px 10px;
+    }
+
+    .profile-hero h1 {
+      font-size: 26px;
+    }
+
+    .profile-hero p,
+    .profile-toolbar > span {
+      font-size: 10px;
+    }
+  }
+
+@media (prefers-reduced-motion: no-preference) {
+    .rolling-number[data-direction="down"] .rolling-number-old {
+      animation-name: count-scroll-out-down;
+    }
+
+    .rolling-number[data-direction="down"] .rolling-number-new {
+      animation-name: count-scroll-in-down;
+    }
+
+    @keyframes count-scroll-out-down {
+      from { transform: translateY(0); }
+      to { transform: translateY(112%); }
+    }
+
+    @keyframes count-scroll-in-down {
+      from { transform: translateY(-112%); }
+      to { transform: translateY(0); }
+    }
+  }
+
+@media (max-height: 700px) and (max-width: 600px) {
+  .today-page .aura-counter-wrap {
+    min-height: 190px !important;
+  }
+
+  .today-page .aura-touch {
+    height: 200px !important;
+  }
+}

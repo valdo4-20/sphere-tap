@@ -1,0 +1,13 @@
+import {X,ArrowUpRight} from "lucide-react";
+import MedalArtwork from "./MedalArtwork";
+import {achievementCatalog} from "./achievements";
+export default function AchievementCelebration({achievement,onClose,onProfile}){
+ const medal=achievementCatalog.find(a=>a.id===achievement.id);
+ if(!medal)return null;
+ return <aside className="achievement-celebration" aria-label="Novo marco de cuidado" role="status">
+  <div className="achievement-light" aria-hidden="true"/>
+  <div className="celebration-medal"><MedalArtwork id={medal.id} title={medal.title} celebration/></div>
+  <div className="celebration-copy"><span className="eyebrow">MARCO DO SEU CUIDADO</span><b>{medal.title}</b><button className="quiet-button" onClick={onProfile}>Ver no perfil<ArrowUpRight size={14}/></button></div>
+  <div className="celebration-actions"><button className="icon-button" aria-label="Fechar conquista" onClick={onClose}><X size={17}/></button></div>
+ </aside>;
+}

@@ -1,0 +1,734 @@
+[
+  {
+    "id": "your-space",
+    "title": "Seu espaço",
+    "rarity": "bronze",
+    "coin": "your-space.svg"
+  },
+  {
+    "id": "check-in",
+    "title": "Olhar para si",
+    "rarity": "bronze",
+    "coin": "check-in.svg"
+  },
+  {
+    "id": "pause-intent",
+    "title": "Uma escolha de pausa",
+    "rarity": "silver",
+    "coin": "pause-intent.svg"
+  },
+  {
+    "id": "pause-1",
+    "title": "Primeiro respiro",
+    "rarity": "bronze",
+    "coin": "pause-1.svg"
+  },
+  {
+    "id": "pause-3",
+    "title": "Espaço para respirar",
+    "rarity": "silver",
+    "coin": "pause-3.svg"
+  },
+  {
+    "id": "pause-7",
+    "title": "Pausas que florescem",
+    "rarity": "gold",
+    "coin": "pause-7.svg"
+  },
+  {
+    "id": "pause-14",
+    "title": "Raízes de cuidado",
+    "rarity": "platinum",
+    "coin": "pause-14.svg"
+  },
+  {
+    "id": "pause-30",
+    "title": "Um caminho de pausas",
+    "rarity": "emerald",
+    "coin": "pause-30.svg"
+  },
+  {
+    "id": "less-consumption",
+    "title": "Um pouco menos",
+    "rarity": "silver",
+    "coin": "less-consumption.svg"
+  },
+  {
+    "id": "urge-awareness",
+    "title": "Acolher a vontade",
+    "rarity": "bronze",
+    "coin": "urge-awareness.svg"
+  },
+  {
+    "id": "budget-choice",
+    "title": "Cuidado com os gastos",
+    "rarity": "silver",
+    "coin": "budget-choice.svg"
+  },
+  {
+    "id": "backup",
+    "title": "Memórias protegidas",
+    "rarity": "gold",
+    "coin": "backup.svg"
+  },
+  {
+    "id": "pause-2",
+    "title": "2 dias de respiro",
+    "rarity": "bronze",
+    "coin": "pause-2.svg"
+  },
+  {
+    "id": "pause-5",
+    "title": "5 dias de respiro",
+    "rarity": "bronze",
+    "coin": "pause-5.svg"
+  },
+  {
+    "id": "pause-10",
+    "title": "10 dias de respiro",
+    "rarity": "silver",
+    "coin": "pause-10.svg"
+  },
+  {
+    "id": "pause-21",
+    "title": "21 dias de respiro",
+    "rarity": "silver",
+    "coin": "pause-21.svg"
+  },
+  {
+    "id": "pause-45",
+    "title": "45 dias de respiro",
+    "rarity": "gold",
+    "coin": "pause-45.svg"
+  },
+  {
+    "id": "pause-60",
+    "title": "60 dias de respiro",
+    "rarity": "gold",
+    "coin": "pause-60.svg"
+  },
+  {
+    "id": "pause-75",
+    "title": "75 dias de respiro",
+    "rarity": "platinum",
+    "coin": "pause-75.svg"
+  },
+  {
+    "id": "pause-90",
+    "title": "90 dias de respiro",
+    "rarity": "platinum",
+    "coin": "pause-90.svg"
+  },
+  {
+    "id": "pause-120",
+    "title": "120 dias de respiro",
+    "rarity": "emerald",
+    "coin": "pause-120.svg"
+  },
+  {
+    "id": "pause-150",
+    "title": "150 dias de respiro",
+    "rarity": "emerald",
+    "coin": "pause-150.svg"
+  },
+  {
+    "id": "pause-180",
+    "title": "180 dias de respiro",
+    "rarity": "obsidian",
+    "coin": "pause-180.svg"
+  },
+  {
+    "id": "pause-210",
+    "title": "210 dias de respiro",
+    "rarity": "obsidian",
+    "coin": "pause-210.svg"
+  },
+  {
+    "id": "pause-240",
+    "title": "240 dias de respiro",
+    "rarity": "diamond",
+    "coin": "pause-240.svg"
+  },
+  {
+    "id": "pause-270",
+    "title": "270 dias de respiro",
+    "rarity": "diamond",
+    "coin": "pause-270.svg"
+  },
+  {
+    "id": "pause-300",
+    "title": "300 dias de respiro",
+    "rarity": "diamond",
+    "coin": "pause-300.svg"
+  },
+  {
+    "id": "pause-365",
+    "title": "365 dias de respiro",
+    "rarity": "diamond",
+    "coin": "pause-365.svg"
+  },
+  {
+    "id": "pause-450",
+    "title": "450 dias de respiro",
+    "rarity": "diamond",
+    "coin": "pause-450.svg"
+  },
+  {
+    "id": "pause-540",
+    "title": "540 dias de respiro",
+    "rarity": "diamond",
+    "coin": "pause-540.svg"
+  },
+  {
+    "id": "pause-730",
+    "title": "730 dias de respiro",
+    "rarity": "diamond",
+    "coin": "pause-730.svg"
+  },
+  {
+    "id": "pause-weeks-1",
+    "title": "1 semana com espaço",
+    "rarity": "bronze",
+    "coin": "pause-weeks-1.svg"
+  },
+  {
+    "id": "pause-weeks-2",
+    "title": "2 semanas com espaço",
+    "rarity": "bronze",
+    "coin": "pause-weeks-2.svg"
+  },
+  {
+    "id": "pause-weeks-3",
+    "title": "3 semanas com espaço",
+    "rarity": "silver",
+    "coin": "pause-weeks-3.svg"
+  },
+  {
+    "id": "pause-weeks-4",
+    "title": "4 semanas com espaço",
+    "rarity": "silver",
+    "coin": "pause-weeks-4.svg"
+  },
+  {
+    "id": "pause-weeks-6",
+    "title": "6 semanas com espaço",
+    "rarity": "gold",
+    "coin": "pause-weeks-6.svg"
+  },
+  {
+    "id": "pause-weeks-8",
+    "title": "8 semanas com espaço",
+    "rarity": "gold",
+    "coin": "pause-weeks-8.svg"
+  },
+  {
+    "id": "pause-weeks-12",
+    "title": "12 semanas com espaço",
+    "rarity": "platinum",
+    "coin": "pause-weeks-12.svg"
+  },
+  {
+    "id": "pause-weeks-16",
+    "title": "16 semanas com espaço",
+    "rarity": "platinum",
+    "coin": "pause-weeks-16.svg"
+  },
+  {
+    "id": "pause-weeks-20",
+    "title": "20 semanas com espaço",
+    "rarity": "emerald",
+    "coin": "pause-weeks-20.svg"
+  },
+  {
+    "id": "pause-weeks-26",
+    "title": "26 semanas com espaço",
+    "rarity": "emerald",
+    "coin": "pause-weeks-26.svg"
+  },
+  {
+    "id": "pause-weeks-39",
+    "title": "39 semanas com espaço",
+    "rarity": "obsidian",
+    "coin": "pause-weeks-39.svg"
+  },
+  {
+    "id": "pause-weeks-52",
+    "title": "52 semanas com espaço",
+    "rarity": "obsidian",
+    "coin": "pause-weeks-52.svg"
+  },
+  {
+    "id": "pause-months-1",
+    "title": "1 mês com uma pausa",
+    "rarity": "bronze",
+    "coin": "pause-months-1.svg"
+  },
+  {
+    "id": "pause-months-2",
+    "title": "2 meses com pausas",
+    "rarity": "bronze",
+    "coin": "pause-months-2.svg"
+  },
+  {
+    "id": "pause-months-3",
+    "title": "3 meses com pausas",
+    "rarity": "silver",
+    "coin": "pause-months-3.svg"
+  },
+  {
+    "id": "pause-months-4",
+    "title": "4 meses com pausas",
+    "rarity": "silver",
+    "coin": "pause-months-4.svg"
+  },
+  {
+    "id": "pause-months-6",
+    "title": "6 meses com pausas",
+    "rarity": "gold",
+    "coin": "pause-months-6.svg"
+  },
+  {
+    "id": "pause-months-9",
+    "title": "9 meses com pausas",
+    "rarity": "gold",
+    "coin": "pause-months-9.svg"
+  },
+  {
+    "id": "pause-months-12",
+    "title": "12 meses com pausas",
+    "rarity": "platinum",
+    "coin": "pause-months-12.svg"
+  },
+  {
+    "id": "pause-months-18",
+    "title": "18 meses com pausas",
+    "rarity": "platinum",
+    "coin": "pause-months-18.svg"
+  },
+  {
+    "id": "pause-months-24",
+    "title": "24 meses com pausas",
+    "rarity": "emerald",
+    "coin": "pause-months-24.svg"
+  },
+  {
+    "id": "monthly-pauses-3",
+    "title": "Um mês, 3 respiros",
+    "rarity": "bronze",
+    "coin": "monthly-pauses-3.svg"
+  },
+  {
+    "id": "monthly-pauses-5",
+    "title": "Um mês, 5 respiros",
+    "rarity": "bronze",
+    "coin": "monthly-pauses-5.svg"
+  },
+  {
+    "id": "monthly-pauses-7",
+    "title": "Um mês, 7 respiros",
+    "rarity": "silver",
+    "coin": "monthly-pauses-7.svg"
+  },
+  {
+    "id": "monthly-pauses-10",
+    "title": "Um mês, 10 respiros",
+    "rarity": "silver",
+    "coin": "monthly-pauses-10.svg"
+  },
+  {
+    "id": "monthly-pauses-14",
+    "title": "Um mês, 14 respiros",
+    "rarity": "gold",
+    "coin": "monthly-pauses-14.svg"
+  },
+  {
+    "id": "monthly-pauses-21",
+    "title": "Um mês, 21 respiros",
+    "rarity": "gold",
+    "coin": "monthly-pauses-21.svg"
+  },
+  {
+    "id": "checkins-3",
+    "title": "3 dias de atenção",
+    "rarity": "bronze",
+    "coin": "checkins-3.svg"
+  },
+  {
+    "id": "checkins-5",
+    "title": "5 dias de atenção",
+    "rarity": "bronze",
+    "coin": "checkins-5.svg"
+  },
+  {
+    "id": "checkins-7",
+    "title": "7 dias de atenção",
+    "rarity": "silver",
+    "coin": "checkins-7.svg"
+  },
+  {
+    "id": "checkins-10",
+    "title": "10 dias de atenção",
+    "rarity": "silver",
+    "coin": "checkins-10.svg"
+  },
+  {
+    "id": "checkins-14",
+    "title": "14 dias de atenção",
+    "rarity": "gold",
+    "coin": "checkins-14.svg"
+  },
+  {
+    "id": "checkins-21",
+    "title": "21 dias de atenção",
+    "rarity": "gold",
+    "coin": "checkins-21.svg"
+  },
+  {
+    "id": "checkins-30",
+    "title": "30 dias de atenção",
+    "rarity": "platinum",
+    "coin": "checkins-30.svg"
+  },
+  {
+    "id": "checkins-45",
+    "title": "45 dias de atenção",
+    "rarity": "platinum",
+    "coin": "checkins-45.svg"
+  },
+  {
+    "id": "checkins-60",
+    "title": "60 dias de atenção",
+    "rarity": "emerald",
+    "coin": "checkins-60.svg"
+  },
+  {
+    "id": "checkins-90",
+    "title": "90 dias de atenção",
+    "rarity": "emerald",
+    "coin": "checkins-90.svg"
+  },
+  {
+    "id": "checkins-120",
+    "title": "120 dias de atenção",
+    "rarity": "obsidian",
+    "coin": "checkins-120.svg"
+  },
+  {
+    "id": "checkins-180",
+    "title": "180 dias de atenção",
+    "rarity": "obsidian",
+    "coin": "checkins-180.svg"
+  },
+  {
+    "id": "checkins-365",
+    "title": "365 dias de atenção",
+    "rarity": "diamond",
+    "coin": "checkins-365.svg"
+  },
+  {
+    "id": "notes-1",
+    "title": "1 nota para si",
+    "rarity": "bronze",
+    "coin": "notes-1.svg"
+  },
+  {
+    "id": "notes-3",
+    "title": "3 notas para si",
+    "rarity": "bronze",
+    "coin": "notes-3.svg"
+  },
+  {
+    "id": "notes-5",
+    "title": "5 notas para si",
+    "rarity": "silver",
+    "coin": "notes-5.svg"
+  },
+  {
+    "id": "notes-7",
+    "title": "7 notas para si",
+    "rarity": "silver",
+    "coin": "notes-7.svg"
+  },
+  {
+    "id": "notes-10",
+    "title": "10 notas para si",
+    "rarity": "gold",
+    "coin": "notes-10.svg"
+  },
+  {
+    "id": "notes-14",
+    "title": "14 notas para si",
+    "rarity": "gold",
+    "coin": "notes-14.svg"
+  },
+  {
+    "id": "notes-21",
+    "title": "21 notas para si",
+    "rarity": "platinum",
+    "coin": "notes-21.svg"
+  },
+  {
+    "id": "notes-30",
+    "title": "30 notas para si",
+    "rarity": "platinum",
+    "coin": "notes-30.svg"
+  },
+  {
+    "id": "notes-45",
+    "title": "45 notas para si",
+    "rarity": "emerald",
+    "coin": "notes-45.svg"
+  },
+  {
+    "id": "notes-60",
+    "title": "60 notas para si",
+    "rarity": "emerald",
+    "coin": "notes-60.svg"
+  },
+  {
+    "id": "notes-90",
+    "title": "90 notas para si",
+    "rarity": "obsidian",
+    "coin": "notes-90.svg"
+  },
+  {
+    "id": "notes-120",
+    "title": "120 notas para si",
+    "rarity": "obsidian",
+    "coin": "notes-120.svg"
+  },
+  {
+    "id": "feelings-1",
+    "title": "1 dia de escuta",
+    "rarity": "bronze",
+    "coin": "feelings-1.svg"
+  },
+  {
+    "id": "feelings-3",
+    "title": "3 dias de escuta",
+    "rarity": "bronze",
+    "coin": "feelings-3.svg"
+  },
+  {
+    "id": "feelings-5",
+    "title": "5 dias de escuta",
+    "rarity": "silver",
+    "coin": "feelings-5.svg"
+  },
+  {
+    "id": "feelings-7",
+    "title": "7 dias de escuta",
+    "rarity": "silver",
+    "coin": "feelings-7.svg"
+  },
+  {
+    "id": "feelings-10",
+    "title": "10 dias de escuta",
+    "rarity": "gold",
+    "coin": "feelings-10.svg"
+  },
+  {
+    "id": "feelings-14",
+    "title": "14 dias de escuta",
+    "rarity": "gold",
+    "coin": "feelings-14.svg"
+  },
+  {
+    "id": "feelings-21",
+    "title": "21 dias de escuta",
+    "rarity": "platinum",
+    "coin": "feelings-21.svg"
+  },
+  {
+    "id": "feelings-30",
+    "title": "30 dias de escuta",
+    "rarity": "platinum",
+    "coin": "feelings-30.svg"
+  },
+  {
+    "id": "urge-days-3",
+    "title": "3 dias de acolhimento",
+    "rarity": "bronze",
+    "coin": "urge-days-3.svg"
+  },
+  {
+    "id": "urge-days-5",
+    "title": "5 dias de acolhimento",
+    "rarity": "bronze",
+    "coin": "urge-days-5.svg"
+  },
+  {
+    "id": "urge-days-7",
+    "title": "7 dias de acolhimento",
+    "rarity": "silver",
+    "coin": "urge-days-7.svg"
+  },
+  {
+    "id": "urge-days-10",
+    "title": "10 dias de acolhimento",
+    "rarity": "silver",
+    "coin": "urge-days-10.svg"
+  },
+  {
+    "id": "urge-days-14",
+    "title": "14 dias de acolhimento",
+    "rarity": "gold",
+    "coin": "urge-days-14.svg"
+  },
+  {
+    "id": "urge-days-21",
+    "title": "21 dias de acolhimento",
+    "rarity": "gold",
+    "coin": "urge-days-21.svg"
+  },
+  {
+    "id": "urge-days-30",
+    "title": "30 dias de acolhimento",
+    "rarity": "platinum",
+    "coin": "urge-days-30.svg"
+  },
+  {
+    "id": "urge-days-45",
+    "title": "45 dias de acolhimento",
+    "rarity": "platinum",
+    "coin": "urge-days-45.svg"
+  },
+  {
+    "id": "urge-days-60",
+    "title": "60 dias de acolhimento",
+    "rarity": "emerald",
+    "coin": "urge-days-60.svg"
+  },
+  {
+    "id": "urge-days-90",
+    "title": "90 dias de acolhimento",
+    "rarity": "emerald",
+    "coin": "urge-days-90.svg"
+  },
+  {
+    "id": "backup-days-2",
+    "title": "2 cuidados com a memória",
+    "rarity": "bronze",
+    "coin": "backup-days-2.svg"
+  },
+  {
+    "id": "backup-days-3",
+    "title": "3 cuidados com a memória",
+    "rarity": "bronze",
+    "coin": "backup-days-3.svg"
+  },
+  {
+    "id": "backup-days-5",
+    "title": "5 cuidados com a memória",
+    "rarity": "silver",
+    "coin": "backup-days-5.svg"
+  },
+  {
+    "id": "backup-days-7",
+    "title": "7 cuidados com a memória",
+    "rarity": "silver",
+    "coin": "backup-days-7.svg"
+  },
+  {
+    "id": "backup-days-10",
+    "title": "10 cuidados com a memória",
+    "rarity": "gold",
+    "coin": "backup-days-10.svg"
+  },
+  {
+    "id": "backup-days-14",
+    "title": "14 cuidados com a memória",
+    "rarity": "gold",
+    "coin": "backup-days-14.svg"
+  },
+  {
+    "id": "backup-days-21",
+    "title": "21 cuidados com a memória",
+    "rarity": "platinum",
+    "coin": "backup-days-21.svg"
+  },
+  {
+    "id": "backup-days-30",
+    "title": "30 cuidados com a memória",
+    "rarity": "platinum",
+    "coin": "backup-days-30.svg"
+  },
+  {
+    "id": "backup-days-60",
+    "title": "60 cuidados com a memória",
+    "rarity": "emerald",
+    "coin": "backup-days-60.svg"
+  },
+  {
+    "id": "profile-bio",
+    "title": "Em suas palavras",
+    "rarity": "bronze",
+    "coin": "profile-bio.svg"
+  },
+  {
+    "id": "profile-photo",
+    "title": "Seu retrato",
+    "rarity": "silver",
+    "coin": "profile-photo.svg"
+  },
+  {
+    "id": "profile-emoji",
+    "title": "Um símbolo seu",
+    "rarity": "bronze",
+    "coin": "profile-emoji.svg"
+  },
+  {
+    "id": "profile-featured",
+    "title": "Sua pequena galeria",
+    "rarity": "gold",
+    "coin": "profile-featured.svg"
+  },
+  {
+    "id": "chosen-aura",
+    "title": "Uma atmosfera sua",
+    "rarity": "silver",
+    "coin": "chosen-aura.svg"
+  },
+  {
+    "id": "gentle-reminder",
+    "title": "Um lembrete gentil",
+    "rarity": "bronze",
+    "coin": "gentle-reminder.svg"
+  },
+  {
+    "id": "walk-days-1",
+    "title": "Um passo ao ar livre",
+    "rarity": "bronze",
+    "coin": "walk-days-1.svg"
+  },
+  {
+    "id": "walk-days-3",
+    "title": "3 dias em movimento",
+    "rarity": "silver",
+    "coin": "walk-days-3.svg"
+  },
+  {
+    "id": "walk-days-7",
+    "title": "7 dias em movimento",
+    "rarity": "gold",
+    "coin": "walk-days-7.svg"
+  },
+  {
+    "id": "walk-days-14",
+    "title": "14 dias em movimento",
+    "rarity": "platinum",
+    "coin": "walk-days-14.svg"
+  },
+  {
+    "id": "walk-days-30",
+    "title": "30 dias em movimento",
+    "rarity": "emerald",
+    "coin": "walk-days-30.svg"
+  },
+  {
+    "id": "walk-days-60",
+    "title": "60 dias em movimento",
+    "rarity": "obsidian",
+    "coin": "walk-days-60.svg"
+  }
+]

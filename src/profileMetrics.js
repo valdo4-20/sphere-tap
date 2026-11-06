@@ -1,0 +1,3 @@
+import {dayKey,shiftDay,observation} from './model.js';
+export function recentCare(data,today=dayKey(),length=28){return Array.from({length},(_,i)=>{const key=shiftDay(today,i-length+1),o=observation(data,key);return {key,known:o.known,paused:o.paused,count:o.entries.length,cost:o.entries.some(e=>e.cost==null)?null:o.entries.reduce((n,e)=>n+Math.round(e.cost*100),0)}})}
+export function pauseScenario(amount,days,price){if(amount===''||days===''||!Number.isFinite(Number(amount))||Number(amount)<0||!Number.isFinite(Number(days))||Number(days)<1||Number(days)>365)return null;const quantity=Number(amount)*Number(days);return {quantity,cents:price==null?null:Math.round(quantity*price*100)}}

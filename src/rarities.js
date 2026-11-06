@@ -1,0 +1,1 @@
+export const rarities={bronze:{name:'Bronze',color:'#b48766'},silver:{name:'Prata',color:'#b9c9d5'},gold:{name:'Ouro',color:'#dcc16c'},platinum:{name:'Platina',color:'#bbd5d6'},emerald:{name:'Esmeralda',color:'#69b194'},obsidian:{name:'Obsidiana',color:'#a58dbb'},diamond:{name:'Diamante',color:'#bee3ee'}};

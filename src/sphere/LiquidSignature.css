@@ -1,0 +1,25 @@
+.liquid-signature {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #030304;
+  color: #f4f0e8;
+}
+
+.liquid-signature canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.liquid-signature canvas[hidden] {
+  display: none;
+}
+
+.liquid-signature-static {
+  font:
+    400 clamp(38px, 12.5vw, 150px)/1 Arial,
+    sans-serif;
+}

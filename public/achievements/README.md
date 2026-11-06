@@ -1,0 +1,1 @@
+Medalhas adaptadas do Sphere UI Kit/achievements. Metal, esmalte e acabamento preservados; motivos musicais substituídos por ícones Lucide de cuidado. Sem recompensa por consumo. Regerar: node scripts/adapt-medals.mjs [pasta de origem].

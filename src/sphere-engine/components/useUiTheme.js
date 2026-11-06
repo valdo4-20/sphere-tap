@@ -1,0 +1,1 @@
+export function useUiTheme(){return {theme:document.documentElement.dataset.theme||'dark'}}
