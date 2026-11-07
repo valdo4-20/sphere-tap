@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.3.0',
- title:'Cada opinião tem sua cor.',
+ version:'1.4.0',
+ title:'Um mundo a cada descoberta.',
  palette:{background:'#211c25',neutral:'#382e3b',accent:'#d9c3b0',text:'#faf7f2'},
- changes:['Mais variedade: 10 mil perguntas factuais com fontes e menos matemática.','No Rolê, marque a opinião de cada amigo pela sua cor antes de confirmar juntos.','A Jornada mantém sua posição ao concluir um nível.'],
+ changes:['A Jornada ganha pequenas ilhas de blocos, com florestas, água, cristais e lava.','Novos planetas aparecem apenas quando o seu progresso ou a data permitem.','Revelações suaves, com os seus amigos, suas cores e todo o progresso preservados.'],
 };

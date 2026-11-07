@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {planetFor,planetSVG,planetIsVisible} from './journeyPlanets.js';
+import {migrateJourney} from './journeyProgression.js';
+test('ilhas seguem o progresso real sem revelar planetas futuros',()=>{for(const done of [0,1,6,7,9999,10000]){assert.equal(planetIsVisible(done+1,done,true),true);assert.equal(planetIsVisible(done+1,done,false),false);assert.equal(planetIsVisible(done+2,done,true),false);if(done)assert.equal(planetIsVisible(done,done,false),true)}});
+test('mundos são estáveis e diferentes em cada bônus/desafio, inclusive além de 10 mil',()=>{const seen=new Set();for(let n=1;n<=100;n++){const svg=planetSVG(n);assert.match(svg,/<polygon/);assert.doesNotMatch(svg,/NaN|undefined|<script|onload=/);assert.equal(svg,planetSVG(n));assert.ok(!seen.has(svg));seen.add(svg)}assert.notEqual(planetFor(1).name,planetFor(7).name);assert.match(planetSVG(10001),/<svg/)});
+test('o novo visual não altera o formato ou os valores do progresso salvo',()=>{const saved={version:3,mode:'personal',personal:44,role:73,stars:200,xp:9000,personalStart:'2026-01-01',personalLastDate:'2026-11-07',personalUnlockSeen:'2026-11-07'};assert.deepEqual(migrateJourney(saved),saved)});

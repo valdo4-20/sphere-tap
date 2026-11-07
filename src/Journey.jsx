@@ -6,7 +6,8 @@ import React,{useEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {Star,Lock,LockOpen,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown,Sparkles} from 'lucide-react';
 import JourneyMotion from './JourneyMotion.jsx';
-import WorldDecor from './JourneyScenery.jsx';
+import JourneyPlanet from './JourneyPlanet.jsx';
+import {planetFor,planetIsVisible} from './journeyPlanets';
 import {questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,earnedXP} from './journeyLogic.js';
 import {dailyStatus,enrollDaily,dailyEdition,dailyLevelDate,weeklyColor} from './journeyDaily.js';
 import {themeFor,praiseFor} from './quizTopics.js';
@@ -123,9 +124,9 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   }else{cue('question');setQuiz(q=>({...q,index:q.index+1,selected:null,draft:null,votes:{}}))}
  }
  let pathHeight=0;
- const positions=nodes.map((n,i)=>{const height=n===level&&selected?206:126,result={n,x:180+(Math.sin(i*1.12)-Math.sin((level-nodes[0])*1.12))*55,y:pathHeight+68,height};pathHeight+=height;return result});
+ const positions=nodes.map((n,i)=>{const height=n===level&&selected?280:planetIsVisible(n,done,playable)?220:86,result={n,x:180+(Math.sin(i*1.12)-Math.sin((level-nodes[0])*1.12))*55,y:pathHeight+68,height};pathHeight+=height;return result});
  const path='M '+positions.map(p=>`${p.x},${p.y}`).join(' L ');
- return <section className='journey-page' style={personal?{'--journey-tint':weeklyColor(level),'--journey-tint-ink':weeklyColor(level),'--journey-trail':weeklyColor(level)}:undefined}>
+ return <section className={'journey-page'+(quiz?' is-playing':'')} style={personal?{'--journey-tint':weeklyColor(level),'--journey-tint-ink':weeklyColor(level),'--journey-trail':weeklyColor(level)}:undefined}>
   <JourneyMotion/>
   <header className='journey-heading'><h1>Descubra pelo caminho.</h1></header>
   <div className='journey-switch' aria-label='Escolher modo'><button aria-pressed={personal} onClick={()=>{onChange(d=>({...enrollDaily(d),mode:'personal'}))}}><UserRound size={17}/><span>Modo Pessoal</span></button><button aria-pressed={!personal} onClick={()=>onChange(d=>({...d,mode:'role'}))}><Users size={18}/><span>Modo Rolê</span></button></div>
@@ -140,13 +141,13 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   </>}
   </Dialog>}
   {loadError&&<p role='alert'>{loadError}</p>}
-  <div className='journey-world' key={`${mode}-${Math.floor(done/7)}`}><WorldDecor/>
+  <div className='journey-world' key={`${mode}-${Math.floor(done/7)}`}>
    <div className='journey-path' aria-label={personal?'Caminho dos seus dias':'Trecho do seu caminho'}>
     <svg className='journey-trail' style={{height:pathHeight}} viewBox={`0 0 360 ${pathHeight}`} preserveAspectRatio='none' aria-hidden='true'><defs><linearGradient id='trailGradient' x1='0' y1='0' x2='0' y2='1'><stop stopColor='currentColor' stopOpacity='.6'/><stop offset='1' stopColor='currentColor' stopOpacity='.16'/></linearGradient></defs><path d={path} fill='none' stroke='url(#trailGradient)' strokeWidth='2' strokeDasharray='2 9' strokeLinecap='round'/></svg>
     {positions.map(({n,x,height},i)=>{const complete=n<=done,current=n===level,unlocked=current&&playable,opening=unlocked&&unlock===n;return <div className={'journey-stop'+(advance===n?' journey-advanced':'')} key={n} style={{'--stop-x':`${x/360*100}%`,'--stop-index':i,...(personal?{'--journey-tint':weeklyColor(n),'--journey-tint-ink':weeklyColor(n)}:{}),height}}><div className='journey-stop-content'>
      {current&&<span className='journey-start-label'>{playable?'CONTINUE AQUI':'ABRE NA SUA DATA'}</span>}
-     <button disabled={!unlocked} className={`journey-node ${complete?'complete':unlocked?'current':'locked'}${opening?' journey-unlocking':''}`} aria-label={`${personal?'Dia':'Nível'} ${n}, ${complete?'concluído':unlocked?'selecionar':'a descobrir'}`} aria-expanded={current?selected:undefined} data-feedback={current?feedback:undefined} onClick={()=>select(n)}>{complete?<Check size={25}/>:opening?<span className='journey-unlock-icons'><Lock className='unlock-closed' size={25}/><LockOpen className='unlock-open' size={25}/><Star className='unlock-star' size={26} fill='currentColor'/></span>:unlocked?<Star size={26} fill='currentColor'/>:n%7===0?<Trophy size={21}/>:<Lock size={18}/>}</button>
-     <span className='journey-node-caption'>{personal?'Dia':'Nível'} {n}{personal&&<small>{new Date(dailyLevelDate(owner,n,clock)+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</small>}</span>
+     <button disabled={!unlocked} className={`journey-node ${complete?'complete':unlocked?'current':'locked'}${opening?' journey-unlocking':''}`} aria-label={`${personal?'Dia':'Nível'} ${n}, ${complete?'concluído':unlocked?'selecionar':'a descobrir'}`} aria-expanded={current?selected:undefined} data-feedback={current?feedback:undefined} onClick={()=>select(n)}>{planetIsVisible(n,done,playable)?<JourneyPlanet level={n} reveal={opening||(!personal&&current&&advance!==null)}/>:<Lock size={18}/>}</button>
+     <span className='journey-node-caption'>{personal?'Dia':'Nível'} {n}{planetIsVisible(n,done,playable)&&<strong className='journey-planet-name'>{planetFor(n).name}</strong>}{personal&&<small>{new Date(dailyLevelDate(owner,n,clock)+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</small>}</span>
      {current&&selected&&playable&&<div className='journey-level-launch'><button className='journey-start-action' disabled={loading} onClick={()=>begin(n)}>{loading?'Preparando…':`Entrar no ${personal?'dia':'nível'} ${n}`}</button></div>}
     </div></div>})}
     <div className='journey-horizon' aria-hidden='true'><ChevronDown size={16}/></div>

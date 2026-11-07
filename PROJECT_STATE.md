@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.3.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.4.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -38,3 +38,11 @@ As preferências acima vêm das instruções do usuário nesta conversa. Este ar
 - Modal fixa/restaura o scroll do documento e devolve o foco sem deslocar a jornada.
 - Motion mini anima brevemente o seletor; sem novos shaders ou loops durante a leitura.
 - Testes cobrem opiniões independentes, fontes/opções distintas, distribuição e restauração do scroll; smoke Chromium também cobre votos diferentes e posição após conclusão.
+
+## Jornada de planetas — 1.4.0
+
+Visual adaptado da prévia https://sphere-tap-jornada-planetas.bikyrt.chatgpt.site , com planetas reduzidos a 96px no celular e 112px nas telas maiores. SVG isométrico com seis biomas, blocos, relevo, rios/cachoeiras, árvores, cristais e lava; identidade e distribuição de minerais determinísticas por nível. Não importa dados de demonstração, amigos ou XP da prévia.
+
+Os mundos visíveis derivam somente dos níveis concluídos e do próximo nível realmente jogável. Datas futuras mostram apenas cadeados, nunca planetas/biomas. Rolê só revela o próximo após concluir o atual; Pessoal aguarda a data real. Calendário, XP, acertos, modos, amigos e formato de armazenamento permanecem intactos. As referências a bônus/desafios representam mundos distintos, sem inventar novas recompensas.
+
+Desbloqueio tem revelação com brilho e partículas; animações CSS pausam fora da tela, durante o quiz e com aba oculta. Reduzir movimento elimina as animações. Não há novo canvas, WebGL, dependência ou loop JavaScript. O smoke verifica dimensões, ocultação dos futuros, revelação pelo progresso e pela data, além de toda a rodada e ranking.
