@@ -1,5 +1,4 @@
 import {
-  Footprints,
   CircleDot,
   ChartNoAxesCombined,
   Wallet,
@@ -8,7 +7,6 @@ import {
 import useSphereNavigation from "./useSphereNavigation";
 export const routes = [
  {id:"Hoje",label:"Hoje",icon:CircleDot},
- {id:"Caminhada",label:"Caminhada",icon:Footprints},
  {id:"Análises",label:"Progresso",icon:ChartNoAxesCombined},
  {id:"Carteira",label:"Carteira",icon:Wallet},
  {id:"Perfil",label:"Perfil",icon:UserRound},

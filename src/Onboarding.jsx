@@ -1,13 +1,13 @@
 import DatePicker from "./DatePicker";
 import React,{useEffect,useRef,useState} from "react";
-import {ArrowLeft,ArrowRight,Check,MapPin,HardDrive,ShieldCheck,Leaf} from "lucide-react";
+import {ArrowLeft,ArrowRight,Check,HardDrive,ShieldCheck,Leaf} from "lucide-react";
 import Aura from "./Aura";
 import ProfilePicker from "./ProfilePicker";
 import Terms,{TERMS_VERSION} from "./Terms";
 import {intentions} from "./intentions";
 import {dayKey} from "./model";
 export default function Onboarding({onComplete,initialIntent="monitor",initialName="",initialProfile,initialBirthDate="",color="#b7beca"}){
- const [step,setStep]=useState(0),[name,setName]=useState(initialName),[birthDate,setBirthDate]=useState(initialBirthDate),[profile,setProfile]=useState(initialProfile||{type:"icon",value:"user"}),[intent,setIntent]=useState(initialIntent),[accepted,setAccepted]=useState(false),[demo,setDemo]=useState(0),[location,setLocation]=useState("Não solicitada"),[storage,setStorage]=useState("Salvamento local ativo"),[busy,setBusy]=useState(false),[ready,setReady]=useState(false),[preparation,setPreparation]=useState(0);
+ const [step,setStep]=useState(0),[name,setName]=useState(initialName),[birthDate,setBirthDate]=useState(initialBirthDate),[profile,setProfile]=useState(initialProfile||{type:"icon",value:"user"}),[intent,setIntent]=useState(initialIntent),[accepted,setAccepted]=useState(false),[demo,setDemo]=useState(0),[storage,setStorage]=useState("Salvamento local ativo"),[busy,setBusy]=useState(false),[ready,setReady]=useState(false),[preparation,setPreparation]=useState(0);
  const heading=useRef(null), form=useRef(null);
  const titles=["Bem-vindo ao seu espaço.","Quando você nasceu?","Um perfil com a sua cara.","Você controla os acessos.","Antes de começar.","Criando seu ambiente saudável.","Um toque. Mais consciência."];
  useEffect(()=>{heading.current?.focus({preventScroll:true});window.scrollTo({top:0,behavior:"instant"});},[step]);
@@ -18,11 +18,6 @@ export default function Onboarding({onComplete,initialIntent="monitor",initialNa
   const done=setTimeout(()=>setReady(true),14000);
   return()=>{changes.forEach(clearTimeout);clearTimeout(done)};
  },[step]);
- async function requestLocation(){
-  if(!window.isSecureContext||!navigator.geolocation){setLocation("Precisa de HTTPS ou localhost.");return;}
-  setLocation("Aguardando sua escolha…");
-  navigator.geolocation.getCurrentPosition(()=>setLocation("Autorizada · coordenadas descartadas"),()=>setLocation("Não autorizada ou indisponível"),{enableHighAccuracy:false,timeout:10000,maximumAge:0});
- }
  async function requestStorage(){
   if(!navigator.storage?.persist){setStorage("O navegador gerencia os dados locais. Faça backups.");return;}
   setBusy(true);try{setStorage(await navigator.storage.persist()?"Persistência autorizada · mantenha backups.":"Persistência não concedida. O salvamento local continua ativo.");}catch{setStorage("O navegador gerencia os dados locais. Faça backups.");}finally{setBusy(false)}
@@ -40,8 +35,6 @@ export default function Onboarding({onComplete,initialIntent="monitor",initialNa
     {step===2&&<><p>Escolha um ícone, emoji ou foto.</p><ProfilePicker value={profile} onChange={setProfile}/></>}
     {step===3&&<><p>Tudo aqui é opcional. Você pode continuar sem liberar acesso.</p>
      <div className="permission-card"><ShieldCheck size={22}/><div><b>Câmera e fotos</b><small>Solicitadas só quando você escolhe uma foto para o perfil.</small></div></div>
-     <div className="permission-card"><MapPin size={22}/><div><b>Localização</b><small>{location}</small></div><button className="button secondary" type="button" onClick={requestLocation}>Autorizar</button></div>
-     <p className="field-help">O Tap não usa nem guarda sua localização para acompanhar o consumo.</p>
      <div className="permission-card"><HardDrive size={22}/><div><b>Armazenamento offline</b><small>{storage}</small></div><button className="button secondary" type="button" disabled={busy} onClick={requestStorage}>Proteger</button></div>
     </>}
     {step===4&&<><ShieldCheck className="onboarding-shield" size={50}/><p>Privado, gratuito e sob seu controle.</p><details className="compact-explanation terms-disclosure"><summary>Termos de uso e privacidade</summary><Terms/></details><label className="consent-check"><input type="checkbox" checked={accepted} onChange={e=>setAccepted(e.target.checked)} required/>Li e aceito os termos de uso e privacidade.</label></>}

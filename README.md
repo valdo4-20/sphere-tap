@@ -148,13 +148,13 @@ Validação desta revisão: build concluído e 22 testes passando. A prancha e a
 
 A primeira experiência pede nome, nascimento e perfil (ícone, emoji ou foto), apresenta acessos opcionais e termos, prepara o ambiente local e explica o uso. Não há contador de etapas nem barras de progresso. Pode ser revista nas configurações. Perfil e nascimento entram no backup JSON e podem ser alterados em Configurações.
 
-Fotos são recortadas localmente em 256 × 256 e salvas como JPEG no perfil. Câmera usa apenas vídeo, é encerrada ao sair/capturar e exige HTTPS ou localhost. Localização é opcional, consultada uma vez, sem guardar coordenadas. O acesso a fotos usa o seletor de arquivos, sem permissão ampla ao armazenamento. A opção de persistência solicita navigator.storage.persist quando disponível; sua concessão depende do navegador e não substitui backup.
+Fotos são recortadas localmente em 256 × 256 e salvas como JPEG no perfil. Câmera usa apenas vídeo, é encerrada ao sair/capturar e exige HTTPS ou localhost. O acesso a fotos usa o seletor de arquivos, sem permissão ampla ao armazenamento. A opção de persistência solicita navigator.storage.persist quando disponível; sua concessão depende do navegador e não substitui backup.
 
 AURA usa agora AuraSurface e dependências do Sphere UI Kit em src/sphere-engine, com adaptador em src/Aura.jsx. O adaptador remove a dependência de playback/tema do Sphere, aceita a cor escolhida e permite congelar a superfície. Não há player ou captura de áudio. O renderer mantém seu movimento ambiente com limite de 30 FPS. Registrar +1 causa uma breve contração e redução de opacidade; não aumenta brilho ou intensidade. O aviso informa o custo acrescentado ou a ausência de preço.
 
 Análises inclui um gráfico radial orgânico por dia da semana, com consumo em ocasiões e custos conhecidos. A escala é relativa ao maior valor registrado no período; não é uma pontuação de saúde. Custos ausentes aparecem como informação incompleta.
 
-Validação: 24 testes de dados e build estático. Cadastro até termos e incremento com custo conferidos no navegador em origem isolada. Aceite de termos e permissões reais ficam para a escolha da pessoa; câmera física, localização e instalação em iOS/Android não foram validadas em dispositivo nesta revisão.
+Validação: 24 testes de dados e build estático. Cadastro até termos e incremento com custo conferidos no navegador em origem isolada. Aceite de termos e permissões reais ficam para a escolha da pessoa; câmera física e instalação em iOS/Android não foram validadas em dispositivo nesta revisão.
 
 A preparação inicial dura 14 segundos, com mensagens espaçadas e movimento gradual, sem contador ou linhas de etapas. A animação respeita a preferência de movimento reduzido.
 
@@ -195,40 +195,16 @@ A navegação permanece em uma barra compacta de vidro inspirada na barra de rep
 Validação: build estático e 38 testes; fluxos de perfil, edição, coleção, detalhes e reconhecimento conferidos em origem de teste separada. Layout sem overflow horizontal na largura CSS de 358 px. Captura de apresentação salva em preview-perfil-medalhas.png. Instalação física em iOS/Android e publicação no GitHub não foram realizadas nesta revisão.
 
 
-## Caminhada, Carteira e perfil
+## Carteira e perfil · revisão de 7 de novembro de 2026
 
-- Caminhada usa Leaflet 1.9.4 e OpenStreetMap, sem chave ou cobrança. O mapa só carrega ao abrir a aba. Não faz download antecipado de mapas; mantém atribuição e cache HTTP do navegador. Disponibilidade dos mapas é de melhor esforço.
-- Ao iniciar uma caminhada, a aba muda para uma tela ao vivo com tempo ativo, distância, passos estimados, ritmo e estado do GPS. Os controles permitem pausar/retomar, finalizar ou abrir o percurso; a navegação fica recolhida durante essa tela.
-- GPS é solicitado somente em **Iniciar caminhada**, exige HTTPS (ou localhost). O endereço HTTP de rede local não permite GPS em navegadores móveis. A publicação no GitHub Pages fornece HTTPS.
-- Tela oculta pausa a caminhada. Retome manualmente ao voltar. Uma sessão interrompida é recuperada pausada neste navegador. O PWA não promete GPS com tela bloqueada.
-- Distância usa Haversine e segmentos separados por pausas/lacunas. Descarta precisão acima de 40 m, deslocamentos abaixo do limiar de ruído e velocidade bruta acima de 3 m/s. Isso reduz ruído, mas não garante precisão de equipamento esportivo.
-- Passos são **estimados por distância / comprimento do passo** (ajustável de 0,30 a 1,50 m), não lidos de um pedômetro. Sem calorias, batimentos ou recuperação corporal inventados.
-- Durante uma caminhada ativa, +1 salva uma posição GPS aceita há menos de 15 segundos. Eventos antigos não recebem localização retroativa. Os pontos indicam consumo, nunca recompensas. Calor representa densidade de registros, não saúde ou temperatura.
-- Percursos e locais ficam no armazenamento local e no backup JSON. Carregar mapas informa ao servidor de tiles a área visualizada. Ao apagar um percurso, seus locais associados são retirados dos registros, mantendo o consumo. A ação pode ser desfeita pela notificação do app.
-- 122 medalhas: 116 marcos de cuidado e seis de caminhada em dias distintos. Nenhuma medalha por volume de consumo. Catálogo paginado e filtros por grupo/raridade.
-- Carteira reúne compras, preços e orçamento. Economia é uma estimativa contra gasto diário de referência informado; só inclui dias confirmados com custos completos. Compras não são somadas ao consumo. Não é saldo bancário, não recebe dinheiro e não faz transações.
-- Perfil: foto local em fundo inteiro, calendário de cuidado, gráfico de registros, cenário financeiro opcional e leitura científica recolhida. Ausência de dados nunca é uma pausa automática.
+A navegação tem Hoje, Progresso, Carteira e Perfil. Caminhada, mapa e solicitação de GPS foram removidos. Percursos antigos em backups continuam preservados e validados apenas para compatibilidade; não são apresentados nem usados para novas conquistas.
 
-### Referências
+A Carteira calcula em centavos a diferença entre gastos e recebimentos informados no período. A pessoa escolhe compras ou custo do consumo como base; os dois nunca são somados. Exemplo: R$ 90,00 − R$ 10,00 = R$ 80,00 de gasto líquido. Cada recebimento pode ser classificado manualmente como lucro, reembolso ou outro. Pode ser editado e excluído, com a ação de desfazer do app. Custos ausentes deixam o cálculo do consumo incompleto; zero só vale quando informado. Valores recebidos acima dos gastos são apresentados como excedente, não como lucro presumido. A economia estimada por referência e a economia editada manualmente continuam identificadas separadamente. Não existe depósito, saque, saldo bancário ou movimentação de dinheiro.
 
-- Filtros de Fitness e identidade de medalhas: `C:/Users/almei/Documents/projeto M/Sphere-UI-Kit/` (adaptação local).
-- [Leaflet 1.9.4](https://leafletjs.com/reference-1.9.4.html), [política de tiles OSM](https://operations.osmfoundation.org/policies/tiles/), [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API).
-- [Hancox et al., 2015](https://pubmed.ncbi.nlm.nih.gov/25837035/): coorte observacional sobre sintomas respiratórios e cessação/redução de cannabis. Sem prazo individual de recuperação.
-- [CDC — benefícios de parar de fumar](https://www.cdc.gov/tobacco/about/benefits-of-quitting.html): referências populacionais para tabaco fumado; não aplicáveis automaticamente a todos os itens.
+O perfil mostra uma sequência informativa de dias com tap, sem prêmio ou incentivo ao consumo. Conta dias distintos até hoje ou ontem; uma lacuna encerra a sequência atual. As 116 conquistas de cuidado ficam visíveis, com filtros e paginação. Meu cuidado é centralizado.
 
-Testes locais: `npm test`; produção estática: `npm run build`. Precisão em caminhada real e comportamento em iPhone/Android continuam dependendo de validação em aparelho físico.
+A moeda de detalhe usa Three.js, espessura real, relevo, bordas serrilhadas e iluminação metálica. O arraste tem resistência dependente do ângulo, rotação suavizada e inércia com amortecimento; sem oscilação automática. Teclado e alternativa CSS continuam disponíveis.
 
-Moeda aberta: Three.js com cilindro, borda serrilhada instanciada, aros e núcleo em relevo, iluminação de ambiente e texturas adaptadas do kit. Carrega sob demanda; limita resolução e quadros e libera o contexto ao fechar. Se WebGL não estiver disponível, usa a alternativa em CSS. A animação de virada de dezena é breve e sem som, pontos ou conquista.
+Validação local: `npm test` e `npm run build`. O teste isolado de Carteira confirmou R$ 90,00 − R$ 10,00 = R$ 80,00, incluindo classificação e gravação do recebimento. Os testes cobrem centavos, datas, custos ausentes, importação/backup e sequência de dias. A avaliação física do gesto e desempenho em dispositivos móveis continua necessária.
 
-
-## Organização atual da interface
-
-Navegação principal: Hoje, Caminhada, Progresso, Carteira e Perfil. Histórico fica em Progresso; Carteira tem uma aba própria. Intenção de pausa e limites opcionais ficam em Meu cuidado. Conquistas permanecem no perfil, recolhidas até a pessoa abrir; ao selecionar uma medalha, ela aparece sobre a tela com fundo transparente e AURA colorida atrás. A tela inicial concentra o contador do item escolhido; os registros do dia são expansíveis.
-
-A AURA original continua ativa. A camada `AuraWaves.jsx` acrescenta gradientes de borda com respiração e pulsos que partem do ponto tocado; o retorno visual é breve e não acumula intensidade com consumo. No tema claro, a AURA permanece visível sem o véu que a encobria. A composição móvel usa tipografia, esfera e controles mais compactos, preservando alvos de toque acessíveis. Mudanças de rota têm transições de entrada/saída e títulos/textos recebem uma entrada sutil, respeitando reduzir movimento. A silhueta da caminhada tem movimento lento de aproximação e rotação, suspenso com reduzir movimento.
-
-Silhuetas originais geradas com a ferramenta integrada `image_gen`, preservando alfa: `public/artwork/walking-silhouette.png`, `walking-feminine.png`, `walking-neutral.png`. Prompts completos: `public/artwork/prompts.json`. São escolhas visuais independentes da identidade ou orientação da pessoa; também há a opção Sem figura. Inter foi obtida da fonte oficial rsms.me e incluída localmente com a licença SIL OFL.
-
-Carteira: Editar valor permite uma economia informada manualmente, identificada como tal, com opção de retornar ao cálculo automático. Nenhum saldo ou transação bancária. Caminhada: Minha localização solicita uma posição para prévia, sem criar percurso. Iniciar caminhada ativa o registro e o ponto azul de posição; arrastar o mapa suspende a centralização automática até pedir Minha localização novamente.
-
-Revisão de foco: categorias novas exibem apenas nome e unidade; preço e visual estão em detalhes opcionais. A tela Hoje não exibe painéis repetidos de gastos, calendário ou conquistas. Progresso mantém período e gráfico, com filtros avançados recolhidos e seleção diretamente nos dias do gráfico. O restante é acessado sob demanda, sem apagar dados ou recursos existentes.
+Referências de cuidado: [Hancox et al., 2015](https://pubmed.ncbi.nlm.nih.gov/25837035/) e [CDC](https://www.cdc.gov/tobacco/about/benefits-of-quitting.html). Não são usadas para prometer recuperação individual.

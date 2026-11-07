@@ -30,22 +30,7 @@ export default function useSphereNavigation(route, paused = false) {
       const sign=Math.sign(delta);
       s.distance=sign===s.direction?s.distance+Math.abs(delta):Math.abs(delta);
       s.direction=sign;
-      const touchViewport = window.matchMedia(
-        "(max-width: 900px), (hover: none) and (pointer: coarse)",
-      ).matches;
-      const next = touchViewport
-        ? navigationState(s.state, fullscreen ? 0 : y, delta, s.distance)
-        : {
-            atTop,
-            hidden: fullscreen || y <= 32
-              ? false
-              : delta > 8 && y > 110
-                ? true
-                : delta < -5
-                  ? false
-                  : s.state.hidden,
-            collapsed: false,
-          };
+      const next = navigationState(s.state, fullscreen ? 0 : y, delta, s.distance);
       const {hidden,collapsed}=next;
       if(next.atTop||collapsed!==s.state.collapsed)s.distance=0;
       s.last = y;

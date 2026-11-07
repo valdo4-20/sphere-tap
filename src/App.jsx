@@ -1,6 +1,5 @@
 import Wallet from "./Wallet.jsx";
 
-import useWalking from "./useWalking";
 import AchievementCelebration from "./AchievementCelebration";
 import {prepareAchievementAudio,playAchievementSound} from "./achievementAudio";
 import GlassSelect from "./GlassSelect";
@@ -43,7 +42,7 @@ import "./tap.css";
 import "./refinements.css";
 import "./focus.css";
 import "./responsive.css";
-const Walking=React.lazy(()=>import("./Walking.jsx"));
+import "./revision.css";
 const STORAGE = "sphere-tap-v1";
 function App() {
   const [data, setData] = useState(() => {
@@ -89,7 +88,6 @@ function App() {
     file = useRef(null),
     recovery = useRef(null);
   const visual = appearanceFor(data);
-  const tracker=useWalking(walk=>mutate(d=>({...d,walks:[...(d.walks||[]),walk]})));
   useEffect(()=>{
     const updated=unlockAchievements(data,now.toISOString());
     if(updated!==data){
@@ -179,7 +177,7 @@ function App() {
       entry = createEntry(chosen, time.toISOString());
     mutate((d) => ({
       ...d,
-      entries: [...d.entries, {...entry,...(tracker.location()?{location:tracker.location()}: {})}],
+      entries: [...d.entries, entry],
       days: invalidate(d.days, [dayKey(time)]),
     }));
     setNow(time);
@@ -262,7 +260,6 @@ function App() {
   async function importData(e) {
     try {
       if (!e.target.files?.[0]) return;
-      if(tracker.session){notify("Finalize a caminhada antes de restaurar um backup.");return;}
       const x = JSON.parse(await e.target.files[0].text());
       if (!validData(x)) throw Error();
       setModal({ kind: "import", data: migrate(x) });
@@ -368,7 +365,7 @@ function App() {
           window.scrollTo({ top: 0, behavior: "instant" });
         }}
       />}
-      <SphereShell route={["Configurações","Metas"].includes(route)?"Perfil":route==="Cuidado"?"Hoje":route==="Histórico"?"Análises":route} onRoute={setRoute} guide={guide !== null} immersive={route==="Caminhada"&&Boolean(tracker.session?.running)}>
+      <SphereShell route={["Configurações","Metas"].includes(route)?"Perfil":route==="Cuidado"?"Hoje":route==="Histórico"?"Análises":route} onRoute={setRoute} guide={guide !== null}>
         {storageError && (
           <div className="storage-warning" role="alert">
             <p>
@@ -415,7 +412,6 @@ function App() {
             now={now}
           />
         )}
-        {route === "Caminhada" && <React.Suspense fallback={<p role="status">Abrindo seu mapa…</p>}><Walking data={data} onFigure={walkingFigure=>mutate(d=>({...d,appearance:{...d.appearance,walkingFigure}}))} tracker={tracker} color={visual.color} onBack={()=>setRoute("Hoje")} onDelete={id=>mutate(d=>({...d,walks:d.walks.filter(w=>w.id!==id),entries:d.entries.map(e=>e.location?.walkId===id?Object.fromEntries(Object.entries(e).filter(([k])=>k!=="location")):e)}))}/></React.Suspense>}
         {route === "Histórico" && (
           <History
             data={data}
@@ -671,7 +667,6 @@ function App() {
                   e.preventDefault();
                   undo.current = null;
                   recovery.current = null;
-                  tracker.discard();
                   const reset = structuredClone(initial);
                   try {
                     localStorage.removeItem(STORAGE);

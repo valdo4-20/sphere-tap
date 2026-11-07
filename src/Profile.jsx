@@ -9,11 +9,12 @@ import {ArrowLeft,Check,ChevronRight,LockKeyhole,Pencil,ShieldCheck,Leaf,Bookmar
 import {Avatar} from "./ProfilePicker";
 import ProfilePicker from "./ProfilePicker";
 import {achievementProgress,confirmedPauseDays} from "./achievements";
+import {tapSequence} from "./wallet";
 import {intentions} from "./intentions";
 const Medal3D=React.lazy(()=>import("./Medal3D"));
 export default function Profile({data,onChange,onNotify,onBack,onSettings,onCare}){
  const [editing,setEditing]=useState(false),[selected,setSelected]=useState(null),[collection,setCollection]=useState("earned"),[group,setGroup]=useState("all"),[page,setPage]=useState(0),[rarity,setRarity]=useState("all");
- const medals=achievementProgress(data),earned=medals.filter(a=>a.earnedAt),pauses=confirmedPauseDays(data).length;
+ const medals=achievementProgress(data),earned=medals.filter(a=>a.earnedAt),pauses=confirmedPauseDays(data).length,sequence=tapSequence(data);
  const featuredIds=Array.isArray(data.profileDetails?.featured)?data.profileDetails.featured:earned.slice(0,3).map(a=>a.id);
  const featured=earned.filter(a=>featuredIds.includes(a.id));
  const groups=[...new Set(medals.map(a=>a.group))];
@@ -41,9 +42,9 @@ export default function Profile({data,onChange,onNotify,onBack,onSettings,onCare
     <button className="button primary"><Check size={16}/>Salvar perfil</button>
    </form>
   </section>}
-  <div className="profile-stats"><div><b>{pauses}</b><span>{pauses===1?"dia de pausa confirmado":"dias de pausa confirmados"}</span></div><div><b>{earned.length}</b><span>{earned.length===1?"medalha reconhecida":"medalhas reconhecidas"}</span></div></div>
-  <button className="button secondary" onClick={onCare}>Meu cuidado</button>
-  <details className="profile-collection compact-explanation"><summary>Conquistas · {earned.length}</summary>
+  <div className="profile-stats"><div><b>{sequence}</b><span>{sequence===1?"dia com tap em sequência":"dias com tap em sequência"}</span><small>Apenas acompanhamento.</small></div><div><b>{pauses}</b><span>{pauses===1?"dia de pausa confirmado":"dias de pausa confirmados"}</span></div><div><b>{earned.length}</b><span>{earned.length===1?"medalha reconhecida":"medalhas reconhecidas"}</span></div></div>
+  <button className="button secondary profile-care" onClick={onCare}>Meu cuidado</button>
+  <section className="profile-collection">
    <div className="section-heading"><div><span className="eyebrow">MARCOS DO SEU CUIDADO</span><h2>Suas conquistas.</h2></div></div>
    <p className="field-help">Pausas não precisam ser seguidas. Um dia difícil não apaga seu caminho.</p>
    <Segmented className="profile-medal-tabs"><button className={collection==="earned"?"active":""} aria-pressed={collection==="earned"} onClick={()=>{setCollection("earned");setPage(0)}}>Suas medalhas <span>{earned.length}</span></button><button className={collection==="explore"?"active":""} aria-pressed={collection==="explore"} onClick={()=>{setCollection("explore");setPage(0)}}>Para explorar</button></Segmented>
@@ -51,7 +52,7 @@ export default function Profile({data,onChange,onNotify,onBack,onSettings,onCare
    <small className="profile-collection-count">{earned.length} reconhecidas · {medals.length} marcos para conhecer</small>
    {shown.length?<div className="profile-medal-grid">{shown.map(a=><button className={"profile-medal "+(a.earnedAt?"earned":"locked")} key={a.id} onClick={()=>setSelected(a.id)} aria-label={a.title+(a.earnedAt?", reconhecida":", conhecer esse marco")}><span className="profile-medal-image"><MedalArtwork id={a.id} locked={!a.earnedAt}/>{!a.earnedAt&&<LockKeyhole size={12}/>}</span><b>{a.title}</b><small>{a.earnedAt?"Reconhecida":a.target?a.current+" de "+a.total:"No seu tempo"}</small></button>)}</div>:<div className="profile-collection-empty"><Leaf size={28}/><p>Seu caminho está começando.</p><button className="quiet-button" onClick={()=>{setCollection("explore");setPage(0)}}>Conhecer os marcos<ChevronRight size={15}/></button></div>}
    {pages>1&&<div className="entry-pagination"><button className="quiet-button" disabled={!current} onClick={()=>setPage(current-1)}>Anterior</button><span>{current+1} / {pages}</span><button className="quiet-button" disabled={current===pages-1} onClick={()=>setPage(current+1)}>Próxima</button></div>}
-  </details>
+  </section>
   {active&&<Dialog className="medal-overlay" title={active.title} onClose={()=>setSelected(null)}><div className="medal-overlay-stage" style={{"--rarity-color":rarities[active.rarity].color}}>
 <div className="medal-aura-backdrop" aria-hidden="true"><Aura color={rarities[active.rarity].color} motion={.45} maxFrameRate={24}/></div>
 <div className="profile-medal-detail rarity-detail" style={{"--rarity-color":rarities[active.rarity].color}}>

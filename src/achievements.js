@@ -1,4 +1,3 @@
-import {routeDistance} from "./walking.js";
 import {dayKey,shiftDay,observation,validDay} from "./model.js";
 const baseCatalog=[
  {id:"your-space",title:"Seu espaço",rarity:"bronze",description:"Dar um nome ao seu perfil.",group:"Seu cuidado"},
@@ -35,7 +34,7 @@ const extraCatalog=[
  {id:"gentle-reminder",title:"Um lembrete gentil",description:"Optar por um lembrete de check-in no app.",group:"Seu cuidado",motif:"Leaf",rarity:"bronze"}
 ];
 const motifs={"your-space":"UserRound","check-in":"NotebookPen","pause-intent":"Pause","pause-1":"Leaf","pause-3":"Sprout","pause-7":"Flower2","pause-14":"Trees","pause-30":"Wind","less-consumption":"TrendingDown","urge-awareness":"HeartHandshake","budget-choice":"Wallet","backup":"ShieldCheck"};
-export const achievementCatalog=[...baseCatalog.map(a=>({...a,motif:motifs[a.id]})),...extraCatalog,...[1,3,7,14,30,60].map((target,i)=>({id:"walk-days-"+target,title:target===1?"Um passo ao ar livre":target+" dias em movimento",description:"Caminhar ao menos 50 metros registrados por GPS em "+target+" dias diferentes, sem sequência obrigatória. Passos estimados e consumo não contam.",group:"Caminhadas",motif:"Footprints",rarity:tiers[Math.min(i,6)],target,metric:"walkDays"}))];
+export const achievementCatalog=[...baseCatalog.map(a=>({...a,motif:motifs[a.id]})),...extraCatalog];
 export function confirmedPauseDays(data,today=dayKey()){
  return Object.keys(data.days||{}).filter(k=>validDay(k)&&k<=today&&observation(data,k).paused).sort();
 }
@@ -62,7 +61,6 @@ export function achievementProgress(data,today=dayKey()){
  const months={};pauseKeys.forEach(k=>months[k.slice(0,7)]=(months[k.slice(0,7)]||0)+1);
  const backupDates=[...(data.careMilestones?.backupDays||[]),...(data.careMilestones?.backupPreparedAt?[dayKey(new Date(data.careMilestones.backupPreparedAt))]:[])].filter(k=>validDay(k)&&k<=today);
  const metrics={
- walkDays:new Set((data.walks||[]).filter(w=>w.seconds>=30&&routeDistance(w.points)>=50&&dayKey(new Date(w.startedAt))<=today).map(w=>dayKey(new Date(w.startedAt)))).size,
  pauses,pauseWeeks:new Set(pauseKeys.map(k=>shiftDay(k,-((new Date(k+"T12:00").getDay()+6)%7)))).size,
  pauseMonths:Object.keys(months).length,maxMonthPauses:Math.max(0,...Object.values(months)),
  checkins:dayRecords.filter(([,d])=>d.confirmed===true).length,

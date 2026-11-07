@@ -53,6 +53,7 @@ export const initial = {
   welcomeDone: false,
   days: {},
   purchases: [],
+  receipts: [],
   cravings: [],
   pause: null,
   preferences: { tips: true, reminderEnabled: false, reminderTime: "20:00" },
@@ -63,6 +64,8 @@ const dateValid = (s) =>
 export const validDay = (s) =>
   /^\d{4}-\d{2}-\d{2}$/.test(s) && dayKey(new Date(s + "T12:00")) === s;
 export function validData(x) {
+  if(x?.preferences?.walletBasis!==undefined&&!['purchases','consumption'].includes(x.preferences.walletBasis))return false;
+  if(x?.receipts!==undefined&&(!Array.isArray(x.receipts)||!x.receipts.every(r=>isRecord(r)&&typeof r.id==='string'&&validDay(r.date)&&finite(r.amount,0.01)&&r.amount<=1e9&&(r.kind===undefined||['profit','refund','other'].includes(r.kind))&&(r.note===undefined||(typeof r.note==='string'&&r.note.length<=240)))))return false;
   if(x?.appearance?.walkingFigure!==undefined&&!["neutral","feminine","masculine","none"].includes(x.appearance.walkingFigure))return false;
   if(x?.walletBalance!==undefined&&(!isRecord(x.walletBalance)||!finite(x.walletBalance.amount)||x.walletBalance.amount>1e9||!dateValid(x.walletBalance.updatedAt)))return false;
   if(x?.walletReference!==undefined&&(!isRecord(x.walletReference)||!Number.isFinite(x.walletReference.dailyCost)||x.walletReference.dailyCost<0||x.walletReference.dailyCost>1000000||!validDay(x.walletReference.start)||x.walletReference.start<"2000-01-01"||x.walletReference.start>dayKey()))return false;
