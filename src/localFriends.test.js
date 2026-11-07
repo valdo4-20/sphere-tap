@@ -15,7 +15,7 @@ test('amigos permanecem após reload e backup, com edições preservando os pont
 });
 test('cadastro valida limites, duplicatas, nomes e backup sem descartar progresso válido',()=>{
  const data=structuredClone(initial),one=addFriend(data,friend('alex','Alex'));
- assert.equal(addFriend(one,friend('alex','Outro')),one);assert.equal(addFriend(data,friend('self','Nome')),data);assert.equal(addFriend(data,friend('abc',' ')),data);
+ assert.equal(addFriend(one,friend('alex','Outro')),one);assert.equal(addFriend(data,friend('self','Nome')),data);assert.equal(addFriend(data,friend('abc',' ')),data);assert.equal(addFriend(data,{name:'Sem ID',color:friendColors[0]}),data);
  assert.equal(validFriends([{...one.localFriends[0],journey:{xp:-1}}]),false);assert.equal(validData({...one,localFriends:[...one.localFriends,...one.localFriends]}),false);
  const legacy=structuredClone(initial);delete legacy.localFriends;assert.deepEqual(migrate(legacy).localFriends,[]);
  assert.equal(completeFriendRound(one,'missing',1,10),one);

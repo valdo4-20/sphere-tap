@@ -27,7 +27,7 @@
 [data-theme=light] .journey-page .journey-node.current{color:#42245f;background:linear-gradient(145deg,#eee1ff,color-mix(in srgb,var(--journey-tint) 80%,white));border-color:#825caa}
 [data-theme=light] .journey-page .journey-node.complete{color:#6c4190;background:#d8c4ef;border-color:#a27dbe}
 [data-theme=light] .journey-page .journey-player .journey-score{color:#8b5b0c}
-[data-theme=light] .journey-page .journey-player .journey-score svg{stroke:#754600;fill:#d9a52a;filter:none;opacity:1}
+[data-theme=light] .journey-page .journey-player .journey-score svg{stroke:#6b4a24;fill:var(--rank-color);filter:none;opacity:1}
 [data-theme=light] .journey-question-category,[data-theme=light] .journey-overlay .journey-feedback.is-correct>b{color:var(--question-ink)}
 [data-theme=light] .journey-result-stars{color:#d49a19}
 .local-ranking{max-width:470px;margin:22px auto;border:1px solid var(--glass-line);border-radius:20px;background:var(--surface-milk);padding:16px;box-sizing:border-box}
@@ -54,11 +54,12 @@
 @keyframes journey-door-star{0%,65%{opacity:0;transform:scale(.5)}85%{opacity:1;transform:scale(1.15)}100%{opacity:1;transform:scale(1)}}
 @keyframes journey-confetti-burst{10%{opacity:1}100%{opacity:0;transform:translate(var(--flight-x),var(--flight-y)) rotate(200deg)}}
 @keyframes journey-level-arrive{from{opacity:.2;transform:scale(.65)}65%{opacity:1;transform:scale(1.12)}to{opacity:1;transform:scale(1)}}
+@keyframes journey-map-arrive{from{opacity:.2;scale:.85}65%{opacity:1;scale:1.05}to{opacity:1;scale:1}}
 @keyframes journey-cheer{from{opacity:0;transform:translateY(6px) scale(.96)}65%{opacity:1;transform:translateY(0) scale(1.03)}to{opacity:1;transform:scale(1)}}
 @media(prefers-reduced-motion:no-preference){
  .journey-entry-rings i{animation:journey-enter-ring .58s ease-out both}.journey-entry-rings i:nth-child(2){animation-delay:.05s}.journey-entry-rings i:nth-child(3){animation-delay:.1s}.journey-entry-rings>svg{animation:journey-enter-star .5s ease-out both}
  .journey-page .journey-unlocking .unlock-closed{animation:journey-door-closed 1s ease both!important}.journey-page .journey-unlocking .unlock-open{animation:journey-door-open 1s ease both!important}.journey-page .journey-unlocking .unlock-star{animation:journey-door-star 1s ease both!important}
- .journey-advanced .journey-stop-content{animation:journey-cheer .6s ease-out}.journey-overlay .journey-feedback.is-correct>b{animation:journey-cheer .4s ease-out both}
+ .journey-advanced .journey-stop-content{animation:journey-map-arrive .6s ease-out}.journey-overlay .journey-feedback.is-correct>b{animation:journey-cheer .4s ease-out both}
  .journey-confetti i{animation:journey-confetti-burst .9s calc(var(--piece)*18ms) ease-out both}.journey-overlay .journey-result-stars .earned-star{animation:journey-level-arrive .6s ease-out both}.journey-overlay .journey-result-stars .earned-star:nth-child(2){animation-delay:.15s}.journey-overlay .journey-result-stars .earned-star:nth-child(3){animation-delay:.3s}
  .journey-overlay .journey-question-body{animation:tap-feedback .18s ease-out}.profile-medal.earned .medal-object{animation:journey-level-arrive .45s ease-out both}
 }
