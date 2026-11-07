@@ -1,4 +1,5 @@
 import DatePicker from "./DatePicker";
+import TapIntro from "./TapIntro";
 import React,{useEffect,useRef,useState} from "react";
 import {ArrowLeft,ArrowRight,Check,HardDrive,ShieldCheck,Leaf} from "lucide-react";
 import Aura from "./Aura";
@@ -7,7 +8,9 @@ import Terms,{TERMS_VERSION} from "./Terms";
 import {intentions} from "./intentions";
 import {dayKey} from "./model";
 export default function Onboarding({onComplete,initialIntent="monitor",initialName="",initialProfile,initialBirthDate="",color="#b7beca"}){
+ const [introDone,setIntroDone]=useState(false);
  const [step,setStep]=useState(0),[name,setName]=useState(initialName),[birthDate,setBirthDate]=useState(initialBirthDate),[profile,setProfile]=useState(initialProfile||{type:"icon",value:"user"}),[intent,setIntent]=useState(initialIntent),[accepted,setAccepted]=useState(false),[demo,setDemo]=useState(0),[storage,setStorage]=useState("Salvamento ativo"),[busy,setBusy]=useState(false),[ready,setReady]=useState(false),[preparation,setPreparation]=useState(0);
+
  const heading=useRef(null), form=useRef(null);
  const titles=["Bem-vindo ao seu espaço.","Quando você nasceu?","Um perfil com a sua cara.","Você controla os acessos.","Antes de começar.","Criando seu ambiente saudável.","Um toque. Mais consciência."];
  useEffect(()=>{heading.current?.focus({preventScroll:true});window.scrollTo({top:0,behavior:"instant"});},[step]);
@@ -24,6 +27,7 @@ export default function Onboarding({onComplete,initialIntent="monitor",initialNa
  }
  function finish(){onComplete({displayName:name.trim(),birthDate,profile,intent,consent:{version:TERMS_VERSION,acceptedAt:new Date().toISOString()}},false);}
  function next(e){e.preventDefault();if(step===6)finish();else setStep(v=>v+1);}
+ if(!introDone)return <TapIntro onDone={()=>setIntroDone(true)}/>;
  return <div className="welcome onboarding">
   <div className="aura-viewport"><Aura fullscreen color={color} motion={.3} pulse={demo}/></div>
   <header className="onboarding-brand"><span className="wordmark">sphere. <em>tap</em></span><img src="./sphere-mark.png" alt="Sphere"/></header>
