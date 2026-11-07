@@ -72,8 +72,8 @@ function App() {
     [now, setNow] = useState(new Date()),
     [storageError, setStorageError] = useState(false),
     [install, setInstall] = useState(null);
-  const setRoute = useCallback((nextRoute) => {
-    const update = () => setRouteState(nextRoute);
+  const setRoute = useCallback((nextRoute,nextSection="profile") => {
+    const update = () => {setRouteState(nextRoute);if(nextRoute==="Perfil")setProfileSection(nextSection)};
     if (
       nextRoute === route ||
       matchMedia("(prefers-reduced-motion: reduce)").matches ||
@@ -84,7 +84,9 @@ function App() {
     }
     document.startViewTransition(update);
   }, [route]);
-  const [celebration,setCelebration]=useState(null);
+  const [celebrations,setCelebrations]=useState([]),[journeyBusy,setJourneyBusy]=useState(false),[profileSection,setProfileSection]=useState('profile');
+  const celebration=celebrations[0]||null;
+  const closeCelebration=useCallback(()=>setCelebrations(list=>list.slice(1)),[]);
   const achievementsReady=useRef(false);
   const undo = useRef(null),
     file = useRef(null),
@@ -96,7 +98,7 @@ function App() {
       const ids=Object.keys(updated.achievements).filter(id=>!data.achievements?.[id]);
       setData(updated);
       if(achievementsReady.current&&ids.length){
-        setCelebration({id:ids[0],count:ids.length});
+        setCelebrations(list=>[...list,...ids.map(id=>({id}))]);
         if(data.preferences.achievementSound!==false)playAchievementSound();
       }
     }
@@ -352,7 +354,7 @@ function App() {
         <Aura
           fullscreen
           preset={data.appearance?.preset||"cover"}
-          enabled={data.aura}
+          enabled={data.aura && route!=="Jornada"}
           color={visual.color}
           motion={weeklyAura(data).motion}
           pulse={pulse}
@@ -398,7 +400,7 @@ function App() {
             )}
           </div>
         )}
-        {route === "Jornada" && <Journey account={data} progress={data.journey} onChange={update=>setData(d=>({...d,journey:typeof update==="function"?update(d.journey):update}))}/>}
+        {route === "Jornada" && <Journey onBusy={setJourneyBusy} onAccountChange={setData} onManageFriends={()=>{setRoute("Perfil","friends")}} account={data} progress={data.journey} onChange={update=>setData(d=>({...d,journey:typeof update==="function"?update(d.journey):update}))}/>}
         {route === "Hoje" && (
           <Today
             data={data}
@@ -446,7 +448,7 @@ function App() {
         {route === "Metas" && (
           <Goals data={data} onChange={mutate} onNotify={notify} />
         )}
-        {route==="Perfil"&&<Profile onCare={()=>setRoute("Cuidado")} data={data} onChange={mutate} onNotify={notify} onBack={()=>setRoute("Hoje")} onSettings={()=>setRoute("Configurações")}/>}
+        {route==="Perfil"&&<Profile initialSection={profileSection} onCare={()=>setRoute("Cuidado")} data={data} onChange={mutate} onNotify={notify} onBack={()=>setRoute("Hoje")} onSettings={()=>setRoute("Configurações")}/>}
         {route === "Configurações" && (
           <Settings
             data={data}
@@ -713,7 +715,7 @@ function App() {
           onRoute={setRoute}
         />
       )}
-      {celebration&&<AchievementCelebration achievement={celebration} onClose={()=>setCelebration(null)} onProfile={()=>{setCelebration(null);setRoute("Perfil");}}/>}
+      {celebration&&!journeyBusy&&<AchievementCelebration key={celebration.id} achievement={celebration} onClose={closeCelebration} onProfile={()=>{closeCelebration();setRoute("Perfil","achievements")}}/>}
       {toast && (
         <div className="tap-toast" role="status">
           {toast.startsWith("Consumo registrado") ? <Info size={16}/> : <Check size={16}/>}

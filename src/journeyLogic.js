@@ -1,9 +1,10 @@
+import {topicQuestions} from './quizTopics.js';
+import {personalQuestions} from './journeyDaily.js';
+export {localDate,availableDailyLevel} from './journeyDaily.js';
 import {countries} from './quizGeography.js';
 import {editorialQuestions} from './quizEditorial.js';
 export const QUESTIONS_PER_LEVEL=20;
 export const INITIAL_LEVEL_CAPACITY=10000; // Internal capacity, never an end marker in the interface.
-export function localDate(date=new Date()){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
-export function availableDailyLevel(start,now=new Date()){const [y,m,d]=start.split('-').map(Number);return Math.max(1,Math.floor((Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())-Date.UTC(y,m-1,d))/86400000)+1)}
 export function difficultyFor(level){const n=Math.max(1,Number(level)||1);return n<=10?{tier:1,name:'Leve'}:n<=35?{tier:2,name:'Curioso'}:n<=100?{tier:3,name:'Desafiador'}:{tier:4,name:'Profundo'}}
 export function personalDifficulty(roleCompleted){return difficultyFor(Math.max(0,roleCompleted)+1)}
 function random(seed){let state=(seed>>>0)||1;return()=>{state^=state<<13;state^=state>>>17;state^=state<<5;return (state>>>0)/4294967296}}
@@ -24,7 +25,7 @@ const everydayQuestions=[
  ['daily-discount','Um item de R$ 100 tem 10% de desconto. Quanto custa?',['R$ 90','R$ 10','R$ 99','R$ 110'],'Dez por cento de 100 é 10; 100 menos 10 é 90.'],
  ['daily-month','Qual mês vem logo depois de abril?',['Maio','Março','Junho','Julho'],'Na ordem dos meses, maio vem depois de abril.']
 ].map(([id,prompt,options,explanation])=>({id,prompt,options,explanation,correct:0,difficulty:1,everyday:true,category:'No dia a dia',source:null,sourceName:'Acervo autoral'}));
-export const questionBank=[...editorialQuestions,...geography,...everydayQuestions];
+export const questionBank=[...editorialQuestions,...topicQuestions,...geography,...everydayQuestions];
 function numericQuestion(level,tier,index,rng){
  const limit=[0,18,70,180,450][tier],a=2+Math.floor(rng()*limit),b=2+Math.floor(rng()*Math.min(limit,25)),kind=(level+index)%6;let answer,prompt,explanation;
  if(kind===0){answer=a+b;prompt=`Quanto é ${a} + ${b}?`;explanation=`${a} + ${b} = ${answer}.`}
@@ -43,6 +44,7 @@ export function questionPlan(difficultyLevel){
 }
 export function questionsFor(level,{difficultyLevel=level,mode='role',round=level}={}){
  if(!Number.isSafeInteger(level)||level<1)throw new RangeError('Nível inválido');
+ if(mode==='personal')return personalQuestions(level,{difficultyLevel});
  const rng=random((level*2654435761+round*97+(mode==='personal'?1234567:0))>>>0),used=new Set(),items=[],categoryCounts=new Map();
  for(const [phaseIndex,phase] of questionPlan(difficultyLevel).entries()){
   const available=questionBank.filter(q=>(mode!=='personal'||q.everyday||/^(music-[1-4]|logic-[1-4]|space-[1-3])$/.test(q.id))&&q.difficulty<=phase.tier&&!used.has(q.prompt));

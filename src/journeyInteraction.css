@@ -9,3 +9,35 @@
 @media(prefers-reduced-motion:reduce){.journey-level-launch,.journey-xp-level,.journey-xp-particles i{animation:none!important}.journey-xp-particles{display:none}}
 /* Five destinations keep the same glass bar and full-button selection. */
 @media(max-width:480px){#root .sphere-tap-shell.app-shell > header.topbar > nav.nav-glass > button.nav-link{flex-direction:column!important;gap:3px!important;padding:3px!important}#root .sphere-tap-shell.app-shell > header.topbar > nav.nav-glass > button.nav-link > span{font-size:9px!important}}
+/* The row remains within the map; only its narrow contents follow the trail. */
+.journey-page{width:100%;min-width:0;box-sizing:border-box}
+.journey-page .journey-path{width:min(360px,100%)}
+.journey-page .journey-stop{transform:none!important;padding:0;box-sizing:border-box;pointer-events:none}
+.journey-stop-content{position:absolute;left:var(--stop-x);top:38px;width:76px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:auto}
+.journey-stop-content .journey-start-label{top:-30px}
+.journey-stop-content .journey-level-launch{top:95px}
+.journey-node-caption{text-align:center;display:grid;gap:4px}
+.journey-node-caption small{font-size:9px;opacity:.7}
+.journey-page .journey-trail{left:0;width:100%}
+.journey-page .journey-node{transform:none!important;translate:0 0!important;scale:1!important;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;transition:box-shadow .14s ease,transform .14s ease!important}
+.journey-page .journey-node.current{--node-depth:color-mix(in srgb,var(--journey-tint) 58%,#261638);background:linear-gradient(145deg,color-mix(in srgb,var(--journey-tint) 70%,white),var(--journey-tint));box-shadow:0 7px 0 var(--node-depth),0 0 35px #bca2df25,inset 0 1px 0 #ffffff90!important}
+.journey-page .journey-node.current[data-down=true]{transform:translateY(5px)!important;box-shadow:0 2px 0 var(--node-depth),inset 0 1px 0 #ffffff90!important}
+.journey-page .journey-node.current::after{border-color:var(--journey-tint)}
+.journey-daily-card{max-width:430px;margin:24px auto;text-align:center;padding:20px 16px;border:1px solid color-mix(in srgb,var(--journey-tint) 35%,transparent);border-radius:22px;background:color-mix(in srgb,var(--journey-tint) 6%,transparent)}
+.journey-daily-card>small{font-size:9px;letter-spacing:1.5px;color:var(--journey-tint)}
+.journey-daily-card h2{font-size:21px;margin:12px 0}
+.journey-daily-card p{font-size:12px;line-height:1.7;color:var(--muted)}
+.journey-daily-card>span{font-size:11px;color:var(--journey-tint)}
+.journey-daily-week{display:flex;justify-content:center;gap:9px;margin-top:18px}
+.journey-daily-week>span{display:grid;place-items:center;width:27px;height:27px;border:1px solid var(--line);border-radius:50%;font-size:10px;color:var(--muted)}
+.journey-daily-week .done{background:var(--journey-tint);color:var(--page)}
+.journey-daily-week .today{border-color:var(--journey-tint);color:var(--journey-tint)}
+@media(max-width:480px){.journey-heading{flex-wrap:wrap;justify-content:center;text-align:center}.journey-heading>div:first-child{width:100%}.journey-heading h1{max-width:none}.journey-player{width:125px;text-align:center}.journey-daily-card{box-sizing:border-box;width:100%}}
+/* Short, isolated transitions keep scrolling free of continuous GPU work. */
+.journey-scenery-shader{background:radial-gradient(ellipse at 30% 15%,color-mix(in srgb,var(--journey-tint) 8%,transparent),transparent 60%);opacity:1}
+.journey-page .journey-node.current:is(:hover,:active){translate:0 0!important;scale:1!important}
+.journey-page .journey-node.current:not([data-down=true]):is(:hover,:active){box-shadow:0 7px 0 var(--node-depth),0 0 35px #bca2df25,inset 0 1px 0 #ffffff90!important}
+.journey-page .journey-node svg,.journey-page .journey-node::after,.journey-page .journey-start-label,.journey-page .world-note,.journey-page .journey-trail path{animation:none!important}
+.journey-page .journey-stop-content .journey-node{backdrop-filter:none;-webkit-backdrop-filter:none}
+.journey-overlay .journey-answers button,.journey-overlay .journey-primary::after{animation:none!important}
+@media(hover:none){:is(.journey-page,.journey-overlay) button:not(:disabled):hover{translate:0 0;scale:1}:is(.journey-page,.journey-overlay) button:not(:disabled):hover svg{rotate:0;scale:1}}

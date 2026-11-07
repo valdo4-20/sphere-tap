@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.1.1',
- title:'Cada descoberta ganha vida.',
- palette:{background:'#231a10',neutral:'#49321c',accent:'#edc88d',text:'#fff8ec'},
- changes:['Jornada ao lado do Tap, com sons e entrada por nível.','XP animado, conquistas e confirmação ao sair.','Perguntas do Pessoal mais próximas do cotidiano.'],
+ version:'1.2.0',
+ title:'Jogue, descubra, compartilhe o Rolê.',
+ palette:{background:'#1d172b',neutral:'#3b2f50',accent:'#c4b5fd',text:'#f7f3ff'},
+ changes:['Um capítulo por dia e uma cor por semana, com entrada, cadeado e conclusão animados.','Perguntas por tema e cor: Cinema, Geek, Música, Países, História, Matemática e mais.','Amigos e ranking locais, com pontos separados e perfis salvos no aparelho.','Conquistas no Perfil, celebrações em sequência e estrelas legíveis no tema claro.'],
 };
