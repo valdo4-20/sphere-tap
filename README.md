@@ -296,3 +296,7 @@ Para continuar o trabalho em outro chat ou computador, ler [PROJECT_STATE.md](./
 ### 1.3.0 — Cada opinião tem sua cor
 
 10.000 perguntas factuais adicionais, temas alternados e no máximo dois desafios de matemática por rodada. No Rolê, cada amigo marca sua opinião com nome/cor antes da resposta compartilhada. Concluir o nível preserva a posição na Jornada. Motion mini fornece feedback curto, respeitando reduzir movimento. Fontes, atribuições e limites: [QUESTION_SOURCES.md](docs/QUESTION_SOURCES.md).
+
+### 1.4.0 — Um mundo a cada descoberta
+
+Jornada com ilhas cúbicas compactas, seis biomas e mundos determinados pelo nível real. Futuros biomas ficam ocultos; o Pessoal respeita a data e o Rolê preserva a rodada compartilhada. Revelações com brilho, partículas, elementos animados e reduzir movimento. Sem migração ou substituição de progresso.

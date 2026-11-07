@@ -1,0 +1,23 @@
+/* Compact SVG islands: no new WebGL context, filters, textures or frame loop. */
+.journey-page .journey-world{isolation:isolate}.journey-page .journey-world:before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle at 13% 17%,var(--text) 0 1px,transparent 1.5px),radial-gradient(circle at 84% 31%,var(--journey-tint) 0 1px,transparent 2px),radial-gradient(circle at 28% 66%,var(--text) 0 1px,transparent 1.5px);background-size:173px 237px,227px 313px,257px 197px;opacity:.19;z-index:-1}
+.journey-page .journey-node:not(.locked){width:126px;height:146px;background:transparent;border:0;box-shadow:none;border-radius:32px;color:var(--text);overflow:visible}.journey-page .journey-node.locked{width:36px;height:36px;opacity:.42}.journey-page .journey-node.complete{opacity:1}.journey-page .journey-node.current:hover{background:transparent}.journey-page .journey-node.current:active{translate:0 2px}.journey-page .journey-node svg{filter:none}.journey-page .journey-node.current[data-down=true]{translate:0 3px}
+.journey-planet{display:block;position:relative;width:112px;height:136px;margin:auto;pointer-events:none}.planet-art{display:block;width:100%;height:100%;transform-origin:50% 60%}.planet-art>svg{display:block;width:100%;height:100%;overflow:visible}.planet-halo{position:absolute;inset:38% 7% 8%;border-radius:50%;background:radial-gradient(ellipse,var(--journey-tint),transparent 65%);opacity:.12}.planet-reveal-rays{position:absolute;inset:4%;border:1px solid var(--journey-tint);border-radius:50%;opacity:0}
+.journey-page .journey-stop-content{width:150px;min-height:0}.journey-page .journey-node-caption{margin-top:3px}.journey-planet-name{display:block;font-size:13px;color:var(--text);line-height:1.5;margin-top:4px}.journey-page .journey-stop-content .journey-level-launch{position:relative;width:150px;margin:10px auto 0;inset:auto;transform:none}.journey-page .journey-start-action{position:relative;inset:auto;transform:none;white-space:nowrap;min-height:42px;min-width:130px;font-size:12px}.journey-page .journey-start-label{position:relative;top:auto;left:auto;transform:none;margin:0 0 2px;display:block;font-size:9px}.journey-page .journey-trail{opacity:.45}.journey-page .journey-horizon{opacity:.3}
+@media(prefers-reduced-motion:no-preference){
+ .journey-planet.in-view .planet-art{animation:planet-float 6s ease-in-out infinite}
+ .journey-planet.in-view .planet-cloud{animation:planet-cloud 7s ease-in-out infinite alternate}
+ .journey-planet.in-view .planet-flow{animation:planet-flow 3.2s ease-in-out infinite alternate}
+ .journey-planet.in-view .planet-sparks circle{animation:planet-spark 3.6s ease-in-out infinite alternate}
+ .journey-planet.in-view.planet-reveal{animation:planet-discover .95s cubic-bezier(.16,1,.3,1) both}
+ .journey-planet.in-view.planet-reveal .planet-reveal-rays{animation:planet-rays 1.1s ease-out both}
+}
+@keyframes planet-float{50%{transform:translateY(-4px)}}@keyframes planet-cloud{to{transform:translate(3px,-2px)}}@keyframes planet-flow{to{opacity:.65}}@keyframes planet-spark{from{opacity:.15;transform:translateY(2px)}to{opacity:.8;transform:translateY(-3px)}}@keyframes planet-discover{from{opacity:0;transform:translateY(12px) scale(.86)}to{opacity:1;transform:none}}@keyframes planet-rays{0%{opacity:.7;transform:scale(.6)}100%{opacity:0;transform:scale(1.3)}}
+.journey-planet:not(.in-view) *,.journey-motion-paused .journey-planet *{animation-play-state:paused!important}
+@media(max-width:600px){.journey-planet{width:96px;height:117px}.journey-page .journey-node:not(.locked){width:110px;height:128px}.journey-page .journey-start-action{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.journey-planet,.journey-planet *{animation:none!important;transition:none!important}}
+
+.journey-page.is-playing .journey-planet,.journey-page.is-playing .journey-planet *,.journey-planet:not(.in-view){animation-play-state:paused!important}
+.journey-page .journey-node:not(.locked)::after{content:none}.journey-page .journey-node.current .planet-art svg{stroke:none;fill:none}
+.journey-page .journey-stop-content .journey-node:not(.locked){background:transparent!important;box-shadow:none!important;border:0}
+.journey-page .journey-stop-content .journey-node.current:not(.locked):is(:hover,:active,[data-down=true]){background:transparent!important;box-shadow:none!important}
+.journey-page .journey-node-caption{padding:4px 9px;border-radius:10px;background:color-mix(in srgb,var(--panel) 85%,transparent);text-align:center}
