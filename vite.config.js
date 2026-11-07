@@ -37,7 +37,7 @@ export default defineConfig({
           },
         ],
       },
-      workbox: { skipWaiting:false,clientsClaim:true,cleanupOutdatedCaches:true,importScripts:['./update-info.js'],globPatterns: ["**/*.{js,css,html,svg,png,woff2,otf}"] },
+      workbox: { maximumFileSizeToCacheInBytes:8*1024*1024,skipWaiting:false,clientsClaim:true,cleanupOutdatedCaches:true,importScripts:['./update-info.js'],globPatterns: ["**/*.{js,css,html,svg,png,woff2,otf}"] },
     }),
   ],
 });

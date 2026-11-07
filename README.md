@@ -292,3 +292,7 @@ Pessoal é o modo individual. Rolê exige ao menos um amigo: na entrada do níve
 Entrada/saída usam fade, sem tela de estrela. Contadores textuais de perguntas, microtextos e rótulos de implementação foram removidos. Controles usam cores neutras; temas de perguntas e semanas têm tons suaves. A customização da AURA permanece sob controle da pessoa.
 
 Para continuar o trabalho em outro chat ou computador, ler [PROJECT_STATE.md](./PROJECT_STATE.md) e atualizar a cópia do repositório antes de editar.
+
+### 1.3.0 — Cada opinião tem sua cor
+
+10.000 perguntas factuais adicionais, temas alternados e no máximo dois desafios de matemática por rodada. No Rolê, cada amigo marca sua opinião com nome/cor antes da resposta compartilhada. Concluir o nível preserva a posição na Jornada. Motion mini fornece feedback curto, respeitando reduzir movimento. Fontes, atribuições e limites: [QUESTION_SOURCES.md](docs/QUESTION_SOURCES.md).

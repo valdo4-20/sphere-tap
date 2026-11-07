@@ -1,3 +1,7 @@
+import {loadQuestionCorpus} from './questionCorpus.js';
+import {animate} from 'motion/mini';
+import {lockQuizScroll} from './quizScroll.js';
+import {recordVote} from './groupVotes.js';
 import React,{useEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {Star,Lock,LockOpen,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown,Sparkles} from 'lucide-react';
@@ -6,7 +10,7 @@ import WorldDecor from './JourneyScenery.jsx';
 import {questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,earnedXP} from './journeyLogic.js';
 import {dailyStatus,enrollDaily,dailyEdition,dailyLevelDate,weeklyColor} from './journeyDaily.js';
 import {themeFor,praiseFor} from './quizTopics.js';
-import {completeGroupRound,groupRanking} from './localFriends.js';
+import {completeGroupRound,groupRanking,warmFriendColor} from './localFriends.js';
 import LocalFriends from './LocalFriends.jsx';
 import {uid} from './model.js';
 import {Dialog} from './ui';
@@ -16,13 +20,13 @@ import './journey.css';
 import './journeyInteraction.css';
 import './journeyPlay.css';
 
-function Quiz({quiz,onClose,onAnswer,onNext,onReady,mode,onCue}){
+function Quiz({quiz,onClose,onAnswer,onNext,onReady,mode,onCue,onVote,onConfirm}){
  const ref=useRef(null),[confirmExit,setConfirmExit]=useState(false),[leaving,setLeaving]=useState(false);
  useEffect(()=>{if(!leaving)return;const timer=setTimeout(onClose,matchMedia('(prefers-reduced-motion: reduce)').matches?0:220);return()=>clearTimeout(timer)},[leaving,onClose]);
  useEffect(()=>{
-  const previous=document.activeElement,shell=document.querySelector('.sphere-tap-shell'),overflow=document.body.style.overflow;
+  const previous=document.activeElement,shell=document.querySelector('.sphere-tap-shell'),restoreScroll=lockQuizScroll();
   if(shell)shell.inert=true;
-  document.body.style.overflow='hidden';ref.current.querySelector('button')?.focus();
+  ref.current.querySelector('button')?.focus();
   function key(event){
    if(event.key==='Escape'){event.preventDefault();setConfirmExit(v=>!v);return}
    if(event.key!=='Tab')return;
@@ -31,13 +35,19 @@ function Quiz({quiz,onClose,onAnswer,onNext,onReady,mode,onCue}){
    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus()}
   }
   document.addEventListener('keydown',key);
-  return()=>{if(shell)shell.inert=false;document.body.style.overflow=overflow;document.removeEventListener('keydown',key);previous?.focus?.({preventScroll:true})};
+  return()=>{if(shell)shell.inert=false;document.removeEventListener('keydown',key);if(previous?.isConnected)previous.focus?.({preventScroll:true});else document.querySelector('.journey-node.current')?.focus({preventScroll:true});restoreScroll()};
  },[]);
+ useEffect(()=>{ref.current?.scrollTo({top:0,behavior:'instant'})},[quiz.index,quiz.finished]);
  useEffect(()=>{
   if(!quiz.entering)return;
   const timer=setTimeout(onReady,matchMedia('(prefers-reduced-motion: reduce)').matches?0:280);
   return()=>clearTimeout(timer);
  },[quiz.entering,onReady]);
+ useEffect(()=>{
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const el=ref.current?.querySelector('.journey-opinion-picker');if(!el)return;
+  const effect=animate(el,{opacity:[.45,1]},{duration:.18});return()=>effect.stop();
+ },[quiz.draft]);
  const question=quiz.answers[quiz.index],theme=themeFor(question);
  const requestClose=()=>{if(leaving)return;onCue('button');setConfirmExit(true)};
  const leave=()=>setLeaving(true);
@@ -56,7 +66,8 @@ function Quiz({quiz,onClose,onAnswer,onNext,onReady,mode,onCue}){
    </>:<>
     <div className='journey-question-meter' role='progressbar' aria-label='Progresso do quiz' aria-valuenow={quiz.index+1} aria-valuemin={0} aria-valuemax={quiz.answers.length}><span style={{width:`${(quiz.index+1)/quiz.answers.length*100}%`}}/></div>
     <div className='journey-question-body' key={`${quiz.level}-${quiz.index}`}><small className='journey-question-category'><Sparkles size={13}/>{theme.name}</small><h2 id='quiz-title'>{question.prompt}</h2>
-     <div className='journey-answers'>{question.options.map((answer,i)=><button key={i} disabled={quiz.entering||leaving||quiz.selected!==null} className={quiz.selected!==null?(i===question.correct?'correct':i===quiz.selected?'incorrect':''):''} onClick={()=>onAnswer(i)}><span>{['A','B','C','D'][i]}</span>{answer}{quiz.selected!==null&&i===question.correct&&<Check size={17}/>}</button>)}</div>
+     <div className='journey-answers'>{question.options.map((answer,i)=><button key={i} disabled={quiz.entering||leaving||quiz.selected!==null} aria-pressed={quiz.friendIds&&quiz.selected===null?quiz.draft===i:undefined} className={quiz.selected!==null?(i===question.correct?'correct':i===quiz.selected?'incorrect':''):quiz.draft===i?'draft':''} onClick={()=>onAnswer(i)}><span>{['A','B','C','D'][i]}</span><span className='journey-answer-copy'>{answer}</span>{quiz.players&&<span className='answer-voters'>{quiz.players.filter(p=>quiz.votes?.[p.id]===i).map(p=><i key={p.id} title={p.name} aria-label={p.name} style={{background:warmFriendColor(p.color)}}>{Array.from(p.name)[0]}</i>)}</span>}{quiz.selected!==null&&i===question.correct&&<Check size={17}/>}</button>)}</div>
+     {quiz.friendIds&&quiz.selected===null&&quiz.draft!==null&&<div className='journey-opinion-picker'><fieldset><legend>Quem escolheu?</legend>{quiz.players.map(p=><button key={p.id} style={{'--opinion-color':warmFriendColor(p.color)}} aria-label={`${p.name}: ${question.options[quiz.draft]}`} aria-pressed={quiz.votes?.[p.id]===quiz.draft} onClick={()=>onVote(p.id)}><i/>{p.name}</button>)}</fieldset><button className='journey-primary' onClick={onConfirm}>Confirmar resposta</button></div>}
     </div>
     {quiz.selected!==null&&<div className={'journey-feedback'+(quiz.selected===question.correct?' is-correct':'')} key={quiz.index} role='status'><b>{quiz.selected===question.correct?<><Sparkles size={19}/>{praiseFor(quiz.level,quiz.index)}</>:'Agora você já sabe.'}</b><p>{question.explanation}</p>{question.source&&<details className='journey-source'><summary>Fonte</summary><a href={question.source} target='_blank' rel='noreferrer'>{question.sourceName} ↗</a></details>}<button className='journey-primary' onClick={onNext}>{quiz.index===quiz.answers.length-1?'Concluir':'Continuar'}<ArrowRight size={16}/></button></div>}
    </>}
@@ -66,7 +77,7 @@ function Quiz({quiz,onClose,onAnswer,onNext,onReady,mode,onCue}){
 
 export default function Journey({progress,onChange,account,onAccountChange,onBusy}){
  const owner=progress||migrateJourney(null);
- const [quiz,setQuiz]=useState(null),[selectedLevel,setSelectedLevel]=useState(null),[feedback,setFeedback]=useState(0),[participants,setParticipants]=useState([]),[choosing,setChoosing]=useState(false),[managing,setManaging]=useState(false),[unlock,setUnlock]=useState(null),[advance,setAdvance]=useState(null),[clock,setClock]=useState(()=>new Date());
+ const [quiz,setQuiz]=useState(null),[selectedLevel,setSelectedLevel]=useState(null),[feedback,setFeedback]=useState(0),[participants,setParticipants]=useState([]),[choosing,setChoosing]=useState(false),[managing,setManaging]=useState(false),[unlock,setUnlock]=useState(null),[advance,setAdvance]=useState(null),[clock,setClock]=useState(()=>new Date()),[loading,setLoading]=useState(false),[loadError,setLoadError]=useState('');
  const entering=useRef(false),completion=useRef(false),busyCallback=useRef(onBusy);
  busyCallback.current=onBusy;
  const data=owner,mode=data.mode,personal=mode==='personal',done=data[mode],level=done+1;
@@ -89,14 +100,18 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  const readyQuiz=React.useCallback(()=>setQuiz(q=>q?{...q,entering:false}:q),[]);
  function cue(kind){levelFeedback({kind,sound:account?.preferences?.journeySound!==false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})}
  function select(n){if(n!==level||!playable||quiz)return;setSelectedLevel(`${mode}:${n}`);setFeedback(v=>v+1);cue('button')}
- function launch(n,players){
+ async function launch(n,players){
   if(n!==level||!selected||!playable||entering.current||quiz||(!personal&&players.length<2))return;
-  entering.current=true;completion.current=false;cue('question');setChoosing(false);
-  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',...(personal?{}:{friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
+  entering.current=true;setLoading(true);setLoadError('');
+  try{await loadQuestionCorpus()}catch{setLoadError('Não foi possível preparar as perguntas. Tente novamente.');setLoading(false);entering.current=false;return}
+  setLoading(false);completion.current=false;cue('question');setChoosing(false);
+  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',draft:null,votes:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
  }
  function begin(n=level){if(personal)launch(n,[]);else{setManaging(false);setChoosing(true)}}
- function closeQuiz(){const finished=quiz?.finished;entering.current=false;setQuiz(null);if(finished){setAdvance(level);requestAnimationFrame(()=>document.querySelector('.journey-node.current,.journey-start-label')?.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}))}}
- function answer(i){cue('button');setQuiz(q=>!q||q.entering||q.selected!==null||q.finished?q:{...q,selected:i,score:q.score+(i===q.answers[q.index].correct?1:0)})}
+ function closeQuiz(){entering.current=false;setQuiz(null);if(quiz?.finished)setAdvance(level)}
+ function answer(i){cue('button');setQuiz(q=>!q||q.entering||q.selected!==null||q.finished?q:q.friendIds?{...q,draft:i}:{...q,selected:i,score:q.score+(i===q.answers[q.index].correct?1:0)})}
+ function vote(id){cue('button');setQuiz(q=>!q||q.selected!==null||q.draft===null?q:{...q,votes:recordVote(q.votes,id,q.draft,q.players.map(p=>p.id))})}
+ function confirmAnswer(){setQuiz(q=>!q||q.selected!==null||q.draft===null?q:{...q,selected:q.draft,score:q.score+(q.draft===q.answers[q.index].correct?1:0)})}
  function next(){
   if(!quiz||quiz.selected===null||quiz.finished||completion.current)return;
   if(quiz.index===quiz.answers.length-1){
@@ -105,7 +120,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
    if(quiz.friendIds)onAccountChange?.(d=>completeGroupRound(d,quiz.matchId,quiz.level,quiz.score,quiz.friendIds));
    else onChange(d=>completeJourney(d,mode,quiz.level,quiz.score));
    setQuiz(q=>({...q,finished:true,stars:starsFor(q.score,q.answers.length),xp:earnedXP(q.score,q.challengeLevel,q.answers.length),...(q.friendIds?{ranking}:{})}));
-  }else{cue('question');setQuiz(q=>({...q,index:q.index+1,selected:null}))}
+  }else{cue('question');setQuiz(q=>({...q,index:q.index+1,selected:null,draft:null,votes:{}}))}
  }
  let pathHeight=0;
  const positions=nodes.map((n,i)=>{const height=n===level&&selected?206:126,result={n,x:180+(Math.sin(i*1.12)-Math.sin((level-nodes[0])*1.12))*55,y:pathHeight+68,height};pathHeight+=height;return result});
@@ -121,9 +136,10 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
    <div className='journey-participants'><p>Você</p>{(account?.localFriends||[]).map(f=><label key={f.id}><input type='checkbox' checked={participants.includes(f.id)} onChange={()=>setParticipants(ids=>ids.includes(f.id)?ids.filter(id=>id!==f.id):[...ids,f.id])}/><span>{f.name}</span></label>)}</div>
    {!account?.localFriends?.length&&<p>Adicione um amigo para começar.</p>}
    <button className='button secondary' onClick={()=>setManaging(true)}><Users size={16}/>Adicionar ou editar amigos</button>
-   <button className='journey-primary' disabled={!roster.length} onClick={()=>launch(level,[{id:'self',name:account?.displayName||'Você'},...roster.map(f=>({id:f.id,name:f.name}))])}>Começar o Rolê</button>
+   <button className='journey-primary' disabled={!roster.length||loading} onClick={()=>launch(level,[{id:'self',name:account?.displayName||'Você',color:account?.appearance?.auraColor||'#b79be8'},...roster.map(f=>({id:f.id,name:f.name,color:f.color}))])}>{loading?'Preparando…':'Começar o Rolê'}</button>
   </>}
   </Dialog>}
+  {loadError&&<p role='alert'>{loadError}</p>}
   <div className='journey-world' key={`${mode}-${Math.floor(done/7)}`}><WorldDecor/>
    <div className='journey-path' aria-label={personal?'Caminho dos seus dias':'Trecho do seu caminho'}>
     <svg className='journey-trail' style={{height:pathHeight}} viewBox={`0 0 360 ${pathHeight}`} preserveAspectRatio='none' aria-hidden='true'><defs><linearGradient id='trailGradient' x1='0' y1='0' x2='0' y2='1'><stop stopColor='currentColor' stopOpacity='.6'/><stop offset='1' stopColor='currentColor' stopOpacity='.16'/></linearGradient></defs><path d={path} fill='none' stroke='url(#trailGradient)' strokeWidth='2' strokeDasharray='2 9' strokeLinecap='round'/></svg>
@@ -131,11 +147,11 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
      {current&&<span className='journey-start-label'>{playable?'CONTINUE AQUI':'ABRE NA SUA DATA'}</span>}
      <button disabled={!unlocked} className={`journey-node ${complete?'complete':unlocked?'current':'locked'}${opening?' journey-unlocking':''}`} aria-label={`${personal?'Dia':'Nível'} ${n}, ${complete?'concluído':unlocked?'selecionar':'a descobrir'}`} aria-expanded={current?selected:undefined} data-feedback={current?feedback:undefined} onClick={()=>select(n)}>{complete?<Check size={25}/>:opening?<span className='journey-unlock-icons'><Lock className='unlock-closed' size={25}/><LockOpen className='unlock-open' size={25}/><Star className='unlock-star' size={26} fill='currentColor'/></span>:unlocked?<Star size={26} fill='currentColor'/>:n%7===0?<Trophy size={21}/>:<Lock size={18}/>}</button>
      <span className='journey-node-caption'>{personal?'Dia':'Nível'} {n}{personal&&<small>{new Date(dailyLevelDate(owner,n,clock)+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</small>}</span>
-     {current&&selected&&playable&&<div className='journey-level-launch'><button className='journey-start-action' onClick={()=>begin(n)}>Entrar no {personal?'dia':'nível'} {n}</button></div>}
+     {current&&selected&&playable&&<div className='journey-level-launch'><button className='journey-start-action' disabled={loading} onClick={()=>begin(n)}>{loading?'Preparando…':`Entrar no ${personal?'dia':'nível'} ${n}`}</button></div>}
     </div></div>})}
     <div className='journey-horizon' aria-hidden='true'><ChevronDown size={16}/></div>
    </div>
   </div>
-  {quiz&&<Quiz quiz={quiz} onClose={closeQuiz} onAnswer={answer} onNext={next} onReady={readyQuiz} onCue={cue} mode={mode}/>}
+  {quiz&&<Quiz quiz={quiz} onVote={vote} onConfirm={confirmAnswer} onClose={closeQuiz} onAnswer={answer} onNext={next} onReady={readyQuiz} onCue={cue} mode={mode}/>}
  </section>;
 }

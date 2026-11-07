@@ -90,3 +90,10 @@
 @keyframes journey-fade-in{from{opacity:0}to{opacity:1}}@keyframes journey-fade-out{from{opacity:1}to{opacity:0}}
 @media(prefers-reduced-motion:reduce){.journey-overlay,.journey-overlay.is-leaving{animation:none!important}}
 .journey-overlay .journey-question-body{animation:journey-fade-in .18s ease both!important}
+.journey-answers button .journey-answer-copy{display:block;flex:1;min-width:0;width:auto;height:auto;border:0;border-radius:0;color:inherit;font-size:inherit}
+.journey-answers button .answer-voters{display:flex;gap:3px;flex-wrap:wrap;width:auto;height:auto;border:0;background:none;max-width:110px}
+.answer-voters i{width:23px;height:23px;border-radius:50%;display:grid;place-items:center;font-style:normal;color:#211c25;font-size:11px;font-weight:600;box-shadow:0 0 0 1px #0002}
+.journey-answers button.draft{border-color:var(--text);box-shadow:inset 0 0 0 1px var(--text)}
+.journey-opinion-picker{margin-top:20px}.journey-opinion-picker fieldset{display:flex;gap:8px;flex-wrap:wrap;border:0;padding:0;margin:0}.journey-opinion-picker legend{font-size:14px;margin-bottom:12px}.journey-opinion-picker fieldset button{display:flex;align-items:center;gap:7px;min-height:44px;padding:8px 11px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--text)}.journey-opinion-picker fieldset button i{width:15px;height:15px;border-radius:50%;background:var(--opinion-color)}.journey-opinion-picker fieldset button[aria-pressed=true]{border-color:var(--opinion-color);background:color-mix(in srgb,var(--opinion-color) 16%,transparent)}
+@media(prefers-reduced-motion:no-preference){.answer-voters i{animation:opinion-appear .18s ease-out both}}
+@keyframes opinion-appear{from{opacity:0;scale:.8}to{opacity:1;scale:1}}

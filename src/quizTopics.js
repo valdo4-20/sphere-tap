@@ -1,3 +1,4 @@
+import {corpusCandidates} from './questionCorpus.js';
 import {editorialQuestions} from './quizEditorial.js';
 import {countries} from './quizGeography.js';
 export const quizThemes={
@@ -50,11 +51,12 @@ export const topicQuestions=facts.map(([id,category,difficulty,prompt,options,ex
 const geography=countries.map((c,i)=>({id:`daily-world-${c.id}`,category:'Geografia',difficulty:1,prompt:`Em qual país fica ${c.capital}?`,options:[c.country,...countries.filter(x=>x.country!==c.country).slice(i%5,i%5+3).map(x=>x.country)],correct:0,explanation:`${c.capital} é a capital de ${c.country}.`,source:c.source,sourceName:'Wikidata · CC0'}));
 const dailyBank=[...topicQuestions,...editorialQuestions,...geography];
 export function mixDailyTopics(items,level,shuffle){
- const themes=['biology','history','art','sport','science','geography','music','cinema','geek'];
- const chosen=[];
- for(let i=0;i<themes.length;i++){
-  const candidates=dailyBank.filter(q=>themeFor(q).id===themes[i]);
-  for(let j=0;j<1+(((i+level)%themes.length)<3?1:0);j++)chosen.push(candidates[((level-1)*2+j)%candidates.length]);
+ const pool=[...dailyBank,...corpusCandidates(level)],themes=['biology','history','art','sport','science','geography','music','cinema','geek'],used=new Set(),chosen=[];
+ // Twenty-eight facts; two short practical challenges remain optional variety.
+ for(let i=0;i<28;i++){
+  const theme=themes[(i+level)%themes.length],candidates=pool.filter(q=>themeFor(q).id===theme&&!used.has(q.prompt));
+  const q=candidates[(level*7+i)%candidates.length];if(!q)continue;used.add(q.prompt);chosen.push(q);
  }
- const order=shuffle(chosen);return items.map((q,i)=>{if(i%5!==1&&i%5!==3)return q;const fact=order.shift();const right=fact.options[fact.correct],options=shuffle(fact.options);return {...fact,id:`personal-fact-${level}-${fact.id}`,theme:themeFor(fact).id,phase:q.phase,phaseIndex:q.phaseIndex,options,correct:options.indexOf(right)}});
+ const order=shuffle(chosen);let at=0;
+ return items.map((q,i)=>{if(i===9||i===24||at>=order.length)return q;const fact=order[at++],right=fact.options[fact.correct],options=shuffle(fact.options);return {...fact,id:`personal-fact-${level}-${fact.id}`,theme:themeFor(fact).id,phase:q.phase,phaseIndex:q.phaseIndex,options,correct:options.indexOf(right)}});
 }
