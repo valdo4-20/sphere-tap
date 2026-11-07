@@ -16,7 +16,7 @@ export function PageTitle({ eyebrow, title, children, action }) {
     </div>
   );
 }
-export function Dialog({ title, onClose, children, className = "" }) {
+export function Dialog({ title, onClose, children, className = "", style }) {
   const ref = useRef(null);
   useEffect(() => {
     const previous = document.documentElement.style.overflow;
@@ -30,6 +30,7 @@ export function Dialog({ title, onClose, children, className = "" }) {
   return (
     <dialog
       className={`tap-dialog ${className}`}
+      style={style}
       ref={ref}
       onCancel={(e) => {
         e.preventDefault();

@@ -217,3 +217,5 @@ O service worker é registrado com `updateViaCache: none`; verifica ao abrir, vo
 Teste local com dois builds de produção e service worker real: detecção, Depois, reabertura nas configurações, ativação e reload para o novo arquivo JavaScript, mantendo nome e R$ 123,45 informados na Carteira. 61 testes automatizados passaram. Safari/iPhone físico ainda precisa de validação pelo usuário.
 
 Na primeira migração de uma versão anterior sem esse fluxo, o modal só existe depois que o novo código carregar. Pode ser necessário fechar todas as abas do Tap e o app instalado e reabri-lo, para o worker anterior deixar de controlar a página. Não apagar os dados do site: eles contêm o histórico local.
+
+A paleta do aviso pertence à atualização, não ao tema pessoal. `src/updateRelease.js` define versão, novidades e `palette` (fundo, neutro, destaque e texto), publicados junto com o build. O modal inteiro usa essa paleta, incluindo a AURA e os botões. Releases sem paleta explícita recebem uma alternativa estável por versão. A atualização de UI atual usa violeta; outros lançamentos podem definir outra identidade. 63 testes automatizados passaram após essa adaptação.

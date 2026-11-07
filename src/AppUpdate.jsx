@@ -3,6 +3,7 @@ import {RefreshCw} from 'lucide-react';
 import {Dialog} from './ui';
 import {appUpdates} from './appUpdates';
 import {validData} from './model';
+import {releaseStyle} from './updatePalette';
 import './appUpdate.css';
 const release=typeof __TAP_RELEASE__!=='undefined'?__TAP_RELEASE__:{version:'desenvolvimento'};
 export function UpdateLifecycle(){
@@ -28,7 +29,7 @@ export function AppUpdateNotice({data,blocked,storageError}){
  if(!state.pending||state.pending.dismissed||blocked)return null;
  const info=state.pending.release;
  function close(){if(state.applying)return;if(matchMedia('(prefers-reduced-motion: reduce)').matches)appUpdates.dismiss();else setClosing(true)}
- return <Dialog title='Atualização disponível' onClose={close} className={'tap-update-dialog'+(closing?' is-closing':'')}><article className='tap-update-card'>
+ return <Dialog title='Atualização disponível' onClose={close} style={releaseStyle(info)} className={'tap-update-dialog'+(closing?' is-closing':'')}><article className='tap-update-card'>
   <div className='tap-update-art' aria-hidden='true'><span className='tap-update-orbit'/><span className='tap-update-orbit second'/><div className='tap-update-aura'><i/><i/><i/></div><img className='tap-update-mark' src='./sphere-mark.png' alt=''/><span className='tap-update-wordmark'>sphere. <em>tap</em></span></div>
   <div className='tap-update-copy'><h2>{info?.title||'Seu Tap, atualizado.'}</h2><p>Uma nova versão está pronta. Atualize no seu tempo.</p>{info?.version&&<small>Versão {info.version}</small>}{info?.changes?.length>0&&<ul>{info.changes.slice(0,3).map(change=><li key={change}>{change}</li>)}</ul>}
    {state.error&&<p role='alert'>{state.error}</p>}
