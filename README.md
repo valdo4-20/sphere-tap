@@ -272,3 +272,13 @@ Validação: 78 testes de lógica/dados, renderização React da Jornada e ordem
 - O mapa mantém as linhas dentro da largura disponível e centraliza o nível atual. A pressão do botão é encerrada em soltura, cancelamento, perda de captura, teclado e saída da janela.
 - O cenário usa um gradiente estático; a AURA de fundo fica congelada na Jornada. Entradas são fades curtos por linha, sem animação por letra ou movimentos decorativos infinitos.
 - Referência de progressão: [assistência oficial do Criminal Case](https://www.criminalcase.com/help/pt_BR.html), com capítulos, estrelas e retorno diário. Não há perda de progresso por ausência.
+
+### 1.2.0 — Temas, amigos e momentos de conquista
+
+- Entrada de nível, abertura de cadeado na data e conclusão usam animações curtas de transformação/opacidade, respeitando reduzir movimento. O desbloqueio visto acompanha o backup. Não há seta no botão de entrada nem observação sobre XP no mapa.
+- Perguntas têm cores por tema e oito mensagens de acerto alternadas. Cinema, Geek, Música e Países aparecem junto a Matemática, História, Ciências, Corpo Humano, Arte, Esportes e Lógica. Perguntas novas usam fontes exibidas após a resposta (Oscar, Nintendo, Mojang, Lucasfilm, Louvre, STF e OpenStax).
+- Perfil tem áreas próprias para Conquistas e Amigos. Novas conquistas aparecem em fila após fechar o quiz, com entrada/medalha/saída animadas; conquistas não ocupam o mapa da Jornada.
+- Amigos são perfis locais persistentes (até 50), editados ou removidos explicitamente. No Rolê, selecione o jogador no ranking antes de entrar. Rodadas de amigos atualizam apenas seu próprio progresso, estrelas e XP. A classificação ordena XP, estrelas e ordem de cadastro, com desempate estável. O Pessoal continua no perfil principal.
+- Backup JSON inclui os amigos, seus pontos e os dados do calendário. Não há backend, convite remoto ou sincronização automática entre aparelhos.
+- Referências de experiência: [Tópicos do Perguntados](https://triviacrack.help.etermax.com/hc/pt/articles/360033522154-T%C3%B3picos) e [Ludo King](https://ludoking.com/features). Conteúdo e interface são próprios.
+- `npm test` valida lógica/dados; `npm run build` valida o PWA; `npm run test:browser` executa a navegação em Chromium após o build (`npx playwright install chromium`). A validação da PR também executa os testes de navegador e guarda capturas como artefato do GitHub Actions.

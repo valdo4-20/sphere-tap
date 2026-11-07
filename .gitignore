@@ -5,3 +5,5 @@ dist/
 preview-*.png
 .env*
 !.env.example
+
+browser-checks/

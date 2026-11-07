@@ -35,10 +35,10 @@ test('virada local, meses e anos; datas inválidas são rejeitadas',()=>{
 test('sete dias compartilham cor; semana seguinte muda',()=>{
  for(let n=1;n<=7;n++)assert.equal(weeklyColor(n),weeklyColor(1));assert.notEqual(weeklyColor(8),weeklyColor(7));
 });
-test('mil edições têm 30 desafios válidos, seis modalidades e cinco etapas',()=>{
+test('mil edições têm 30 desafios válidos, temas variados e cinco etapas',()=>{
  const signatures=new Set();for(let n=1;n<=1000;n++){
  const questions=personalQuestions(n);assert.equal(questions.length,30);assert.equal(new Set(questions.map(q=>q.prompt)).size,30);
- assert.equal(new Set(questions.map(q=>q.category)).size,6);
+ assert.ok(new Set(questions.map(q=>q.category)).size>=9);
  assert.deepEqual([0,1,2,3,4].map(p=>questions.filter(q=>q.phaseIndex===p).length),[6,6,6,6,6]);
  for(const q of questions){assert.equal(new Set(q.options).size,4);assert.ok(q.correct>=0&&q.correct<4)}
  signatures.add(questions.map(q=>q.prompt).join('|'));

@@ -1,3 +1,4 @@
+import {mixDailyTopics} from './quizTopics.js';
 // Calendar days use local midnight, including across daylight-saving changes.
 export function localDate(date=new Date()){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
 export function validDate(value){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const d=new Date(value+'T12:00:00');return !Number.isNaN(+d)&&localDate(d)===value}
@@ -36,5 +37,5 @@ export function personalQuestions(level,{difficultyLevel=level}={}){
   if(items.some(q=>q.prompt===prompt)){i--;continue}
   const correct=options[0],shuffled=shuffle(options);items.push({id:`personal-${level}-${i}`,prompt,options:shuffled,correct:shuffled.indexOf(correct),explanation,category,phase:edition.chapters[Math.floor(i/6)],phaseIndex:Math.floor(i/6),source:null,sourceName:'Desafio autoral gerado localmente'});
  }
- return items;
+ return mixDailyTopics(items,level,shuffle);
 }

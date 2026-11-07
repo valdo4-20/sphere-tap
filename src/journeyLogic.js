@@ -1,3 +1,4 @@
+import {topicQuestions} from './quizTopics.js';
 import {personalQuestions} from './journeyDaily.js';
 export {localDate,availableDailyLevel} from './journeyDaily.js';
 import {countries} from './quizGeography.js';
@@ -24,7 +25,7 @@ const everydayQuestions=[
  ['daily-discount','Um item de R$ 100 tem 10% de desconto. Quanto custa?',['R$ 90','R$ 10','R$ 99','R$ 110'],'Dez por cento de 100 é 10; 100 menos 10 é 90.'],
  ['daily-month','Qual mês vem logo depois de abril?',['Maio','Março','Junho','Julho'],'Na ordem dos meses, maio vem depois de abril.']
 ].map(([id,prompt,options,explanation])=>({id,prompt,options,explanation,correct:0,difficulty:1,everyday:true,category:'No dia a dia',source:null,sourceName:'Acervo autoral'}));
-export const questionBank=[...editorialQuestions,...geography,...everydayQuestions];
+export const questionBank=[...editorialQuestions,...topicQuestions,...geography,...everydayQuestions];
 function numericQuestion(level,tier,index,rng){
  const limit=[0,18,70,180,450][tier],a=2+Math.floor(rng()*limit),b=2+Math.floor(rng()*Math.min(limit,25)),kind=(level+index)%6;let answer,prompt,explanation;
  if(kind===0){answer=a+b;prompt=`Quanto é ${a} + ${b}?`;explanation=`${a} + ${b} = ${answer}.`}
