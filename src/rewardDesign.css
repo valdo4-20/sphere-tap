@@ -11,3 +11,8 @@
 
 .rewards-paused .profile-banner-art *,.rewards-paused .reward-constellation *{animation-play-state:paused!important}.profile-banner-hero .profile-banner-art{opacity:.9}.profile-banner-hero .profile-portrait,.profile-banner-hero h1,.profile-banner-hero .profile-intent{position:relative;z-index:1}.profile-banner-hero h1{background:var(--page);border-radius:14px;padding:5px 12px}
 .journey-overlay .match-ranking li{grid-template-columns:22px 30px minmax(0,1fr) auto;align-items:center}.journey-overlay .match-ranking li>span{overflow-wrap:anywhere}.profile-medal-tabs{flex-wrap:wrap}.profile-medal-tabs>button{min-width:0;font-size:12px}.reward-node .medal-reflection{display:none}
+/* Keep the linework and selection legible on every customized AURA. */
+.friend-emblem .emblem-frame{fill:#19171e}
+.profile-page .profile-area-tabs button,.profile-page .profile-medal-tabs button{color:var(--text)!important;opacity:1!important}.profile-page .profile-area-tabs button[aria-pressed=true],.profile-page .profile-medal-tabs button[aria-pressed=true]{background:var(--panel)!important;border-color:var(--muted)}
+.profile-banner-hero h1{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto}.reward-links{stroke:color-mix(in srgb,var(--text) 32%,transparent);stroke-width:1}.reward-node.locked{border-color:var(--muted)}.reward-node.locked .medal-object{opacity:.7}.reward-node.growing .medal-object{opacity:.9}
+[data-theme=light] .profile-banner-art{color:color-mix(in srgb,var(--banner-color) 55%,#302139)}[data-theme=light] .banner-options .locked .profile-banner-art{opacity:.7}
