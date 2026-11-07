@@ -8,5 +8,5 @@ export function lockQuizScroll(doc=document,win=window){
   restore();
   // Wait for the restored document and focus layout before the browser paints.
   win.requestAnimationFrame?.(restore);
- }; 
+ };
 }

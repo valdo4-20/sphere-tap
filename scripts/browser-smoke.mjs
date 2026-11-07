@@ -42,7 +42,7 @@ try{
    await page.getByRole('button',{name:i===29?'Concluir':'Continuar',exact:true}).click();
   }
   await page.getByRole('heading',{name:'Você foi além.'}).waitFor();await page.screenshot({path:`browser-checks/result-${width}.png`});
-  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.getByText('Por hoje, você chegou lá.').waitFor();await page.waitForTimeout(100);assert.ok(Math.abs((await page.evaluate(()=>scrollY))-lockedY)<3,`map position restored at ${width}: expected ${lockedY}, got ${await page.evaluate(()=>scrollY)}`);assert.equal(await page.locator('.journey-node.current').count(),0);
+  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.locator('.journey-overlay').waitFor({state:'detached'});await page.getByText('Por hoje, você chegou lá.').waitFor();await page.waitForTimeout(100);assert.ok(Math.abs((await page.evaluate(()=>scrollY))-lockedY)<3,`map position restored at ${width}: expected ${lockedY}, got ${await page.evaluate(()=>scrollY)}`);assert.equal(await page.locator('.journey-node.current').count(),0);
   let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personal,1);assert.equal(saved.journey.xp,400);
   await page.reload();await page.locator('.journey-entry').click();await page.getByText('Por hoje, você chegou lá.').waitFor();
   await page.screenshot({path:`browser-checks/map-${width}.png`,fullPage:true});
