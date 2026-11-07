@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.4.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.5.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -46,3 +46,13 @@ Visual adaptado da prévia https://sphere-tap-jornada-planetas.bikyrt.chatgpt.si
 Os mundos visíveis derivam somente dos níveis concluídos e do próximo nível realmente jogável. Datas futuras mostram apenas cadeados, nunca planetas/biomas. Rolê só revela o próximo após concluir o atual; Pessoal aguarda a data real. Calendário, XP, acertos, modos, amigos e formato de armazenamento permanecem intactos. As referências a bônus/desafios representam mundos distintos, sem inventar novas recompensas.
 
 Desbloqueio tem revelação com brilho e partículas; animações CSS pausam fora da tela, durante o quiz e com aba oculta. Reduzir movimento elimina as animações. Não há novo canvas, WebGL, dependência ou loop JavaScript. O smoke verifica dimensões, ocultação dos futuros, revelação pelo progresso e pela data, além de toda a rodada e ranking.
+
+## Recompensas, banners e emblemas — 1.5.0
+
+Conquistas continuam exclusivamente no Perfil, com constelação navegável em páginas de 12 medalhas, filtros, progresso real e detalhe. As conexões são visuais, não novos pré-requisitos. Não há compra, moeda ou recompensa de XP inventada. Pop-up mantém a fila e prevenção de duplicatas, adicionando partículas e aviso do banner desbloqueado.
+
+Banners originais em SVG inspirados nas referências geométricas/orbitais do usuário. Órbita livre; Alvorada por nome do perfil; Jardim por personalização da AURA; Explorador por uma rodada Rolê; Lunar por cinco dias Pessoal; Coroa solar por dez rodadas Rolê. Só conquistas registradas liberam o uso. A seleção profileDetails.banner acompanha backup; visualização de banner bloqueado abre a condição real, sem equipá-lo.
+
+Amigos têm emblemas com símbolo e paleta ampliada; essa é a exceção autorizada para cores azuis em identidade dos participantes. Cores anteriores, nomes e pontos preservados. Campo emblem opcional para compatibilidade; exibir em gerenciamento, seleção, opiniões e rankings. Sem turnos individuais e sem mudar XP compartilhado.
+
+Cachoeiras de floresta e água têm filetes SVG com stroke-dashoffset descendente, recortados na face dos blocos, e respingos. Pausam fora da tela/aba/durante quiz; reduzir movimento mantém tudo estático. Banners e constelações também respeitam reduzir movimento e aba oculta.

@@ -1,3 +1,4 @@
+import FriendEmblem from './FriendEmblem';
 import {loadQuestionCorpus} from './questionCorpus.js';
 import {animate} from 'motion/mini';
 import {lockQuizScroll} from './quizScroll.js';
@@ -62,13 +63,13 @@ function Quiz({quiz,onClose,onAnswer,onNext,onReady,mode,onCue,onVote,onConfirm}
     <div className='journey-result-stars' aria-label={`${quiz.stars} estrelas`}>{Array.from({length:3},(_,i)=><Star key={i} fill={i<quiz.stars?'currentColor':'none'} className={i<quiz.stars?'earned-star':''}/>)}</div>
     <p>{quiz.score===quiz.answers.length?'Fenomenal!':'Bom trabalho!'}</p>
     <p className='journey-earned-xp'>+{quiz.xp} XP</p><JourneyXP from={quiz.previousXP} to={quiz.previousXP+quiz.xp}/>
-    {quiz.friendIds&&<section className='match-ranking' aria-label='Ranking do Rolê'><h3>Ranking do Rolê</h3><ol>{quiz.ranking.map(r=><li key={r.id}><b>{r.place}</b><span>{r.name}</span><strong>{r.journey.xp} XP</strong></li>)}</ol></section>}
+    {quiz.friendIds&&<section className='match-ranking' aria-label='Ranking do Rolê'><h3>Ranking do Rolê</h3><ol>{quiz.ranking.map(r=><li key={r.id}><b>{r.place}</b><FriendEmblem friend={r}/><span>{r.name}</span><strong>{r.journey.xp} XP</strong></li>)}</ol></section>}
     <button className='journey-primary' disabled={leaving} onClick={leave}>Continuar a jornada</button>
    </>:<>
     <div className='journey-question-meter' role='progressbar' aria-label='Progresso do quiz' aria-valuenow={quiz.index+1} aria-valuemin={0} aria-valuemax={quiz.answers.length}><span style={{width:`${(quiz.index+1)/quiz.answers.length*100}%`}}/></div>
     <div className='journey-question-body' key={`${quiz.level}-${quiz.index}`}><small className='journey-question-category'><Sparkles size={13}/>{theme.name}</small><h2 id='quiz-title'>{question.prompt}</h2>
-     <div className='journey-answers'>{question.options.map((answer,i)=><button key={i} disabled={quiz.entering||leaving||quiz.selected!==null} aria-pressed={quiz.friendIds&&quiz.selected===null?quiz.draft===i:undefined} className={quiz.selected!==null?(i===question.correct?'correct':i===quiz.selected?'incorrect':''):quiz.draft===i?'draft':''} onClick={()=>onAnswer(i)}><span>{['A','B','C','D'][i]}</span><span className='journey-answer-copy'>{answer}</span>{quiz.players&&<span className='answer-voters'>{quiz.players.filter(p=>quiz.votes?.[p.id]===i).map(p=><i key={p.id} title={p.name} aria-label={p.name} style={{background:warmFriendColor(p.color)}}>{Array.from(p.name)[0]}</i>)}</span>}{quiz.selected!==null&&i===question.correct&&<Check size={17}/>}</button>)}</div>
-     {quiz.friendIds&&quiz.selected===null&&quiz.draft!==null&&<div className='journey-opinion-picker'><fieldset><legend>Quem escolheu?</legend>{quiz.players.map(p=><button key={p.id} style={{'--opinion-color':warmFriendColor(p.color)}} aria-label={`${p.name}: ${question.options[quiz.draft]}`} aria-pressed={quiz.votes?.[p.id]===quiz.draft} onClick={()=>onVote(p.id)}><i/>{p.name}</button>)}</fieldset><button className='journey-primary' onClick={onConfirm}>Confirmar resposta</button></div>}
+     <div className='journey-answers'>{question.options.map((answer,i)=><button key={i} disabled={quiz.entering||leaving||quiz.selected!==null} aria-pressed={quiz.friendIds&&quiz.selected===null?quiz.draft===i:undefined} className={quiz.selected!==null?(i===question.correct?'correct':i===quiz.selected?'incorrect':''):quiz.draft===i?'draft':''} onClick={()=>onAnswer(i)}><span>{['A','B','C','D'][i]}</span><span className='journey-answer-copy'>{answer}</span>{quiz.players&&<span className='answer-voters'>{quiz.players.filter(p=>quiz.votes?.[p.id]===i).map(p=><i key={p.id} title={p.name} aria-label={p.name} style={{background:'transparent'}}><FriendEmblem friend={p}/></i>)}</span>}{quiz.selected!==null&&i===question.correct&&<Check size={17}/>}</button>)}</div>
+     {quiz.friendIds&&quiz.selected===null&&quiz.draft!==null&&<div className='journey-opinion-picker'><fieldset><legend>Quem escolheu?</legend>{quiz.players.map(p=><button key={p.id} style={{'--opinion-color':warmFriendColor(p.color)}} aria-label={`${p.name}: ${question.options[quiz.draft]}`} aria-pressed={quiz.votes?.[p.id]===quiz.draft} onClick={()=>onVote(p.id)}><FriendEmblem friend={p}/>{p.name}</button>)}</fieldset><button className='journey-primary' onClick={onConfirm}>Confirmar resposta</button></div>}
     </div>
     {quiz.selected!==null&&<div className={'journey-feedback'+(quiz.selected===question.correct?' is-correct':'')} key={quiz.index} role='status'><b>{quiz.selected===question.correct?<><Sparkles size={19}/>{praiseFor(quiz.level,quiz.index)}</>:'Agora você já sabe.'}</b><p>{question.explanation}</p>{question.source&&<details className='journey-source'><summary>Fonte</summary><a href={question.source} target='_blank' rel='noreferrer'>{question.sourceName} ↗</a></details>}<button className='journey-primary' onClick={onNext}>{quiz.index===quiz.answers.length-1?'Concluir':'Continuar'}<ArrowRight size={16}/></button></div>}
    </>}
@@ -134,10 +135,10 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   :null}
   {choosing&&<Dialog title={managing?'Amigos':'Quem vem para o Rolê?'} onClose={()=>setChoosing(false)} className='journey-players-dialog'>
   {managing?<><button className='quiet-button' onClick={()=>setManaging(false)}>Voltar à partida</button><LocalFriends compact data={account} onChange={onAccountChange}/></>:<>
-   <div className='journey-participants'><p>Você</p>{(account?.localFriends||[]).map(f=><label key={f.id}><input type='checkbox' checked={participants.includes(f.id)} onChange={()=>setParticipants(ids=>ids.includes(f.id)?ids.filter(id=>id!==f.id):[...ids,f.id])}/><span>{f.name}</span></label>)}</div>
+   <div className='journey-participants'><p>Você</p>{(account?.localFriends||[]).map(f=><label key={f.id}><input type='checkbox' checked={participants.includes(f.id)} onChange={()=>setParticipants(ids=>ids.includes(f.id)?ids.filter(id=>id!==f.id):[...ids,f.id])}/><FriendEmblem friend={f}/><span>{f.name}</span></label>)}</div>
    {!account?.localFriends?.length&&<p>Adicione um amigo para começar.</p>}
    <button className='button secondary' onClick={()=>setManaging(true)}><Users size={16}/>Adicionar ou editar amigos</button>
-   <button className='journey-primary' disabled={!roster.length||loading} onClick={()=>launch(level,[{id:'self',name:account?.displayName||'Você',color:account?.appearance?.auraColor||'#b79be8'},...roster.map(f=>({id:f.id,name:f.name,color:f.color}))])}>{loading?'Preparando…':'Começar o Rolê'}</button>
+   <button className='journey-primary' disabled={!roster.length||loading} onClick={()=>launch(level,[{id:'self',name:account?.displayName||'Você',color:account?.appearance?.auraColor||'#b79be8'},...roster.map(f=>({id:f.id,name:f.name,color:f.color,emblem:f.emblem}))])}>{loading?'Preparando…':'Começar o Rolê'}</button>
   </>}
   </Dialog>}
   {loadError&&<p role='alert'>{loadError}</p>}

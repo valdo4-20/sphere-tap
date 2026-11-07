@@ -1,3 +1,4 @@
+import {profileBanners} from './profileBanners.js';
 import {validFriends} from './localFriends.js';
 import {migrateJourney,validJourney} from './journeyProgression.js';
 import {validWalk,validPoint} from "./walking.js";
@@ -49,7 +50,7 @@ export const initial = {
   profile: {type:"icon",value:"user"},
   consent: null,
   achievements: {},
-  profileDetails: {bio:"",featured:null},
+  profileDetails: {bio:"",featured:null,banner:"orbit"},
   careMilestones: {},
   appearance: { palette: "cristal", auraColor: "#b7beca" },
   aura: true,
@@ -79,6 +80,7 @@ export function validData(x) {
   if(x?.entries?.some(e=>e.location!==undefined&&(!validPoint({...e.location,timestamp:1})||typeof e.location.walkId!=="string")))return false;
   if(x?.achievements!==undefined && (!isRecord(x.achievements) || !Object.entries(x.achievements).every(([id,a])=>/^[a-z0-9-]{1,64}$/.test(id)&&isRecord(a)&&dateValid(a.earnedAt))))return false;
   if(x?.profileDetails!==undefined && (!isRecord(x.profileDetails) || (x.profileDetails.bio!==undefined&&(typeof x.profileDetails.bio!=="string"||x.profileDetails.bio.length>120)) || (x.profileDetails.featured!=null&&(!Array.isArray(x.profileDetails.featured)||x.profileDetails.featured.length>3||!x.profileDetails.featured.every(id=>typeof id==="string"&&/^[a-z0-9-]{1,64}$/.test(id))))))return false;
+  if(x?.profileDetails?.banner!==undefined&&!profileBanners.some(b=>b.id===x.profileDetails.banner))return false;
   if(x?.careMilestones?.backupDays!==undefined&&(!Array.isArray(x.careMilestones.backupDays)||!x.careMilestones.backupDays.every(validDay)))return false;
   if(x?.careMilestones!==undefined && (!isRecord(x.careMilestones)||(x.careMilestones.backupPreparedAt!==undefined&&!dateValid(x.careMilestones.backupPreparedAt))))return false;
 
