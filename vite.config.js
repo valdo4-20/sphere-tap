@@ -2,13 +2,21 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
+import {updateRelease} from './src/updateRelease.js';
+const buildId=process.env.TAP_BUILD_ID||new Date().toISOString();
+const release={...updateRelease,build:buildId};
 export default defineConfig({
   base: "./",
+  define:{__TAP_RELEASE__:JSON.stringify(release)},
   plugins: [
     react(),
     tailwindcss(),
+    {name:'tap-update-metadata',generateBundle(){
+      this.emitFile({type:'asset',fileName:'update-info.js',source:`self.addEventListener('message',event=>{if(event.data==='SPHERE_UPDATE_INFO')event.ports[0]?.postMessage(${JSON.stringify(release)})});`});
+    }},
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
+      injectRegister: false,
       includeAssets: ["icon.svg", "apple-touch-icon.png"],
       manifest: {
         name: "Sphere Tap — No seu ritmo",
@@ -29,7 +37,7 @@ export default defineConfig({
           },
         ],
       },
-      workbox: { globPatterns: ["**/*.{js,css,html,svg,png,woff2,otf}"] },
+      workbox: { skipWaiting:false,clientsClaim:true,cleanupOutdatedCaches:true,importScripts:['./update-info.js'],globPatterns: ["**/*.{js,css,html,svg,png,woff2,otf}"] },
     }),
   ],
 });

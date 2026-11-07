@@ -1,4 +1,5 @@
 import DatePicker from "./DatePicker";
+import {AppUpdateSettings} from './AppUpdate';
 import AuraPreview from "./AuraPreview";
 import ItemForm from "./ItemForm";
 import ProfilePicker from "./ProfilePicker";
@@ -40,6 +41,7 @@ export default function Settings({
       <PageTitle eyebrow="SEU ESPAÇO" title="Do seu jeito.">
         Categorias, privacidade e apoio para usar o Tap.
       </PageTitle>
+      <AppUpdateSettings/>
       <details className="settings-disclosure" open>
         <summary>
           AURA e paletas de interface

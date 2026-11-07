@@ -1,4 +1,5 @@
 import Wallet from "./Wallet.jsx";
+import {AppUpdateNotice} from './AppUpdate';
 
 import AchievementCelebration from "./AchievementCelebration";
 import {prepareAchievementAudio,playAchievementSound} from "./achievementAudio";
@@ -345,6 +346,7 @@ function App() {
                   : modal?.kind==="item" ? "Adicionar novo item" : "Sobre a sua AURA";
   return (
     <>
+      <AppUpdateNotice data={data} storageError={storageError} blocked={Boolean(modal)||guide!==null||Boolean(celebration)}/>
       <div className="aura-viewport">
         <Aura
           fullscreen

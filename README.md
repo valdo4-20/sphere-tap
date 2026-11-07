@@ -208,3 +208,12 @@ A moeda de detalhe usa Three.js, espessura real, relevo, bordas serrilhadas e il
 Validação local: `npm test` e `npm run build`. O teste isolado de Carteira confirmou R$ 90,00 − R$ 10,00 = R$ 80,00, incluindo classificação e gravação do recebimento. Os testes cobrem centavos, datas, custos ausentes, importação/backup e sequência de dias. A avaliação física do gesto e desempenho em dispositivos móveis continua necessária.
 
 Referências de cuidado: [Hancox et al., 2015](https://pubmed.ncbi.nlm.nih.gov/25837035/) e [CDC](https://www.cdc.gov/tobacco/about/benefits-of-quitting.html). Não são usadas para prometer recuperação individual.
+## Atualizações pelo app · 1.0.1
+
+Fluxo adaptado do Sphere (`PwaLifecycle`, `appUpdates`, `AppUpdateCard`): aviso animado com órbitas/AURA e logo circular Sphere, opções Depois e Atualizar. Perfil → Preferências do perfil permite Buscar atualização ou Ver atualização. Depois guarda a oferta por build, mas a atualização continua acessível nas configurações.
+
+O service worker é registrado com `updateViaCache: none`; verifica ao abrir, voltar ao app, recuperar conexão e periodicamente quando visível. A versão nova aguarda escolha do usuário. Atualizar salva o estado validado no localStorage, solicita ativação e só recarrega após a troca do controlador. Falha no salvamento impede a ativação. Não limpa localStorage nem dados do usuário. Atualização ativada por outra aba também pode ser oferecida para recarregar esta aba.
+
+Teste local com dois builds de produção e service worker real: detecção, Depois, reabertura nas configurações, ativação e reload para o novo arquivo JavaScript, mantendo nome e R$ 123,45 informados na Carteira. 61 testes automatizados passaram. Safari/iPhone físico ainda precisa de validação pelo usuário.
+
+Na primeira migração de uma versão anterior sem esse fluxo, o modal só existe depois que o novo código carregar. Pode ser necessário fechar todas as abas do Tap e o app instalado e reabri-lo, para o worker anterior deixar de controlar a página. Não apagar os dados do site: eles contêm o histórico local.
