@@ -262,3 +262,13 @@ O resultado anima o XP real indo para a barra e os números até o valor final, 
 Pessoal usa conhecimentos cotidianos, lógica, música básica e números, sem perguntas sobre atletas, premiados ou capitais específicas. Rolê mantém cultura geral variada. As três fases internas e as 20 perguntas continuam; falta de fatos elegíveis é preenchida por desafios numéricos únicos, sem diminuir a rodada.
 
 Validação: 78 testes de lógica/dados, renderização React da Jornada e ordem da navegação. Controle do navegador estava indisponível; animações, som e vibração ainda precisam de teste visual/auditivo em aparelho.
+
+### 1.1.2 — Jornada diária
+
+- Pessoal libera um capítulo por data local e permite uma conclusão por dia. Concluir não libera o próximo capítulo antes da data. Dias anteriores e recompensas são preservados; no retorno, capítulos pendentes seguem em ordem, um por dia.
+- Progresso anterior é preservado: o próximo capítulo recebe a data da primeira abertura após a atualização. Datas e última conclusão acompanham o backup.
+- Cada capítulo pessoal tem 30 desafios autorais em cinco etapas, com seis modalidades: observação, conexões visuais, padrões, horários, orçamento e ordenação. A distribuição muda diariamente; conteúdo e alternativas são reproduzíveis por nível. O Rolê continua com 20 perguntas.
+- A cor muda por semana de sete capítulos. Cada nó mantém a cor da própria semana.
+- O mapa mantém as linhas dentro da largura disponível e centraliza o nível atual. A pressão do botão é encerrada em soltura, cancelamento, perda de captura, teclado e saída da janela.
+- O cenário usa um gradiente estático; a AURA de fundo fica congelada na Jornada. Entradas são fades curtos por linha, sem animação por letra ou movimentos decorativos infinitos.
+- Referência de progressão: [assistência oficial do Criminal Case](https://www.criminalcase.com/help/pt_BR.html), com capítulos, estrelas e retorno diário. Não há perda de progresso por ausência.

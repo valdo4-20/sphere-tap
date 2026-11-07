@@ -1,10 +1,10 @@
+import {dailyStatus,enrollDaily,dailyEdition,dailyLevelDate,weeklyColor,PERSONAL_QUESTIONS} from './journeyDaily.js';
 import React,{useEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {Star,Lock,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown} from 'lucide-react';
 import JourneyMotion,{AnimatedLetters} from './JourneyMotion.jsx';
 import WorldDecor,{SceneryShader} from './JourneyScenery.jsx';
 import {questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,starRankFor,earnedXP,playerProgress} from './journeyLogic.js';
-import {prepareAchievementAudio} from './achievementAudio';
 import JourneyXP from './JourneyXP';
 import {levelFeedback} from './journeyFeedback';
 import {achievementProgress} from './achievements';
@@ -31,9 +31,9 @@ function Quiz({quiz,onClose,onAnswer,onNext,mode,onCue}){
    <p>{quiz.score===quiz.answers.length?`Você gabaritou! ${quiz.score} de ${quiz.answers.length}.`:`Você acertou ${quiz.score} de ${quiz.answers.length} perguntas.`}</p><p className='journey-earned-xp'>+{quiz.xp} XP</p><JourneyXP from={quiz.previousXP} to={quiz.previousXP+quiz.xp}/>
    <button className='journey-primary' onClick={onClose}>Continuar a jornada<ArrowRight size={16}/></button>
   </>:<>
-   <p className='journey-eyebrow'>{mode==='role'?`ROLÊ · NÍVEL ${quiz.level}`:'PESSOAL · SEU TREINO'} · {quiz.index+1} DE {quiz.answers.length}</p>
+   <p className='journey-eyebrow'>{mode==='role'?`ROLÊ · NÍVEL ${quiz.level}`:`PESSOAL · DIA ${quiz.level}`} · {quiz.index+1} DE {quiz.answers.length}</p>
    <div className='journey-question-meter' role='progressbar' aria-label='Progresso do quiz' aria-valuenow={quiz.index+1} aria-valuemin={0} aria-valuemax={quiz.answers.length}><span style={{width:`${(quiz.index+1)/quiz.answers.length*100}%`}}/></div>
-   <div className='journey-question-body' key={`${quiz.level}-${quiz.index}`}><small className='journey-question-category'>{question.category}</small><h2 id='quiz-title'><AnimatedLetters>{question.prompt}</AnimatedLetters></h2>
+   <div className='journey-question-body' key={`${quiz.level}-${quiz.index}`}><small className='journey-question-category'>{question.phase} · {question.category}</small><h2 id='quiz-title'><AnimatedLetters>{question.prompt}</AnimatedLetters></h2>
    <div className='journey-answers'>{question.options.map((answer,i)=><button key={i} disabled={quiz.selected!==null} className={quiz.selected!==null?(i===question.correct?'correct':i===quiz.selected?'incorrect':''):''} onClick={()=>onAnswer(i)}><span>{['A','B','C','D'][i]}</span>{answer}{quiz.selected!==null&&i===question.correct&&<Check size={17}/>}</button>)}</div></div>
    {quiz.selected!==null&&<div className='journey-feedback' key={quiz.index} role='status'><b>{quiz.selected===question.correct?'Boa! Você acertou.':'Agora você já sabe.'}</b><p>{question.explanation}</p>{question.source?<a href={question.source} target='_blank' rel='noreferrer'>Fonte: {question.sourceName} ↗</a>:null}<button className='journey-primary' onClick={onNext}>{quiz.index===quiz.answers.length-1?'Concluir':'Continuar'}<ArrowRight size={16}/></button></div>}
   </>}
@@ -42,18 +42,23 @@ function Quiz({quiz,onClose,onAnswer,onNext,mode,onCue}){
 export default function Journey({progress,onChange,account}){
  const data=progress||migrateJourney(null),setData=onChange;
  const [quiz,setQuiz]=useState(null),[selectedLevel,setSelectedLevel]=useState(null),[feedback,setFeedback]=useState(0),[awards,setAwards]=useState(false);
+ const [clock,setClock]=useState(()=>new Date());
+ useEffect(()=>{const refresh=()=>setClock(new Date());const timer=setInterval(refresh,30000);window.addEventListener('focus',refresh);document.addEventListener('visibilitychange',refresh);return()=>{clearInterval(timer);window.removeEventListener('focus',refresh);document.removeEventListener('visibilitychange',refresh)}},[]);
+ useEffect(()=>{if(data.mode==='personal'&&!data.personalStart)setData(d=>enrollDaily(d))},[data.mode,data.personalStart,setData]);
+ const daily=dailyStatus(data,clock);
  const mode=data.mode,personal=mode==='personal',done=data[mode],level=done+1,nodes=visibleLevels(done),rank=starRankFor(data.stars),player=playerProgress(data.xp);
+ const playable=!personal||daily.canPlay,edition=dailyEdition(level);
  const selected=selectedLevel===`${mode}:${level}`,challengeLevel=personal?data.role+1:level;
  const gameMedals=account?achievementProgress(account).filter(a=>a.group.startsWith('Jornada')):[];
- function select(n,event){if(n!==level)return;const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!reduced)event.currentTarget.animate([{translate:"0 0"},{translate:"-2px 0"},{translate:"2px 0"},{translate:"0 0"}],{duration:210});prepareAchievementAudio();setSelectedLevel(`${mode}:${n}`);setFeedback(v=>v+1);levelFeedback({sound:account?.preferences?.journeySound!==false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})}
+ function select(n,event){if(n!==level||!playable)return;setSelectedLevel(`${mode}:${n}`);setFeedback(v=>v+1);levelFeedback({sound:account?.preferences?.journeySound!==false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})}
  const closeQuiz=React.useCallback(()=>setQuiz(null),[]);
  function cue(kind){levelFeedback({kind,sound:account?.preferences?.journeySound!==false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})}
- function begin(n=level){if(n!==level||!selected)return;cue("question");setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:personal?data.role+1:n,mode,round:n}),selected:null,score:0,challengeLevel:personal?data.role+1:n,finished:false})}
+ function begin(n=level){if(n!==level||!selected||!playable)return;cue("question");setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:personal?data.role+1:n,mode,round:n}),selected:null,score:0,challengeLevel:personal?data.role+1:n,finished:false})}
  function answer(i){cue("button");setQuiz(q=>!q||q.selected!==null||q.finished?q:{...q,selected:i,score:q.score+(i===q.answers[q.index].correct?1:0)})}
- function next(){if(!quiz||quiz.selected===null||quiz.finished)return;if(quiz.index===quiz.answers.length-1){cue("complete");setData(d=>completeJourney(d,mode,quiz.level,quiz.score));setQuiz(q=>({...q,finished:true,stars:starsFor(q.score,q.answers.length),xp:earnedXP(q.score,q.challengeLevel)}))}else {cue("question");setQuiz(q=>({...q,index:q.index+1,selected:null}))}}
- let pathHeight=0;const positions=nodes.map((n,i)=>{const height=n===level&&selected?206:126,result={n,x:180+Math.sin(i*1.12)*88,y:pathHeight+78,height};pathHeight+=height;return result});
+ function next(){if(!quiz||quiz.selected===null||quiz.finished)return;if(quiz.index===quiz.answers.length-1){cue("complete");setData(d=>completeJourney(d,mode,quiz.level,quiz.score));setQuiz(q=>({...q,finished:true,stars:starsFor(q.score,q.answers.length),xp:earnedXP(q.score,q.challengeLevel,q.answers.length)}))}else {cue("question");setQuiz(q=>({...q,index:q.index+1,selected:null}))}}
+ let pathHeight=0;const positions=nodes.map((n,i)=>{const height=n===level&&selected?206:126,result={n,x:180+(Math.sin(i*1.12)-Math.sin((level-nodes[0])*1.12))*55,y:pathHeight+68,height};pathHeight+=height;return result});
  const path='M '+positions.map(p=>`${p.x},${p.y}`).join(' L ');
- return <section className='journey-page'>
+ return <section className='journey-page' style={personal?{'--journey-tint':weeklyColor(level),'--journey-tint-ink':weeklyColor(level),'--journey-trail':weeklyColor(level)}:undefined}>
   <JourneyMotion sound={account?.preferences?.journeySound!==false}/>
   <SceneryShader/>
   <header className='journey-heading'><div><p className='journey-eyebrow'>SPHERE TAP · JORNADA</p><h1><AnimatedLetters>Descubra pelo caminho.</AnimatedLetters></h1><p>Seu universo, uma descoberta de cada vez.</p></div><div className={`journey-player rank-${rank.id}`} style={{'--rank-color':rank.color}}>
@@ -61,20 +66,21 @@ export default function Journey({progress,onChange,account}){
    <div className='journey-xp-meter' role='progressbar' aria-label={`XP do nível ${player.level}`} aria-valuemin={0} aria-valuemax={player.required} aria-valuenow={player.current}><span style={{width:`${player.percent}%`}}/></div><small>{player.current} / {player.required} XP</small>
   </div></header>
   <div className='journey-switch' aria-label='Escolher modo'>
-   <button aria-pressed={personal} onClick={()=>setData(d=>({...d,mode:'personal'}))}><UserRound size={17}/><span>Modo Pessoal</span></button>
+   <button aria-pressed={personal} onClick={()=>setData(d=>({...enrollDaily(d),mode:'personal'}))}><UserRound size={17}/><span>Modo Pessoal</span></button>
    <button aria-pressed={!personal} onClick={()=>setData(d=>({...d,mode:'role'}))}><Users size={18}/><span>Modo Rolê</span></button>
   </div>
+  {personal&&<div className='journey-daily-card' role='status'><small>SEMANA {Math.floor((level-1)/7)+1} · DIA {level}</small><h2>{playable?edition.title:'Seu capítulo de hoje está concluído.'}</h2><p>{playable?edition.description:'O próximo capítulo abre na sua data. Seu progresso está guardado.'}</p><span>{playable?'30 desafios · 5 etapas diferentes':`Próximo nível: ${new Date(dailyLevelDate(data,level,clock)+'T12:00:00').toLocaleDateString('pt-BR')}`}</span><div className='journey-daily-week' aria-label='Dias da semana da jornada'>{Array.from({length:7},(_,i)=>{const day=Math.floor((level-1)/7)*7+i+1;return <span key={day} className={day<=done?'done':day===level?'today':''}>{day<=done?<Check size={13}/>:i+1}</span>})}</div></div>}
   <button className='journey-awards-link quiet-button' onClick={()=>setAwards(true)}><Trophy size={15}/>Conquistas da Jornada</button>
   <div className='journey-world' key={`${mode}-${Math.floor(done/7)}`}>
    <WorldDecor/>
    <div className='journey-path' aria-label={personal?'Caminho dos seus treinos':'Trecho do seu caminho'}>
     <svg className='journey-trail' style={{height:pathHeight}} viewBox={`0 0 360 ${pathHeight}`} preserveAspectRatio='none' aria-hidden='true'><defs><linearGradient id='trailGradient' x1='0' y1='0' x2='0' y2='1'><stop stopColor='currentColor' stopOpacity='.6'/><stop offset='1' stopColor='currentColor' stopOpacity='.16'/></linearGradient></defs><path d={path} fill='none' stroke='url(#trailGradient)' strokeWidth='2' strokeDasharray='2 9' strokeLinecap='round'/></svg>
-    {positions.map(({n,x,height},i)=>{const complete=n<=done,current=n===level;return <div className='journey-stop' key={n} style={{'--offset':`${x-180}px`,'--stop-index':i,height}}>
-     {current&&<span className='journey-start-label'>CONTINUE AQUI</span>}
-     <button disabled={!current} className={`journey-node ${complete?'complete':current?'current':'locked'}`} aria-label={`${personal?'Treino':'Nível'} ${n}, ${complete?'concluído':current?'selecionar':'a descobrir'}`} aria-expanded={current?selected:undefined} data-feedback={current?feedback:undefined} onClick={event=>select(n,event)}>{complete?<Check size={25}/>:current?<Star size={26} fill='currentColor'/>:n%7===0?<Trophy size={21}/>:<Lock size={18}/>}</button>
-     <span className='journey-node-caption'>{personal?'Treino':'Nível'} {n}</span>
-     {current&&selected&&<div className='journey-level-launch' key={`${mode}-${n}`}><button className='journey-start-action' onClick={()=>begin(n)}>Entrar · até {earnedXP(20,challengeLevel)} XP<ArrowRight size={14}/></button><small>O XP depende dos acertos.</small></div>}
-    </div>})}
+    {positions.map(({n,x,height},i)=>{const complete=n<=done,current=n===level,unlocked=current&&playable;return <div className='journey-stop' key={n} style={{'--stop-x':`${x/360*100}%`,'--stop-index':i,...(personal?{'--journey-tint':weeklyColor(n),'--journey-tint-ink':weeklyColor(n)}:{}),height}}><div className='journey-stop-content'>
+     {current&&<span className='journey-start-label'>{playable?'CONTINUE AQUI':'ABRE NA SUA DATA'}</span>}
+     <button disabled={!unlocked} className={`journey-node ${complete?'complete':unlocked?'current':'locked'}`} aria-label={`${personal?'Treino':'Nível'} ${n}, ${complete?'concluído':unlocked?'selecionar':'a descobrir'}`} aria-expanded={current?selected:undefined} data-feedback={current?feedback:undefined} onClick={event=>select(n,event)}>{complete?<Check size={25}/>:current?<Star size={26} fill='currentColor'/>:n%7===0?<Trophy size={21}/>:<Lock size={18}/>}</button>
+     <span className='journey-node-caption'>{personal?'Dia':'Nível'} {n}{personal&&<small>{new Date(dailyLevelDate(data,n,clock)+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</small>}</span>
+     {current&&selected&&playable&&<div className='journey-level-launch' key={`${mode}-${n}`}><button className='journey-start-action' onClick={()=>begin(n)}>Entrar · até {earnedXP(personal?PERSONAL_QUESTIONS:20,challengeLevel,personal?PERSONAL_QUESTIONS:20)} XP<ArrowRight size={14}/></button><small>O XP depende dos acertos.</small></div>}
+    </div></div>})}
     <div className='journey-horizon' aria-hidden='true'><span>✧</span><p>Novos caminhos se revelam.</p><ChevronDown size={16}/></div>
    </div>
   </div>

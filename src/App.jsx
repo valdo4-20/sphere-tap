@@ -352,7 +352,7 @@ function App() {
         <Aura
           fullscreen
           preset={data.appearance?.preset||"cover"}
-          enabled={data.aura}
+          enabled={data.aura && route!=="Jornada"}
           color={visual.color}
           motion={weeklyAura(data).motion}
           pulse={pulse}
