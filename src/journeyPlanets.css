@@ -18,3 +18,4 @@
 
 .journey-page.is-playing .journey-planet,.journey-page.is-playing .journey-planet *,.journey-planet:not(.in-view){animation-play-state:paused!important}
 .journey-page .journey-node:not(.locked)::after{content:none}.journey-page .journey-node.current .planet-art svg{stroke:none;fill:none}
+.journey-page .journey-stop-content .journey-node:not(.locked){background:transparent!important;box-shadow:none!important;border:0}
