@@ -219,3 +219,32 @@ Teste local com dois builds de produção e service worker real: detecção, Dep
 Na primeira migração de uma versão anterior sem esse fluxo, o modal só existe depois que o novo código carregar. Pode ser necessário fechar todas as abas do Tap e o app instalado e reabri-lo, para o worker anterior deixar de controlar a página. Não apagar os dados do site: eles contêm o histórico local.
 
 A paleta do aviso pertence à atualização, não ao tema pessoal. `src/updateRelease.js` define versão, novidades e `palette` (fundo, neutro, destaque e texto), publicados junto com o build. O modal inteiro usa essa paleta, incluindo a AURA e os botões. Releases sem paleta explícita recebem uma alternativa estável por versão. A atualização de UI atual usa violeta; outros lançamentos podem definir outra identidade. 63 testes automatizados passaram após essa adaptação.
+## Jornada · versão 1.1.0
+
+Em Hoje, toque em Jornada. A barra de navegação existente continua com Hoje, Progresso, Carteira e Perfil.
+
+- Modo Rolê começa no nível 1 e continua sem mostrar um nível final. Só nove etapas próximas são renderizadas.
+- Modo Pessoal acompanha internamente a dificuldade do Rolê e mantém seu avanço de treino separado.
+- Cada rodada tem vinte perguntas. A curva 5/10/5 é interna; a UI não revela suas regras.
+- Estrelas acumuladas mudam de identidade: amarelo, laranja, vermelho, roxo, azul, fogo, gelo e prismático. XP e nível de jogador são separados das estrelas.
+- Notas musicais, partículas e shader formam o cenário, sem modificar a AURA. Cristais e pedras foram retirados. As animações são restritas à Jornada, respeitam movimento reduzido e não alteram a navegação.
+- Progresso, XP e estrelas são incluídos no backup JSON oficial em `journey`. Backups antigos continuam válidos e iniciam a Jornada em zero. Registros de consumo, custos e medalhas de cuidado não rendem pontos no jogo.
+- Os dados de teste pertenciam a outra pasta/endereço e não são transferidos automaticamente entre domínios ou aparelhos.
+
+### Conteúdo e fontes
+
+O acervo local tem 84 perguntas, com oito desafios numéricos gerados por rodada. A geração foi testada em 10.000 conjuntos distintos e continua além deles. O acervo editorial pode se repetir; não são 200.000 perguntas editoriais inéditas.
+
+Os dados de países/capitais foram consultados em Wikidata em 2026-11-07 e são CC0: [licença](https://www.wikidata.org/wiki/Wikidata:Licensing). Fonte por entidade e cópia dos dados: `public/quiz/geography.json` e `src/quizGeography.js`.
+
+Enunciados locais de ciência, história, música, lógica e acontecimentos de 2024/2025 incluem referências da NASA, UNESCO, Nobel Prize, Panam Sports e do canal oficial da Academia do Oscar. As referências aparecem após responder. Open Trivia DB e The Trivia API foram pesquisadas, mas não são dependências do jogo nem serviços pagos integrados.
+
+### Progressão para manutenção
+
+Estrelas por rodada: 3 com pelo menos 80% de acertos, 2 com pelo menos 50%, 1 nos demais casos. Classes acumuladas mudam em 0, 15, 40, 80, 140, 220, 340 e 500 estrelas.
+
+XP = arredondar((10 × acertos + 40 pela conclusão + 60 se gabaritar) × (1 + 0,1 × piso((nível do desafio − 1) / 10))). No Pessoal, o desafio usa o próximo nível do Rolê. Subir do nível de jogador N ao N+1 exige 200 + 100 × (N−1) XP; excedentes permanecem. Resultados inválidos ou conclusões já creditadas não repetem a recompensa.
+
+### Validação
+
+76 testes aprovados, build PWA aprovado e verificação de renderização React dos dois modos/acesso em Hoje. Cobertura inclui 10.000 rodadas, continuidade do mapa, XP, transições de cor, independência entre modos, backup e regressões de navegação existentes. Os arquivos da barra de navegação e seus estilos compartilhados não foram modificados. Nesta integração não houve nova revisão visual pelo navegador, pois o controle local estava desativado; a confirmação no iPhone permanece manual.

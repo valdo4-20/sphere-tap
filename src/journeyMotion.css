@@ -1,0 +1,31 @@
+/* Motion is scoped to the Journey; shared navigation and AURA are untouched. */
+@keyframes tap-letter-reveal{from{opacity:0;translate:0 .65em;rotate:5deg;filter:blur(5px)}to{opacity:1;translate:0 0;rotate:0deg;filter:blur(0)}}
+@keyframes tap-float{0%,100%{translate:0 0;rotate:-3deg}50%{translate:0 -8px;rotate:3deg}}
+@keyframes tap-halo{0%,100%{opacity:.2;scale:.92}50%{opacity:.65;scale:1.1}}
+@keyframes tap-trail{to{stroke-dashoffset:-104}}
+@keyframes tap-ambient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes tap-shine{0%,65%{translate:-160% 0}100%{translate:260% 0}}
+@keyframes tap-pop{from{opacity:0;scale:.5;rotate:-15deg}65%{opacity:1;scale:1.14;rotate:5deg}to{scale:1;rotate:0deg}}
+@keyframes tap-feedback{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
+@keyframes tap-wrong{0%,100%{translate:0}25%{translate:-5px}75%{translate:5px}}
+@keyframes tap-open{from{opacity:0;scale:.95;translate:0 18px}to{opacity:1;scale:1;translate:0 0}}
+.tap-motion-word{display:inline-block;white-space:nowrap}.tap-motion-letter{display:inline-block;animation:tap-letter-reveal .7s cubic-bezier(.16,1,.3,1) var(--letter-delay,0ms) both}.tap-animated-letters{display:inline!important}
+.tap-click-wave{position:fixed;z-index:20000;pointer-events:none;width:42px;height:42px;margin:-21px;border:1px solid #e0c9ff;border-radius:50%;background:#c4b5fd10}
+@media(prefers-reduced-motion:no-preference){
+:is(.journey-page,.journey-overlay) button,:is(.journey-page,.journey-overlay) summary,:is(.journey-page,.journey-overlay) input,:is(.journey-page,.journey-overlay) textarea{transition:background-color .25s,border-color .25s,box-shadow .25s,color .25s,scale .22s,translate .3s!important}
+:is(.journey-page,.journey-overlay) button:not(:disabled):hover{translate:0 -2px;box-shadow:0 6px 24px #b5a0e51b}:is(.journey-page,.journey-overlay) button:not(:disabled):active{scale:.96;translate:0 1px}:is(.journey-page,.journey-overlay) button svg{transition:rotate .35s,translate .35s,scale .35s}:is(.journey-page,.journey-overlay) button:not(:disabled):hover svg{rotate:-7deg;scale:1.1}:is(.journey-page,.journey-overlay) input:focus,:is(.journey-page,.journey-overlay) textarea:focus{box-shadow:0 0 0 4px #c4b5fd18}
+.journey-map-card,.journey-aside,.journey-score{transition:border-color .4s,box-shadow .4s}
+.journey-unit{background-size:250% 250%;animation:tap-ambient 12s ease-in-out infinite}.journey-aside-orb{animation:tap-float 6s ease-in-out infinite}.journey-aside-orb svg,.journey-unit-icon svg{animation:tap-float 5s ease-in-out infinite}.journey-unit-icon svg{animation-delay:-2s}
+.journey-node.current::after{content:'';position:absolute;inset:-11px;border:1px solid #c4b5fd80;border-radius:50%;animation:tap-halo 2.8s ease-in-out infinite;pointer-events:none}.journey-node.current>svg{animation:tap-float 4s ease-in-out infinite}.journey-trail path{animation:tap-trail 16s linear infinite}.journey-start-label{animation:tap-float 4s ease-in-out infinite}.journey-stop:nth-child(3n) .journey-node.locked svg{animation:tap-float 7s ease-in-out infinite;animation-delay:-3s}
+.journey-primary{position:relative;overflow:hidden}.journey-primary::after{content:'';position:absolute;inset:-25% 0;width:40%;background:linear-gradient(100deg,transparent,#ffffff40,transparent);transform:skewX(-20deg);animation:tap-shine 7s ease-in-out infinite;pointer-events:none}.journey-primary:disabled::after{display:none}.journey-primary:hover svg{translate:3px 0;rotate:0!important}
+.journey-overlay{animation:tap-feedback .25s ease-out}.journey-quiz{animation:tap-open .45s cubic-bezier(.16,1,.3,1)}.journey-answers button{animation:tap-feedback .4s ease-out backwards}.journey-answers button:nth-child(2){animation-delay:60ms}.journey-answers button:nth-child(3){animation-delay:120ms}.journey-answers button:nth-child(4){animation-delay:180ms}.journey-answers button.correct{animation:tap-pop .45s ease-out}.journey-answers button.incorrect{animation:tap-wrong .3s ease-in-out}.journey-feedback{animation:tap-feedback .35s ease-out}.journey-result-icon{animation:tap-pop .7s cubic-bezier(.16,1,.3,1)}.journey-result-stars svg{animation:tap-pop .65s cubic-bezier(.16,1,.3,1) .15s both}.journey-result-stars svg:nth-child(2){animation-delay:.3s}.journey-result-stars svg:nth-child(3){animation-delay:.45s}.journey-score>b{animation:tap-pop .5s ease-out}.journey-reset-confirm{animation:tap-feedback .3s ease-out}.journey-week .complete i{animation:tap-pop .5s ease-out}
+}
+:is(.journey-page,.journey-overlay).journey-motion-paused *, :is(.journey-page,.journey-overlay).journey-motion-paused *::after{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){:is(.journey-page,.journey-overlay) *,:is(.journey-page,.journey-overlay) *::before,:is(.journey-page,.journey-overlay) *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.tap-motion-letter{opacity:1!important;filter:none!important;translate:none!important;rotate:none!important}.tap-click-wave{display:none}}
+/* Keep quiz feedback above the navigation and readable after answering. */
+
+.journey-page:has(.journey-overlay){transform:none!important;filter:none!important}
+.journey-answers button:disabled{opacity:1!important;cursor:default}
+
+
+@media(prefers-reduced-motion:reduce){.journey-overlay *,.journey-overlay *::after{animation:none!important;transition:none!important}.journey-overlay .tap-motion-letter{opacity:1!important;translate:none!important;filter:none!important}}

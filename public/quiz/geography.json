@@ -1,0 +1,217 @@
+{
+  "license": "CC0",
+  "retrieved": "2026-11-07",
+  "source": "https://www.wikidata.org",
+  "countries": [
+    {
+      "id": "Q155",
+      "country": "Brasil",
+      "capitalId": "Q2844",
+      "capital": "Brasília",
+      "source": "https://www.wikidata.org/wiki/Q155"
+    },
+    {
+      "id": "Q142",
+      "country": "França",
+      "capitalId": "Q90",
+      "capital": "Paris",
+      "source": "https://www.wikidata.org/wiki/Q142"
+    },
+    {
+      "id": "Q183",
+      "country": "Alemanha",
+      "capitalId": "Q64",
+      "capital": "Berlim",
+      "source": "https://www.wikidata.org/wiki/Q183"
+    },
+    {
+      "id": "Q38",
+      "country": "Itália",
+      "capitalId": "Q220",
+      "capital": "Roma",
+      "source": "https://www.wikidata.org/wiki/Q38"
+    },
+    {
+      "id": "Q29",
+      "country": "Espanha",
+      "capitalId": "Q2807",
+      "capital": "Madrid",
+      "source": "https://www.wikidata.org/wiki/Q29"
+    },
+    {
+      "id": "Q45",
+      "country": "Portugal",
+      "capitalId": "Q597",
+      "capital": "Lisboa",
+      "source": "https://www.wikidata.org/wiki/Q45"
+    },
+    {
+      "id": "Q145",
+      "country": "Reino Unido",
+      "capitalId": "Q84",
+      "capital": "Londres",
+      "source": "https://www.wikidata.org/wiki/Q145"
+    },
+    {
+      "id": "Q30",
+      "country": "Estados Unidos",
+      "capitalId": "Q61",
+      "capital": "Washington, D.C.",
+      "source": "https://www.wikidata.org/wiki/Q30"
+    },
+    {
+      "id": "Q16",
+      "country": "Canadá",
+      "capitalId": "Q1930",
+      "capital": "Ottawa",
+      "source": "https://www.wikidata.org/wiki/Q16"
+    },
+    {
+      "id": "Q414",
+      "country": "Argentina",
+      "capitalId": "Q1486",
+      "capital": "Buenos Aires",
+      "source": "https://www.wikidata.org/wiki/Q414"
+    },
+    {
+      "id": "Q298",
+      "country": "Chile",
+      "capitalId": "Q2887",
+      "capital": "Santiago",
+      "source": "https://www.wikidata.org/wiki/Q298"
+    },
+    {
+      "id": "Q736",
+      "country": "Equador",
+      "capitalId": "Q2900",
+      "capital": "Quito",
+      "source": "https://www.wikidata.org/wiki/Q736"
+    },
+    {
+      "id": "Q419",
+      "country": "Peru",
+      "capitalId": "Q2868",
+      "capital": "Lima",
+      "source": "https://www.wikidata.org/wiki/Q419"
+    },
+    {
+      "id": "Q96",
+      "country": "México",
+      "capitalId": "Q1489",
+      "capital": "Cidade do México",
+      "source": "https://www.wikidata.org/wiki/Q96"
+    },
+    {
+      "id": "Q17",
+      "country": "Japão",
+      "capitalId": "Q1490",
+      "capital": "Tóquio",
+      "source": "https://www.wikidata.org/wiki/Q17"
+    },
+    {
+      "id": "Q884",
+      "country": "Coreia do Sul",
+      "capitalId": "Q8684",
+      "capital": "Seul",
+      "source": "https://www.wikidata.org/wiki/Q884"
+    },
+    {
+      "id": "Q668",
+      "country": "Índia",
+      "capitalId": "Q987",
+      "capital": "Nova Deli",
+      "source": "https://www.wikidata.org/wiki/Q668"
+    },
+    {
+      "id": "Q408",
+      "country": "Austrália",
+      "capitalId": "Q3114",
+      "capital": "Camberra",
+      "source": "https://www.wikidata.org/wiki/Q408"
+    },
+    {
+      "id": "Q664",
+      "country": "Nova Zelândia",
+      "capitalId": "Q23661",
+      "capital": "Wellington",
+      "source": "https://www.wikidata.org/wiki/Q664"
+    },
+    {
+      "id": "Q258",
+      "country": "África do Sul",
+      "capitalId": "Q3926",
+      "capital": "Pretória",
+      "source": "https://www.wikidata.org/wiki/Q258"
+    },
+    {
+      "id": "Q79",
+      "country": "Egito",
+      "capitalId": "Q85",
+      "capital": "Cairo",
+      "source": "https://www.wikidata.org/wiki/Q79"
+    },
+    {
+      "id": "Q1033",
+      "country": "Nigéria",
+      "capitalId": "Q3787",
+      "capital": "Abuja",
+      "source": "https://www.wikidata.org/wiki/Q1033"
+    },
+    {
+      "id": "Q1049",
+      "country": "Sudão",
+      "capitalId": "Q1963",
+      "capital": "Cartum",
+      "source": "https://www.wikidata.org/wiki/Q1049"
+    },
+    {
+      "id": "Q43",
+      "country": "Turquia",
+      "capitalId": "Q3640",
+      "capital": "Ancara",
+      "source": "https://www.wikidata.org/wiki/Q43"
+    },
+    {
+      "id": "Q28",
+      "country": "Hungria",
+      "capitalId": "Q1781",
+      "capital": "Budapeste",
+      "source": "https://www.wikidata.org/wiki/Q28"
+    },
+    {
+      "id": "Q36",
+      "country": "Polónia",
+      "capitalId": "Q270",
+      "capital": "Varsóvia",
+      "source": "https://www.wikidata.org/wiki/Q36"
+    },
+    {
+      "id": "Q34",
+      "country": "Suécia",
+      "capitalId": "Q1754",
+      "capital": "Estocolmo",
+      "source": "https://www.wikidata.org/wiki/Q34"
+    },
+    {
+      "id": "Q20",
+      "country": "Noruega",
+      "capitalId": "Q585",
+      "capital": "Oslo",
+      "source": "https://www.wikidata.org/wiki/Q20"
+    },
+    {
+      "id": "Q35",
+      "country": "Dinamarca",
+      "capitalId": "Q1748",
+      "capital": "Copenhaga",
+      "source": "https://www.wikidata.org/wiki/Q35"
+    },
+    {
+      "id": "Q39",
+      "country": "Suíça",
+      "capitalId": "Q70",
+      "capital": "Berna",
+      "source": "https://www.wikidata.org/wiki/Q39"
+    }
+  ]
+}

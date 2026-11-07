@@ -1,3 +1,4 @@
+import Journey from './Journey.jsx';
 import Wallet from "./Wallet.jsx";
 import {AppUpdateNotice} from './AppUpdate';
 
@@ -367,7 +368,7 @@ function App() {
           window.scrollTo({ top: 0, behavior: "instant" });
         }}
       />}
-      <SphereShell route={["Configurações","Metas"].includes(route)?"Perfil":route==="Cuidado"?"Hoje":route==="Histórico"?"Análises":route} onRoute={setRoute} guide={guide !== null}>
+      <SphereShell route={["Configurações","Metas"].includes(route)?"Perfil":["Cuidado","Jornada"].includes(route)?"Hoje":route==="Histórico"?"Análises":route} onRoute={setRoute} guide={guide !== null}>
         {storageError && (
           <div className="storage-warning" role="alert">
             <p>
@@ -397,6 +398,7 @@ function App() {
             )}
           </div>
         )}
+        {route === "Jornada" && <Journey progress={data.journey} onChange={update=>setData(d=>({...d,journey:typeof update==="function"?update(d.journey):update}))}/>}
         {route === "Hoje" && (
           <Today
             data={data}

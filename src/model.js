@@ -1,3 +1,4 @@
+import {migrateJourney,validJourney} from './journeyProgression.js';
 import {validWalk,validPoint} from "./walking.js";
 export const dayKey = (d = new Date()) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -29,6 +30,7 @@ export const total = (entries) =>
   );
 export const unitLabel = (c) => ({session:"sessão",package:"pacote",gram:"grama",item:"unidade"}[c?.unit] || "unidade");
 export const initial = {
+  journey: migrateJourney(null),
   version: 2,
   entries: [],
   walks: [],
@@ -64,6 +66,7 @@ const dateValid = (s) =>
 export const validDay = (s) =>
   /^\d{4}-\d{2}-\d{2}$/.test(s) && dayKey(new Date(s + "T12:00")) === s;
 export function validData(x) {
+  if(x?.journey!==undefined&&!validJourney(x.journey))return false;
   if(x?.preferences?.walletBasis!==undefined&&!['purchases','consumption'].includes(x.preferences.walletBasis))return false;
   if(x?.receipts!==undefined&&(!Array.isArray(x.receipts)||!x.receipts.every(r=>isRecord(r)&&typeof r.id==='string'&&validDay(r.date)&&finite(r.amount,0.01)&&r.amount<=1e9&&(r.kind===undefined||['profit','refund','other'].includes(r.kind))&&(r.note===undefined||(typeof r.note==='string'&&r.note.length<=240)))))return false;
   if(x?.appearance?.walkingFigure!==undefined&&!["neutral","feminine","masculine","none"].includes(x.appearance.walkingFigure))return false;
@@ -227,6 +230,7 @@ export function migrate(raw) {
     ...structuredClone(initial),
     ...x,
     version: 2,
+    journey: migrateJourney(x.journey),
     categories: x.categories.map((c) => ({
       ...c,
       enabled: c.enabled ?? !(["joint","cigarette","chamomile"].includes(c.id) && ["Cannabis","Baseado","Cigarro","Camomila"].includes(c.name) && c.price==null && !x.entries.some(e=>e.category===c.id) && !x.purchases?.some(p=>p.category===c.id)),

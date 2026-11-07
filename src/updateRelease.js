@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.0.1',
- title:'Seu Tap, atualizado.',
- palette:{background:'#120e1f',neutral:'#2d1742',accent:'#cfa9ef',text:'#fdf4ff'},
- changes:['Atualização pelo app, inclusive no Safari.','Carteira com recebimentos e gastos líquidos.','Ajustes no perfil, navegação e medalhas.'],
+ version:'1.1.0',
+ title:'Novos caminhos no seu Tap.',
+ palette:{background:'#0d171b',neutral:'#17333c',accent:'#91d9cf',text:'#eefaf7'},
+ changes:['Jornada com modos Pessoal e Rolê.','Estrelas, XP e nível de jogador.','Seu progresso na Jornada também fica no backup.'],
 };
