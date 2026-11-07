@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.2.0',
- title:'Jogue, descubra, compartilhe o Rolê.',
- palette:{background:'#1d172b',neutral:'#3b2f50',accent:'#c4b5fd',text:'#f7f3ff'},
- changes:['Um capítulo por dia e uma cor por semana, com entrada, cadeado e conclusão animados.','Perguntas por tema e cor: Cinema, Geek, Música, Países, História, Matemática e mais.','Amigos e ranking locais, com pontos separados e perfis salvos no aparelho.','Conquistas no Perfil, celebrações em sequência e estrelas legíveis no tema claro.'],
+ version:'1.2.1',
+ title:'Mais leve. Do seu jeito.',
+ palette:{background:'#211c25',neutral:'#382e3b',accent:'#d9c3b0',text:'#faf7f2'},
+ changes:['Sua AURA acompanha a Jornada e o aviso de atualização.','No Rolê, escolha seus amigos no nível e respondam juntos. O ranking aparece ao fim da rodada.','Entrada e saída em fade, cores mais suaves e telas com menos informações.'],
 };

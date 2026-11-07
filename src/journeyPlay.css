@@ -64,3 +64,29 @@
  .journey-overlay .journey-question-body{animation:tap-feedback .18s ease-out}.profile-medal.earned .medal-object{animation:journey-level-arrive .45s ease-out both}
 }
 @media(prefers-reduced-motion:reduce){.journey-entry-rings i,.journey-confetti{display:none}.journey-unlock-icons .unlock-closed,.journey-unlock-icons .unlock-open{display:none}.journey-unlock-icons .unlock-star{opacity:1}.achievement-celebration,.celebration-medal .medal-volume,.profile-medal.earned .medal-object{animation:none!important;transition:none!important}}
+/* Quiet reading surface: theme colors identify topics, controls stay neutral. */
+.journey-overlay{animation:journey-fade-in .28s ease both!important;background:color-mix(in srgb,var(--page) 72%,transparent)}
+.journey-overlay.is-leaving{animation:journey-fade-out .22s ease both!important;pointer-events:none}
+.journey-overlay .journey-quiz{animation:none!important;border-top:1px solid var(--glass-line);padding:30px 22px 24px}
+.journey-overlay .journey-primary,.journey-players-dialog .journey-primary{background:var(--text)!important;color:var(--page)!important;border-color:var(--line)}
+.journey-overlay .journey-primary::after{display:none!important}
+.journey-overlay .journey-quiz .journey-close{top:10px;right:10px;background:transparent}
+.journey-question-meter{margin:18px 38px 20px 0;height:3px}
+.journey-question-category{font-size:13px}
+.journey-overlay .journey-exit-confirm{display:grid;gap:16px;padding:24px 0 4px}
+.journey-overlay .journey-exit-confirm h2{margin:0;font-size:24px}.journey-overlay .journey-exit-confirm p{font-size:14px;line-height:1.6;margin:0}
+.journey-overlay .journey-exit-confirm .journey-primary{margin-top:4px}.journey-overlay .journey-exit-action{margin:0 auto;font-size:14px}
+.journey-source{font-size:13px;margin:12px 0}.journey-source summary{cursor:pointer}.journey-source a{display:inline-block;padding:8px 0;font-size:13px}
+.journey-page .journey-heading{display:block;text-align:center;padding:18px 0 26px}.journey-page .journey-heading h1{max-width:none;margin:0}
+.journey-daily-card{background:none;border:0;margin:14px auto;padding:14px}.journey-daily-card h2{font-size:18px}.journey-daily-card .journey-next-date{font-size:14px;margin-bottom:0}
+.journey-page .journey-start-label{font-size:10px;letter-spacing:.7px}.journey-page .journey-node-caption{font-size:12px}.journey-page .journey-node-caption small{font-size:12px}
+.journey-page .journey-node .lucide-star,.journey-page .journey-node:is(:hover,:active) .lucide-star,.journey-overlay .lucide-star{rotate:0deg!important;transition:none!important}
+.journey-page .journey-node:is(:hover,:active) svg{rotate:0deg!important;translate:0 0!important;scale:1!important}
+.journey-confetti i:nth-child(3n+1){background:#d1a99c}
+.journey-participants{display:grid;gap:12px;margin-bottom:20px}.journey-participants>p{font-size:15px;margin:0 0 4px;font-weight:500}.journey-participants label{display:flex;align-items:center;gap:12px;min-height:48px;padding:10px;border:1px solid var(--line);border-radius:12px;font-size:15px}.journey-participants input{accent-color:var(--text);width:20px;height:20px}.journey-participants label:has(input:checked){background:color-mix(in srgb,var(--text) 7%,transparent)}
+.journey-players-dialog .journey-primary:disabled{opacity:.4}.journey-players-dialog .local-friends{margin-top:16px}.journey-players-dialog .local-friends .section-heading h2{font-size:20px}
+.journey-turn-name{font-size:15px;font-weight:500;padding-right:40px;margin:0 0 14px}
+.match-ranking{margin:24px 0;text-align:left}.match-ranking h3{font-size:18px;font-weight:500;margin-bottom:14px}.match-ranking ol{padding:0;margin:0;list-style:none;display:grid;gap:8px}.match-ranking li{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px}.match-ranking li>b{font-size:15px}.match-ranking li>span{flex:1;min-width:0;overflow-wrap:anywhere;font-size:14px}.match-ranking li>strong{font-size:13px;font-weight:500;white-space:nowrap}
+@keyframes journey-fade-in{from{opacity:0}to{opacity:1}}@keyframes journey-fade-out{from{opacity:1}to{opacity:0}}
+@media(prefers-reduced-motion:reduce){.journey-overlay,.journey-overlay.is-leaving{animation:none!important}}
+.journey-overlay .journey-question-body{animation:journey-fade-in .18s ease both!important}

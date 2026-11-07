@@ -349,12 +349,13 @@ function App() {
                   : modal?.kind==="item" ? "Adicionar novo item" : "Sobre a sua AURA";
   return (
     <>
-      <AppUpdateNotice data={data} storageError={storageError} blocked={Boolean(modal)||guide!==null||Boolean(celebration)}/>
+      <AppUpdateNotice data={data} storageError={storageError} blocked={Boolean(modal)||guide!==null||Boolean(celebration)||journeyBusy}/>
       <div className="aura-viewport">
         <Aura
           fullscreen
           preset={data.appearance?.preset||"cover"}
-          enabled={data.aura && route!=="Jornada"}
+          enabled={data.aura}
+          maxFrameRate={route==="Jornada"?18:30}
           color={visual.color}
           motion={weeklyAura(data).motion}
           pulse={pulse}
@@ -400,7 +401,7 @@ function App() {
             )}
           </div>
         )}
-        {route === "Jornada" && <Journey onBusy={setJourneyBusy} onAccountChange={setData} onManageFriends={()=>{setRoute("Perfil","friends")}} account={data} progress={data.journey} onChange={update=>setData(d=>({...d,journey:typeof update==="function"?update(d.journey):update}))}/>}
+        {route === "Jornada" && <Journey onBusy={setJourneyBusy} onAccountChange={setData} account={data} progress={data.journey} onChange={update=>setData(d=>({...d,journey:typeof update==="function"?update(d.journey):update}))}/>}
         {route === "Hoje" && (
           <Today
             data={data}
