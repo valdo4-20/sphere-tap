@@ -1,3 +1,4 @@
+import {corpusCandidates} from './questionCorpus.js';
 import {topicQuestions} from './quizTopics.js';
 import {personalQuestions} from './journeyDaily.js';
 export {localDate,availableDailyLevel} from './journeyDaily.js';
@@ -38,16 +39,16 @@ function numericQuestion(level,tier,index,rng){
 }
 export function questionPlan(difficultyLevel){
  const base=difficultyFor(difficultyLevel).tier;
- return [{name:'Aquecimento',count:5,facts:3,tier:Math.max(1,base-1)},
- {name:'Exploração',count:10,facts:6,tier:Math.min(4,base+1)},
- {name:'Desafio final',count:5,facts:3,tier:Math.min(4,base+2)}];
+ return [{name:'Aquecimento',count:5,facts:4,tier:Math.max(1,base-1)},
+ {name:'Exploração',count:10,facts:10,tier:Math.min(4,base+1)},
+ {name:'Desafio final',count:5,facts:4,tier:Math.min(4,base+2)}];
 }
 export function questionsFor(level,{difficultyLevel=level,mode='role',round=level}={}){
  if(!Number.isSafeInteger(level)||level<1)throw new RangeError('Nível inválido');
  if(mode==='personal')return personalQuestions(level,{difficultyLevel});
  const rng=random((level*2654435761+round*97+(mode==='personal'?1234567:0))>>>0),used=new Set(),items=[],categoryCounts=new Map();
  for(const [phaseIndex,phase] of questionPlan(difficultyLevel).entries()){
-  const available=questionBank.filter(q=>(mode!=='personal'||q.everyday||/^(music-[1-4]|logic-[1-4]|space-[1-3])$/.test(q.id))&&q.difficulty<=phase.tier&&!used.has(q.prompt));
+  const available=[...questionBank,...corpusCandidates(level)].filter(q=>!q.everyday&&(mode!=='personal'||q.everyday||/^(music-[1-4]|logic-[1-4]|space-[1-3])$/.test(q.id))&&(q.difficulty<=phase.tier||q.sourced)&&!used.has(q.prompt));
   const preferred=shuffle(available.filter(q=>q.difficulty>=Math.max(1,phase.tier-1)),rng);
   const candidates=[...preferred,...shuffle(available.filter(q=>!preferred.includes(q)),rng)],selected=[];
   for(let i=0;i<phase.facts;i++){candidates.sort((a,b)=>(categoryCounts.get(a.category)||0)-(categoryCounts.get(b.category)||0));const q=candidates.shift();if(!q)break;selected.push(q);categoryCounts.set(q.category,(categoryCounts.get(q.category)||0)+1)}

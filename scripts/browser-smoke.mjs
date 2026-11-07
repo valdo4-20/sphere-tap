@@ -1,3 +1,4 @@
+import {loadQuestionCorpus} from '../src/questionCorpus.js';
 import {chromium} from '@playwright/test';
 import {spawn} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
@@ -8,6 +9,7 @@ import {localDate} from '../src/journeyDaily.js';
 const server=spawn(process.execPath,['node_modules/vite/bin/vite.js','preview','--host','127.0.0.1','--port','4173'],{stdio:'ignore'});
 let browser;
 const results=[];
+await loadQuestionCorpus();
 try{
  for(let i=0;i<80;i++){try{if((await fetch('http://127.0.0.1:4173')).ok)break}catch{}await new Promise(r=>setTimeout(r,100))}
  await mkdir('browser-checks',{recursive:true});
@@ -29,7 +31,7 @@ try{
   const geometry=await node.evaluate(b=>{const r=b.getBoundingClientRect(),p=document.querySelector('.journey-path').getBoundingClientRect(),s=getComputedStyle(b);return {overflow:document.documentElement.scrollWidth>innerWidth,offset:Math.abs(r.x+r.width/2-p.x-p.width/2),down:b.dataset.down,scale:s.scale}});
   assert.equal(geometry.overflow,false,`${width}: overflow`);assert.ok(geometry.offset<2);assert.equal(geometry.down,undefined);assert.equal(geometry.scale,'1');
   assert.equal(await page.getByText('O XP depende dos acertos.').count(),0);assert.equal(await page.getByText('Conquistas da Jornada',{exact:true}).count(),0);
-  const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.click();
+  const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);const mapY=await page.evaluate(()=>scrollY);await enter.click();
   assert.equal(await page.locator('.journey-entry-scene').count(),0);await page.locator('.journey-answers button').first().waitFor();
   const questions=questionsFor(1,{mode:'personal',difficultyLevel:1,round:1});
   for(let i=0;i<questions.length;i++){
@@ -39,7 +41,7 @@ try{
    await page.getByRole('button',{name:i===29?'Concluir':'Continuar',exact:true}).click();
   }
   await page.getByRole('heading',{name:'Você foi além.'}).waitFor();await page.screenshot({path:`browser-checks/result-${width}.png`});
-  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.getByText('Por hoje, você chegou lá.').waitFor();assert.equal(await page.locator('.journey-node.current').count(),0);
+  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.getByText('Por hoje, você chegou lá.').waitFor();await page.waitForTimeout(100);assert.ok(Math.abs((await page.evaluate(()=>scrollY))-mapY)<3,'map position restored');assert.equal(await page.locator('.journey-node.current').count(),0);
   let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personal,1);assert.equal(saved.journey.xp,400);
   await page.reload();await page.locator('.journey-entry').click();await page.getByText('Por hoje, você chegou lá.').waitFor();
   await page.screenshot({path:`browser-checks/map-${width}.png`,fullPage:true});
@@ -56,7 +58,14 @@ try{
  const node=page.getByRole('button',{name:'Nível 1, selecionar',exact:true});await node.scrollIntoViewIfNeeded();await node.click();await page.getByRole('button',{name:'Entrar no nível 1',exact:true}).click();
  const start=page.getByRole('button',{name:'Começar o Rolê',exact:true});assert.equal(await start.isDisabled(),true);await page.getByRole('checkbox',{name:'Alexandre',exact:true}).check();await start.click();await page.locator('.journey-answers button').first().waitFor();
  const questions=questionsFor(1);
- for(let i=0;i<20;i++){await page.locator('.journey-answers button').nth(questions[i].correct).click();await page.getByRole('button',{name:i===19?'Concluir':'Continuar',exact:true}).click()}
+ for(let i=0;i<20;i++){
+  if(i===0){
+   await page.locator('.journey-answers button').nth((questions[i].correct+1)%4).click();await page.getByRole('button',{name:new RegExp('Alexandre:')}).click();
+   await page.locator('.journey-answers button').nth(questions[i].correct).click();await page.getByRole('button',{name:new RegExp('Você:')}).click();
+   assert.equal(await page.locator('.answer-voters i').count(),2);await page.screenshot({path:'browser-checks/different-opinions.png'});
+  }else await page.locator('.journey-answers button').nth(questions[i].correct).click();
+  await page.getByRole('button',{name:'Confirmar resposta',exact:true}).click();await page.getByRole('button',{name:i===19?'Concluir':'Continuar',exact:true}).click();
+ }
  assert.equal(await page.getByRole('button',{name:/Passar para/}).count(),0);
  await page.getByRole('region',{name:'Ranking do Rolê'}).waitFor();assert.equal(await page.locator('.match-ranking li').count(),2);await page.screenshot({path:'browser-checks/match-ranking.png'});
  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.locator('.journey-overlay').waitFor({state:'detached'});assert.equal(await page.locator('.local-ranking,.match-ranking').count(),0);
