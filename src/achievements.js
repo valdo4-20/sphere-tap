@@ -27,7 +27,7 @@ const extraCatalog=[
  ...series("urge-days",[3,5,7,10,14,21,30,45,60,90],"urgeDays",n=>n+" dias de acolhimento",n=>"Observar uma vontade em "+n+" dias diferentes. Intensidade maior não dá vantagem; vontade não é consumo.","Seu cuidado","HeartHandshake"),
  ...series("backup-days",[2,3,5,7,10,14,21,30,60],"backupDays",n=>n+" cuidados com a memória",n=>"Preparar backups em "+n+" dias diferentes. Guarde os arquivos em local seguro.","Seus dados","ShieldCheck"),
  {id:"profile-bio",title:"Em suas palavras",description:"Escrever uma frase pessoal no perfil.",group:"Seu espaço",motif:"NotebookPen",rarity:"bronze"},
- {id:"profile-photo",title:"Seu retrato",description:"Escolher uma foto para seu perfil local.",group:"Seu espaço",motif:"UserRound",rarity:"silver"},
+ {id:"profile-photo",title:"Seu retrato",description:"Escolher uma foto para seu perfil.",group:"Seu espaço",motif:"UserRound",rarity:"silver"},
  {id:"profile-emoji",title:"Um símbolo seu",description:"Escolher um emoji de perfil.",group:"Seu espaço",motif:"Flower2",rarity:"bronze"},
  {id:"profile-featured",title:"Sua pequena galeria",description:"Escolher três medalhas reconhecidas para destacar.",group:"Seu espaço",motif:"ShieldCheck",rarity:"gold"},
  {id:"chosen-aura",title:"Uma atmosfera sua",description:"Escolher um dos presets de AURA para seu espaço.",group:"Seu espaço",motif:"Wind",rarity:"silver"},

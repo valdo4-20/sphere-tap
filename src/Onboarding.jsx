@@ -7,7 +7,7 @@ import Terms,{TERMS_VERSION} from "./Terms";
 import {intentions} from "./intentions";
 import {dayKey} from "./model";
 export default function Onboarding({onComplete,initialIntent="monitor",initialName="",initialProfile,initialBirthDate="",color="#b7beca"}){
- const [step,setStep]=useState(0),[name,setName]=useState(initialName),[birthDate,setBirthDate]=useState(initialBirthDate),[profile,setProfile]=useState(initialProfile||{type:"icon",value:"user"}),[intent,setIntent]=useState(initialIntent),[accepted,setAccepted]=useState(false),[demo,setDemo]=useState(0),[storage,setStorage]=useState("Salvamento local ativo"),[busy,setBusy]=useState(false),[ready,setReady]=useState(false),[preparation,setPreparation]=useState(0);
+ const [step,setStep]=useState(0),[name,setName]=useState(initialName),[birthDate,setBirthDate]=useState(initialBirthDate),[profile,setProfile]=useState(initialProfile||{type:"icon",value:"user"}),[intent,setIntent]=useState(initialIntent),[accepted,setAccepted]=useState(false),[demo,setDemo]=useState(0),[storage,setStorage]=useState("Salvamento ativo"),[busy,setBusy]=useState(false),[ready,setReady]=useState(false),[preparation,setPreparation]=useState(0);
  const heading=useRef(null), form=useRef(null);
  const titles=["Bem-vindo ao seu espaço.","Quando você nasceu?","Um perfil com a sua cara.","Você controla os acessos.","Antes de começar.","Criando seu ambiente saudável.","Um toque. Mais consciência."];
  useEffect(()=>{heading.current?.focus({preventScroll:true});window.scrollTo({top:0,behavior:"instant"});},[step]);
@@ -19,8 +19,8 @@ export default function Onboarding({onComplete,initialIntent="monitor",initialNa
   return()=>{changes.forEach(clearTimeout);clearTimeout(done)};
  },[step]);
  async function requestStorage(){
-  if(!navigator.storage?.persist){setStorage("O navegador gerencia os dados locais. Faça backups.");return;}
-  setBusy(true);try{setStorage(await navigator.storage.persist()?"Persistência autorizada · mantenha backups.":"Persistência não concedida. O salvamento local continua ativo.");}catch{setStorage("O navegador gerencia os dados locais. Faça backups.");}finally{setBusy(false)}
+  if(!navigator.storage?.persist){setStorage("Seus dados ficam neste aparelho. Faça backups.");return;}
+  setBusy(true);try{setStorage(await navigator.storage.persist()?"Persistência autorizada · mantenha backups.":"Persistência não concedida. O salvamento continua ativo.");}catch{setStorage("Seus dados ficam neste aparelho. Faça backups.");}finally{setBusy(false)}
  }
  function finish(){onComplete({displayName:name.trim(),birthDate,profile,intent,consent:{version:TERMS_VERSION,acceptedAt:new Date().toISOString()}},false);}
  function next(e){e.preventDefault();if(step===6)finish();else setStep(v=>v+1);}
@@ -31,7 +31,7 @@ export default function Onboarding({onComplete,initialIntent="monitor",initialNa
    <div className="onboarding-step" key={step}>
     <h1 tabIndex={-1} ref={heading}>{titles[step]}</h1>
     {step===0&&<><p>Acompanhe seu consumo e seus gastos. Faça espaço para pausas.</p><label>Como podemos chamar você?<input name="nickname" autoComplete="nickname" maxLength={32} required value={name} onChange={e=>setName(e.target.value)} placeholder="Nome ou apelido" autoFocus/></label><small className="field-help">Um perfil só seu, salvo neste dispositivo.</small></>}
-    {step===1&&<><p>Essa informação fica apenas no seu perfil local.</p><label>Data de nascimento<DatePicker className="birth-date-input" type="date" autoComplete="bday" min="1900-01-01" max={dayKey()} required value={birthDate} onChange={e=>setBirthDate(e.target.value)}/></label></>}
+    {step===1&&<><p>Essa informação fica apenas no seu perfil.</p><label>Data de nascimento<DatePicker className="birth-date-input" type="date" autoComplete="bday" min="1900-01-01" max={dayKey()} required value={birthDate} onChange={e=>setBirthDate(e.target.value)}/></label></>}
     {step===2&&<><p>Escolha um ícone, emoji ou foto.</p><ProfilePicker value={profile} onChange={setProfile}/></>}
     {step===3&&<><p>Tudo aqui é opcional. Você pode continuar sem liberar acesso.</p>
      <div className="permission-card"><ShieldCheck size={22}/><div><b>Câmera e fotos</b><small>Solicitadas só quando você escolhe uma foto para o perfil.</small></div></div>

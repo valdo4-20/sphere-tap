@@ -19,7 +19,7 @@ try{
   await page.goto('http://127.0.0.1:4173');return {context,page,errors};
  }
  for(const width of [320,390,768,1280]){
-  const data=structuredClone(initial);data.appearance.palette=width===390?'neve':'cristal';
+  const data=structuredClone(initial);data.appearance.palette=width===390?'neve':'cristal';data.appearance.preset='eclipse';data.appearance.auraColor='#c77b91';
   const {context,page,errors}=await contextFor(width,data);
   await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Pessoal',exact:true}).click();
   await page.getByRole('heading',{name:'Pequenas descobertas'}).waitFor();
@@ -30,7 +30,7 @@ try{
   assert.equal(geometry.overflow,false,`${width}: overflow`);assert.ok(geometry.offset<2);assert.equal(geometry.down,undefined);assert.equal(geometry.scale,'1');
   assert.equal(await page.getByText('O XP depende dos acertos.').count(),0);assert.equal(await page.getByText('Conquistas da Jornada',{exact:true}).count(),0);
   const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.click();
-  await page.getByRole('heading',{name:'Entrando no dia 1'}).waitFor();await page.locator('.journey-answers button').first().waitFor();
+  assert.equal(await page.locator('.journey-entry-scene').count(),0);await page.locator('.journey-answers button').first().waitFor();
   const questions=questionsFor(1,{mode:'personal',difficultyLevel:1,round:1});
   for(let i=0;i<questions.length;i++){
    await page.locator('.journey-answers button').nth(questions[i].correct).click();
@@ -39,11 +39,12 @@ try{
    await page.getByRole('button',{name:i===29?'Concluir':'Continuar',exact:true}).click();
   }
   await page.getByRole('heading',{name:'Você foi além.'}).waitFor();await page.screenshot({path:`browser-checks/result-${width}.png`});
-  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.getByText('Seu capítulo de hoje está concluído.').waitFor();assert.equal(await page.locator('.journey-node.current').count(),0);
+  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.getByText('Por hoje, você chegou lá.').waitFor();assert.equal(await page.locator('.journey-node.current').count(),0);
   let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personal,1);assert.equal(saved.journey.xp,400);
-  await page.reload();await page.locator('.journey-entry').click();await page.getByText('Seu capítulo de hoje está concluído.').waitFor();
+  await page.reload();await page.locator('.journey-entry').click();await page.getByText('Por hoje, você chegou lá.').waitFor();
   await page.screenshot({path:`browser-checks/map-${width}.png`,fullPage:true});
-  assert.deepEqual(errors,[]);results.push({width,centered:true,depthRestored:true,dailyLockPersists:true});await context.close();
+  assert.equal(await page.locator('.journey-page .local-ranking').count(),0);assert.equal(await page.locator('.aura-viewport>.aura-engine').getAttribute('data-aura-preset'),'eclipse');assert.equal(await page.locator('.aura-viewport>.aura-engine').getAttribute('data-aura-color'),'#c77b91');
+  assert.deepEqual(errors,[]);results.push({width,centered:true,depthRestored:true,dailyLockPersists:true,auraPreserved:true});await context.close();
  }
  // Persistent local friends, editing, score ownership, ranking, explicit removal.
  {
@@ -51,16 +52,46 @@ try{
  await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();await page.getByRole('button',{name:'Amigos',exact:true}).click();await page.getByRole('button',{name:'Adicionar',exact:true}).click();
  await page.getByRole('textbox',{name:'Nome do amigo'}).fill('Alex');await page.getByRole('button',{name:'Salvar amigo',exact:true}).click();await page.locator('.friend-management').getByText('Alex',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Editar Alex',exact:true}).click();await page.getByRole('textbox',{name:'Nome do amigo'}).fill('Alexandre');await page.getByRole('button',{name:'Salvar amigo',exact:true}).click();
- await page.reload();await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Rolê',exact:true}).click();await page.locator('.local-ranking li').filter({hasText:'Alexandre'}).getByRole('button').click();
- const node=page.getByRole('button',{name:'Nível 1, selecionar',exact:true});await node.scrollIntoViewIfNeeded();await node.click();await page.getByRole('button',{name:'Entrar no nível 1',exact:true}).click();await page.locator('.journey-answers button').first().waitFor();
- const questions=questionsFor(1);for(let i=0;i<20;i++){await page.locator('.journey-answers button').nth(questions[i].correct).click();await page.getByRole('button',{name:i===19?'Concluir':'Continuar',exact:true}).click()}
- await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();
- let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.xp,0);assert.equal(saved.localFriends[0].journey.xp,300);
- await page.screenshot({path:'browser-checks/friends-rank.png',fullPage:true});
- await page.locator('.local-ranking').getByRole('button',{name:'Amigos',exact:true}).click();await page.getByRole('button',{name:'Remover Alexandre',exact:true}).click();await page.getByRole('button',{name:'Manter amigo',exact:true}).click();assert.equal(await page.locator('.friend-management>li').count(),1);
- await page.getByRole('button',{name:'Remover Alexandre',exact:true}).click();await page.getByRole('button',{name:'Remover amigo',exact:true}).click();assert.equal(await page.locator('.friend-management>li').count(),0);
+ await page.reload();await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Rolê',exact:true}).click();assert.equal(await page.locator('.local-ranking').count(),0);
+ const node=page.getByRole('button',{name:'Nível 1, selecionar',exact:true});await node.scrollIntoViewIfNeeded();await node.click();await page.getByRole('button',{name:'Entrar no nível 1',exact:true}).click();
+ const start=page.getByRole('button',{name:'Começar o Rolê',exact:true});assert.equal(await start.isDisabled(),true);await page.getByRole('checkbox',{name:'Alexandre',exact:true}).check();await start.click();await page.locator('.journey-answers button').first().waitFor();
+ const questions=questionsFor(1);
+ for(let i=0;i<20;i++){await page.locator('.journey-answers button').nth(questions[i].correct).click();await page.getByRole('button',{name:i===19?'Concluir':'Continuar',exact:true}).click()}
+ assert.equal(await page.getByRole('button',{name:/Passar para/}).count(),0);
+ await page.getByRole('region',{name:'Ranking do Rolê'}).waitFor();assert.equal(await page.locator('.match-ranking li').count(),2);await page.screenshot({path:'browser-checks/match-ranking.png'});
+ await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.locator('.journey-overlay').waitFor({state:'detached'});assert.equal(await page.locator('.local-ranking,.match-ranking').count(),0);
+ let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.xp,300);assert.equal(saved.localFriends[0].journey.xp,300);
+ const next=page.getByRole('button',{name:'Nível 2, selecionar',exact:true});await next.scrollIntoViewIfNeeded();await next.click();await page.getByRole('button',{name:'Entrar no nível 2',exact:true}).click();
+ await page.getByRole('button',{name:'Adicionar ou editar amigos',exact:true}).click();await page.getByRole('button',{name:'Adicionar',exact:true}).click();await page.getByRole('textbox',{name:'Nome do amigo'}).fill('Greg');await page.getByRole('button',{name:'Salvar amigo',exact:true}).click();await page.getByRole('button',{name:'Voltar à partida',exact:true}).click();
+ await page.getByRole('checkbox',{name:'Alexandre',exact:true}).uncheck();await page.getByRole('checkbox',{name:'Greg',exact:true}).check();await page.getByRole('button',{name:'Adicionar ou editar amigos',exact:true}).click();
+ await page.getByRole('button',{name:'Remover Alexandre',exact:true}).click();await page.getByRole('button',{name:'Manter amigo',exact:true}).click();assert.equal(await page.locator('.friend-management>li').count(),2);
+ await page.getByRole('button',{name:'Remover Alexandre',exact:true}).click();await page.getByRole('button',{name:'Remover amigo',exact:true}).click();assert.equal(await page.locator('.friend-management>li').count(),1);
+ await page.getByRole('button',{name:'Voltar à partida',exact:true}).click();assert.equal(await page.getByRole('checkbox',{name:'Greg',exact:true}).isChecked(),true);
+ await page.getByRole('button',{name:'Fechar',exact:true}).click();await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();
  await page.getByRole('button',{name:'Conquistas',exact:true}).click();await page.getByRole('heading',{name:'Suas conquistas.'}).waitFor();
- assert.deepEqual(errors,[]);results.push({localFriendsPersist:true,friendXPIsolated:true,explicitRemoval:true,conquestsSeparate:true});await context.close();
+ assert.deepEqual(errors,[]);results.push({localFriendsPersist:true,sharedRoundXP:true,roleRequiresFriends:true,participantsEditableAtLevel:true,rankingOnlyAfterMatch:true,explicitRemoval:true,conquestsSeparate:true});await context.close();
+ }
+ // Fade into the actual question and fade out while confirming an unfinished round.
+ {
+ const {context,page,errors}=await contextFor(390,initial);
+ await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Pessoal',exact:true}).click();await page.getByRole('button',{name:'Dia 1, selecionar',exact:true}).click();await page.getByRole('button',{name:'Entrar no dia 1',exact:true}).click();await page.locator('.journey-answers button').first().waitFor();
+ assert.equal(await page.locator('.journey-entry-rings').count(),0);assert.equal(await page.locator('.journey-question-body').innerText().then(t=>/DE 30|faltam/i.test(t)),false);
+ await page.getByRole('button',{name:'Fechar quiz',exact:true}).click();await page.getByRole('button',{name:'Sair da rodada',exact:true}).click();await page.locator('.journey-overlay.is-leaving').waitFor();await page.locator('.journey-overlay').waitFor({state:'detached'});
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personal,0);assert.deepEqual(errors,[]);results.push({entryHasNoLogo:true,exitFades:true,unfinishedRoundNotCredited:true});await context.close();
+ }
+ // The actual update modal in light and dark themes, using a waiting-worker fixture.
+ for(const palette of ['neve','cristal']){
+ const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage();const data=structuredClone(initial);data.appearance={...data.appearance,palette,preset:'eclipse',auraColor:'#c77b91'};
+ await page.addInitScript(data=>{
+  localStorage.setItem('sphere-tap-v1',JSON.stringify({...data,welcomeDone:true}));sessionStorage.setItem('sphere-tap-opened','yes');
+  const worker={state:'installed',scriptURL:location.origin+'/sw.js',postMessage(message,ports){if(message==='SPHERE_UPDATE_INFO')ports?.[0]?.postMessage({build:'fixture-update',version:'1.2.1',title:'Do seu jeito.',changes:['Uma Jornada mais leve.']})}};
+  const registration={waiting:worker,active:null,addEventListener(){},removeEventListener(){},update:async()=>{}};
+  Object.defineProperty(navigator,'serviceWorker',{configurable:true,value:{controller:{},register:async()=>registration,addEventListener(){},removeEventListener(){}}});
+ },data);
+ await page.goto('http://127.0.0.1:4173');const modal=page.getByRole('dialog',{name:'Atualização disponível',exact:true});await modal.waitFor();
+ const colors=await modal.locator('.dialog-header').evaluate(el=>{const cs=getComputedStyle(el),title=getComputedStyle(el.querySelector('h2'));return {background:cs.backgroundColor,text:title.color,opacity:title.opacity}});assert.notEqual(colors.background,colors.text);assert.equal(colors.opacity,'1');
+ assert.equal(await modal.locator('.tap-update-orbit').count(),0);assert.equal(await modal.locator('.tap-update-mark').evaluate(el=>getComputedStyle(el).animationName),'none');assert.equal(await modal.locator('.aura-engine').getAttribute('data-aura-preset'),'eclipse');assert.equal(await modal.locator('.aura-engine').getAttribute('data-aura-color'),'#c77b91');
+ await page.screenshot({path:`browser-checks/update-${palette}.png`});await page.getByRole('button',{name:'Depois',exact:true}).click();await modal.waitFor({state:'detached'});results.push({updateTheme:palette,headerReadable:true,logoStatic:true,customAura:true});await context.close();
  }
  // A new local date unlocks with a finite lock animation and is remembered.
  {

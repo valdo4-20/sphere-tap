@@ -27,7 +27,7 @@ export default function Aura({enabled=true,pulse=0,color="#a8a7cd",pulseColor,al
     if(reduced||!enabled||!ref.current) return;
     setPulseLayers(layers=>[...layers,{id:++sequence.current,color:pulseColor||color,alert}]);
   },[pulse,reduced,enabled,pulseColor,color,alert]);
-  return <div ref={ref} className={"aura-engine "+(fullscreen?"aura-engine-fullscreen":"aura-engine-local")} aria-hidden="true">
+  return <div ref={ref} data-aura-preset={preset} data-aura-color={color} className={"aura-engine "+(fullscreen?"aura-engine-fullscreen":"aura-engine-local")} aria-hidden="true">
     <AuraSurface key={String(enabled)+String(reduced)} currentTrack={ambient} isPlaying auraEnabled auraPreset={preset} auraPreferences={preferences} getAudioLevels={silence} maxFrameRate={maxFrameRate} adaptiveResolution />
     {fullscreen&&<AuraWaves color={color} pulse={pulse} pulseColor={pulseColor} enabled={enabled}/>}
     {pulseLayers.map(layer=><div key={layer.id} className={`aura-pulse-layer${layer.alert?" is-alert":""}`} style={{"--tap-color":layer.color}} onAnimationEnd={event=>{if(event.target===event.currentTarget)setPulseLayers(layers=>layers.filter(item=>item.id!==layer.id));}}>

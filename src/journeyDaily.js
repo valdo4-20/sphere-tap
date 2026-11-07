@@ -15,7 +15,7 @@ export const dailyThemes=[
  {title:'Um novo horizonte',description:'Reúna as pistas em uma edição com desafios misturados.'}
 ];
 export function dailyEdition(level){return {...dailyThemes[(level-1)%dailyThemes.length],number:level,chapters:['Observar','Conectar','Planejar','Investigar','Revelar']}}
-export const weeklyColors=['#c4b5fd','#93c5fd','#99dbb5','#f0cd8b','#f2a6bd','#8ed6da','#d3b48b'];
+export const weeklyColors=['#c4b5fd','#dfb376','#99dbb5','#f0cd8b','#f2a6bd','#c5b79a','#d3b48b'];
 export function dailyLevelDate(data,level,now=new Date()){const start=enrollDaily(data,now).personalStart;const date=new Date(start+'T12:00:00');date.setDate(date.getDate()+level-1);return localDate(date)}
 export function weeklyColor(level){return weeklyColors[Math.floor((level-1)/7)%weeklyColors.length]}
 export const PERSONAL_QUESTIONS=30;

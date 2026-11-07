@@ -1,7 +1,7 @@
 import {editorialQuestions} from './quizEditorial.js';
 import {countries} from './quizGeography.js';
 export const quizThemes={
- cinema:{name:'Cinema',color:'#e6a08b',ink:'#92462c'},geek:{name:'Geek',color:'#95cbaa',ink:'#306c48'},math:{name:'Matemática',color:'#78b5e4',ink:'#255a86'},history:{name:'História',color:'#e7bf70',ink:'#78520b'},geography:{name:'Países e Geografia',color:'#76c4bc',ink:'#226860'},science:{name:'Ciências',color:'#aabce9',ink:'#405d9a'},biology:{name:'Corpo humano',color:'#e4a0af',ink:'#963b56'},art:{name:'Arte',color:'#c4a2e5',ink:'#754398'},music:{name:'Música',color:'#dba8dc',ink:'#89478a'},sport:{name:'Esportes',color:'#a4ca85',ink:'#426d25'},culture:{name:'Cultura',color:'#e9ac83',ink:'#8c4b20'},logic:{name:'Lógica',color:'#b8a7dd',ink:'#655080'}
+ cinema:{name:'Cinema',color:'#e6a08b',ink:'#92462c'},geek:{name:'Geek',color:'#95cbaa',ink:'#306c48'},math:{name:'Matemática',color:'#d6b28b',ink:'#76542d'},history:{name:'História',color:'#e7bf70',ink:'#78520b'},geography:{name:'Países e Geografia',color:'#b5bc87',ink:'#5b642f'},science:{name:'Ciências',color:'#bca8cc',ink:'#685078'},biology:{name:'Corpo humano',color:'#e4a0af',ink:'#963b56'},art:{name:'Arte',color:'#c4a2e5',ink:'#754398'},music:{name:'Música',color:'#dba8dc',ink:'#89478a'},sport:{name:'Esportes',color:'#a4ca85',ink:'#426d25'},culture:{name:'Cultura',color:'#e9ac83',ink:'#8c4b20'},logic:{name:'Lógica',color:'#b8a7dd',ink:'#655080'}
 };
 export function themeFor(question){
  const c=question.category||'',id=question.id||'';

@@ -11,7 +11,7 @@ export default function ProfilePicker({value,onChange}) {
  useEffect(()=>()=>tracks.current?.getTracks().forEach(t=>t.stop()),[]);
  useEffect(()=>{if(video.current&&stream){video.current.srcObject=stream;video.current.play().catch(()=>{});}},[stream]);
  function stop(){tracks.current?.getTracks().forEach(t=>t.stop());tracks.current=null;setStream(null);}
- function image(source,w,h){const canvas=document.createElement("canvas");canvas.width=768;canvas.height=768;const side=Math.min(w,h);canvas.getContext("2d").drawImage(source,(w-side)/2,(h-side)/2,side,side,0,0,768,768);let quality=.82,value=canvas.toDataURL("image/jpeg",quality);while(value.length>245000&&quality>.2){quality-=.08;value=canvas.toDataURL("image/jpeg",quality)}if(value.length>250000){setError("Escolha uma imagem mais simples, para caber no armazenamento local.");return}onChange({type:"photo",value});}
+ function image(source,w,h){const canvas=document.createElement("canvas");canvas.width=768;canvas.height=768;const side=Math.min(w,h);canvas.getContext("2d").drawImage(source,(w-side)/2,(h-side)/2,side,side,0,0,768,768);let quality=.82,value=canvas.toDataURL("image/jpeg",quality);while(value.length>245000&&quality>.2){quality-=.08;value=canvas.toDataURL("image/jpeg",quality)}if(value.length>250000){setError("Escolha uma imagem mais simples, para salvar no aparelho.");return}onChange({type:"photo",value});}
  async function upload(e){
   setError("");const f=e.target.files?.[0];if(!f)return;
   if(!["image/jpeg","image/png","image/webp","image/gif"].includes(f.type)||f.size>8*1024*1024){setError("Use uma imagem JPG, PNG, WebP ou GIF de até 8 MB.");return;}

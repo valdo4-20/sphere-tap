@@ -282,3 +282,13 @@ Validação: 78 testes de lógica/dados, renderização React da Jornada e ordem
 - Backup JSON inclui os amigos, seus pontos e os dados do calendário. Não há backend, convite remoto ou sincronização automática entre aparelhos.
 - Referências de experiência: [Tópicos do Perguntados](https://triviacrack.help.etermax.com/hc/pt/articles/360033522154-T%C3%B3picos) e [Ludo King](https://ludoking.com/features). Conteúdo e interface são próprios.
 - `npm test` valida lógica/dados; `npm run build` valida o PWA; `npm run test:browser` executa a navegação em Chromium após o build (`npx playwright install chromium`). A validação da PR também executa os testes de navegador e guarda capturas como artefato do GitHub Actions.
+
+### 1.2.1 — Jornada e Rolê do seu jeito
+
+A AURA configurada acompanha a Jornada e o aviso de atualização. O cabeçalho desse aviso passa a usar o tema da pessoa, com contraste consistente. O logo fica parado, sem órbitas; a AURA é a única animação do fundo.
+
+Pessoal é o modo individual. Rolê exige ao menos um amigo: na entrada do nível, escolher participantes ou gerenciar amigos sem perder a seleção. Todos discutem cada pergunta e registram uma resposta para o grupo; não há turnos individuais. O resultado recompensa os participantes escolhidos de uma vez. Ao concluir, mostrar o ranking geral de todos os amigos por XP acumulado. Somente participantes selecionados recebem o XP da rodada; ausentes preservam os pontos até voltarem. Empates em XP compartilham posição. XP e estrelas são salvos separadamente por perfil e preservados no backup. Não há ranking no mapa; o ranking geral no Perfil é aberto por escolha.
+
+Entrada/saída usam fade, sem tela de estrela. Contadores textuais de perguntas, microtextos e rótulos de implementação foram removidos. Controles usam cores neutras; temas de perguntas e semanas têm tons suaves. A customização da AURA permanece sob controle da pessoa.
+
+Para continuar o trabalho em outro chat ou computador, ler [PROJECT_STATE.md](./PROJECT_STATE.md) e atualizar a cópia do repositório antes de editar.
