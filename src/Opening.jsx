@@ -24,9 +24,6 @@ export default function Opening({ onComplete }) {
     <div className={`tap-opening ${leaving ? "is-leaving" : ""}`}>
       <LiquidSignature />
       <span className="opening-caption">SEU RITMO. SUAS ESCOLHAS.</span>
-      <button className="opening-skip" onClick={onComplete} autoFocus>
-        Pular abertura <span>↗</span>
-      </button>
     </div>
   );
 }
