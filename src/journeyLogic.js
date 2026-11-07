@@ -14,7 +14,17 @@ const geography=countries.flatMap((c,i)=>{
  return [{id:`capital-${c.id}`,category:'Mundo',difficulty:i<12?1:i<22?2:3,prompt:`Qual é a capital ${countryOf(c.country)}?`,options,correct:0,explanation:`${c.capital} é a capital ${countryOf(c.country)}.`,source:c.source,sourceName:'Wikidata · CC0'},
  {id:`country-${c.id}`,category:'Mundo',difficulty:i<12?2:3,prompt:`${c.capital} é a capital de qual país?`,options:[c.country,...[0,7,14].map(n=>wrong[(i+n)%wrong.length].country)],correct:0,explanation:`${c.capital} é a capital ${countryOf(c.country)}.`,source:c.source,sourceName:'Wikidata · CC0'}]
 });
-export const questionBank=[...editorialQuestions,...geography];
+const everydayQuestions=[
+ ['daily-hour','Quantos minutos há em uma hora?',['60','100','30','90'],'Uma hora tem 60 minutos.'],
+ ['daily-week','Quantos dias há em uma semana?',['7','5','6','8'],'Uma semana tem sete dias.'],
+ ['daily-half','Qual é a metade de 50?',['25','20','10','30'],'Dividir 50 por dois dá 25.'],
+ ['daily-change','Você paga R$ 20 por algo de R$ 12. Qual é o troco?',['R$ 8','R$ 6','R$ 10','R$ 12'],'20 menos 12 é igual a 8.'],
+ ['daily-litre','Um litro equivale a quantos mililitros?',['1.000','100','10','10.000'],'Um litro equivale a mil mililitros.'],
+ ['daily-kilo','Um quilograma equivale a quantos gramas?',['1.000','100','10','10.000'],'O prefixo quilo indica mil unidades.'],
+ ['daily-discount','Um item de R$ 100 tem 10% de desconto. Quanto custa?',['R$ 90','R$ 10','R$ 99','R$ 110'],'Dez por cento de 100 é 10; 100 menos 10 é 90.'],
+ ['daily-month','Qual mês vem logo depois de abril?',['Maio','Março','Junho','Julho'],'Na ordem dos meses, maio vem depois de abril.']
+].map(([id,prompt,options,explanation])=>({id,prompt,options,explanation,correct:0,difficulty:1,everyday:true,category:'No dia a dia',source:null,sourceName:'Acervo autoral'}));
+export const questionBank=[...editorialQuestions,...geography,...everydayQuestions];
 function numericQuestion(level,tier,index,rng){
  const limit=[0,18,70,180,450][tier],a=2+Math.floor(rng()*limit),b=2+Math.floor(rng()*Math.min(limit,25)),kind=(level+index)%6;let answer,prompt,explanation;
  if(kind===0){answer=a+b;prompt=`Quanto é ${a} + ${b}?`;explanation=`${a} + ${b} = ${answer}.`}
@@ -35,12 +45,12 @@ export function questionsFor(level,{difficultyLevel=level,mode='role',round=leve
  if(!Number.isSafeInteger(level)||level<1)throw new RangeError('Nível inválido');
  const rng=random((level*2654435761+round*97+(mode==='personal'?1234567:0))>>>0),used=new Set(),items=[],categoryCounts=new Map();
  for(const [phaseIndex,phase] of questionPlan(difficultyLevel).entries()){
-  const available=questionBank.filter(q=>q.difficulty<=phase.tier&&!used.has(q.prompt));
+  const available=questionBank.filter(q=>(mode!=='personal'||q.everyday||/^(music-[1-4]|logic-[1-4]|space-[1-3])$/.test(q.id))&&q.difficulty<=phase.tier&&!used.has(q.prompt));
   const preferred=shuffle(available.filter(q=>q.difficulty>=Math.max(1,phase.tier-1)),rng);
   const candidates=[...preferred,...shuffle(available.filter(q=>!preferred.includes(q)),rng)],selected=[];
   for(let i=0;i<phase.facts;i++){candidates.sort((a,b)=>(categoryCounts.get(a.category)||0)-(categoryCounts.get(b.category)||0));const q=candidates.shift();if(!q)break;selected.push(q);categoryCounts.set(q.category,(categoryCounts.get(q.category)||0)+1)}
   for(const q of selected){used.add(q.prompt);items.push({...q,phase:phase.name,phaseIndex})}
-  for(let i=phase.facts;i<phase.count;i++){
+  for(let i=selected.length;i<phase.count;i++){
    let q;do{q=numericQuestion(level,phase.tier,items.length,rng)}while(used.has(q.prompt));
    used.add(q.prompt);items.push({...q,phase:phase.name,phaseIndex});
   }

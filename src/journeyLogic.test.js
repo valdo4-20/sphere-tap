@@ -18,3 +18,14 @@ test('treino usa o desafio do Rolê para XP, impede crédito duplicado e migra X
 
 test('backup oficial conserva progresso, XP, estrelas e tracking sem misturar recompensas',async()=>{const {initial,validData,migrate,weeklyAura}=await import('./model.js');const d=structuredClone(initial),aura=weeklyAura(d);d.journey=completeJourney(d.journey,'role',1,20);assert.equal(validData(d),true);const restored=migrate(JSON.parse(JSON.stringify(d)));assert.deepEqual(restored.journey,d.journey);assert.deepEqual(weeklyAura(restored),aura);assert.deepEqual(restored.entries,d.entries);assert.deepEqual(restored.achievements,d.achievements);for(const field of ['xp','stars','role','personal']){const invalid=structuredClone(d);invalid.journey[field]=-1;assert.equal(validData(invalid),false)}const legacy=structuredClone(initial);delete legacy.journey;assert.equal(validData(legacy),true);assert.equal(migrate(legacy).journey.xp,0)});
 test('conclusões com resultado inválido não alteram saldo nem avanço',()=>{const d=migrateJourney(null);for(const score of [-1,21,NaN,1.5])assert.equal(completeJourney(d,'role',1,score),d)});
+
+test('Pessoal tem vinte perguntas cotidianas, sem trivia de celebridades, em todas as fases',()=>{
+ for(const level of [1,2,10,36,101,10001]){const qs=questionsFor(level,{mode:'personal',difficultyLevel:level});assert.equal(qs.length,20);assert.equal(new Set(qs.map(q=>q.prompt)).size,20);assert.deepEqual([0,1,2].map(p=>qs.filter(q=>q.phaseIndex===p).length),[5,10,5]);assert.ok(qs.every(q=>!q.id.startsWith('recent-')&&!q.id.startsWith('history-')&&!q.id.startsWith('capital-')));}
+ assert.ok(questionsFor(1)[0]);
+});
+test('conquistas da Jornada contam apenas rodadas concluídas e preservam XP',async()=>{
+ const {initial}=await import('./model.js'),{achievementProgress,unlockAchievements}=await import('./achievements.js');const d=structuredClone(initial);
+ assert.ok(achievementProgress(d).filter(a=>a.group.startsWith('Jornada')).every(a=>!a.eligible));
+ d.journey=completeJourney(d.journey,'personal',1,12);const xp=d.journey.xp,out=unlockAchievements(d);
+ assert.ok(out.achievements['journey-personal-1']);assert.equal(out.achievements['journey-role-1'],undefined);assert.equal(out.journey.xp,xp);
+});

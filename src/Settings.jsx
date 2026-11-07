@@ -135,6 +135,7 @@ export default function Settings({
           Aparência e dicas
           <ChevronDown size={17} />
         </summary>
+        <label className="toggle-row"><span><b>Sons da Jornada</b><small>Botões, perguntas e conclusão do desafio.</small></span><input type="checkbox" checked={data.preferences.journeySound!==false} onChange={e=>onChange(d=>({...d,preferences:{...d.preferences,journeySound:e.target.checked}}))}/></label>
         <label className="toggle-row"><span><b>Som de conquista</b><small>Apenas para novos marcos de cuidado.</small></span><input type="checkbox" checked={data.preferences.achievementSound!==false} onChange={e=>onChange(d=>({...d,preferences:{...d.preferences,achievementSound:e.target.checked}}))}/></label>
         <label className="toggle-row">
           <span>

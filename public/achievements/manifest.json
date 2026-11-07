@@ -730,5 +730,77 @@
     "title": "60 dias em movimento",
     "rarity": "obsidian",
     "coin": "walk-days-60.svg"
+  },
+  {
+    "id": "journey-role-1",
+    "title": "Primeira descoberta",
+    "rarity": "bronze",
+    "coin": "journey-role-1.svg"
+  },
+  {
+    "id": "journey-role-5",
+    "title": "5 desafios em companhia",
+    "rarity": "bronze",
+    "coin": "journey-role-5.svg"
+  },
+  {
+    "id": "journey-role-10",
+    "title": "10 desafios em companhia",
+    "rarity": "silver",
+    "coin": "journey-role-10.svg"
+  },
+  {
+    "id": "journey-role-25",
+    "title": "25 desafios em companhia",
+    "rarity": "silver",
+    "coin": "journey-role-25.svg"
+  },
+  {
+    "id": "journey-role-50",
+    "title": "50 desafios em companhia",
+    "rarity": "gold",
+    "coin": "journey-role-50.svg"
+  },
+  {
+    "id": "journey-role-100",
+    "title": "100 desafios em companhia",
+    "rarity": "gold",
+    "coin": "journey-role-100.svg"
+  },
+  {
+    "id": "journey-personal-1",
+    "title": "Um tempo para aprender",
+    "rarity": "bronze",
+    "coin": "journey-personal-1.svg"
+  },
+  {
+    "id": "journey-personal-5",
+    "title": "5 treinos pessoais",
+    "rarity": "bronze",
+    "coin": "journey-personal-5.svg"
+  },
+  {
+    "id": "journey-personal-10",
+    "title": "10 treinos pessoais",
+    "rarity": "silver",
+    "coin": "journey-personal-10.svg"
+  },
+  {
+    "id": "journey-personal-25",
+    "title": "25 treinos pessoais",
+    "rarity": "silver",
+    "coin": "journey-personal-25.svg"
+  },
+  {
+    "id": "journey-personal-50",
+    "title": "50 treinos pessoais",
+    "rarity": "gold",
+    "coin": "journey-personal-50.svg"
+  },
+  {
+    "id": "journey-personal-100",
+    "title": "100 treinos pessoais",
+    "rarity": "gold",
+    "coin": "journey-personal-100.svg"
   }
 ]

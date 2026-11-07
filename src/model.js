@@ -150,6 +150,7 @@ export function validData(x) {
   if (
     x.preferences !== undefined &&
     (!isRecord(x.preferences) ||
+      (x.preferences.journeySound!==undefined&&typeof x.preferences.journeySound!=="boolean") ||
       (x.preferences.achievementSound!==undefined&&typeof x.preferences.achievementSound!=="boolean") ||
       (x.preferences.reminderTime !== undefined &&
         !/^([01]\d|2[0-3]):[0-5]\d$/.test(x.preferences.reminderTime)))

@@ -34,7 +34,10 @@ const extraCatalog=[
  {id:"gentle-reminder",title:"Um lembrete gentil",description:"Optar por um lembrete de check-in no app.",group:"Seu cuidado",motif:"Leaf",rarity:"bronze"}
 ];
 const motifs={"your-space":"UserRound","check-in":"NotebookPen","pause-intent":"Pause","pause-1":"Leaf","pause-3":"Sprout","pause-7":"Flower2","pause-14":"Trees","pause-30":"Wind","less-consumption":"TrendingDown","urge-awareness":"HeartHandshake","budget-choice":"Wallet","backup":"ShieldCheck"};
-export const achievementCatalog=[...baseCatalog.map(a=>({...a,motif:motifs[a.id]})),...extraCatalog];
+export const achievementCatalog=[...baseCatalog.map(a=>({...a,motif:motifs[a.id]})),...extraCatalog,
+ ...series("journey-role",[1,5,10,25,50,100],"journeyRole",n=>n===1?"Primeira descoberta":n+" desafios em companhia",n=>"Concluir "+n+" rodada(s) do modo Rolê. Consumo não conta.","Jornada · Rolê","Compass"),
+ ...series("journey-personal",[1,5,10,25,50,100],"journeyPersonal",n=>n===1?"Um tempo para aprender":n+" treinos pessoais",n=>"Concluir "+n+" rodada(s) do modo Pessoal. Sem sequência obrigatória.","Jornada · Pessoal","Sparkles")
+];
 export function confirmedPauseDays(data,today=dayKey()){
  return Object.keys(data.days||{}).filter(k=>validDay(k)&&k<=today&&observation(data,k).paused).sort();
 }
@@ -61,6 +64,7 @@ export function achievementProgress(data,today=dayKey()){
  const months={};pauseKeys.forEach(k=>months[k.slice(0,7)]=(months[k.slice(0,7)]||0)+1);
  const backupDates=[...(data.careMilestones?.backupDays||[]),...(data.careMilestones?.backupPreparedAt?[dayKey(new Date(data.careMilestones.backupPreparedAt))]:[])].filter(k=>validDay(k)&&k<=today);
  const metrics={
+ journeyRole:data.journey?.role||0,journeyPersonal:data.journey?.personal||0,
  pauses,pauseWeeks:new Set(pauseKeys.map(k=>shiftDay(k,-((new Date(k+"T12:00").getDay()+6)%7)))).size,
  pauseMonths:Object.keys(months).length,maxMonthPauses:Math.max(0,...Object.values(months)),
  checkins:dayRecords.filter(([,d])=>d.confirmed===true).length,

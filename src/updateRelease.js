@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.1.0',
- title:'Novos caminhos no seu Tap.',
- palette:{background:'#0d171b',neutral:'#17333c',accent:'#91d9cf',text:'#eefaf7'},
- changes:['Jornada com modos Pessoal e Rolê.','Estrelas, XP e nível de jogador.','Seu progresso na Jornada também fica no backup.'],
+ version:'1.1.1',
+ title:'Cada descoberta ganha vida.',
+ palette:{background:'#231a10',neutral:'#49321c',accent:'#edc88d',text:'#fff8ec'},
+ changes:['Jornada ao lado do Tap, com sons e entrada por nível.','XP animado, conquistas e confirmação ao sair.','Perguntas do Pessoal mais próximas do cotidiano.'],
 };

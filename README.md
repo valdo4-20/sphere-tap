@@ -248,3 +248,17 @@ XP = arredondar((10 × acertos + 40 pela conclusão + 60 se gabaritar) × (1 + 0
 ### Validação
 
 76 testes aprovados, build PWA aprovado e verificação de renderização React dos dois modos/acesso em Hoje. Cobertura inclui 10.000 rodadas, continuidade do mapa, XP, transições de cor, independência entre modos, backup e regressões de navegação existentes. Os arquivos da barra de navegação e seus estilos compartilhados não foram modificados. Nesta integração não houve nova revisão visual pelo navegador, pois o controle local estava desativado; a confirmação no iPhone permanece manual.
+
+## Jornada 1.1.1
+
+Tap/Hoje permanece primeiro; Jornada passa a ser o segundo botão da barra, antes de Progresso, Carteira e Perfil. Somente a grade necessária para cinco destinos foi adaptada; o fundo de vidro e a seleção de botão inteiro foram preservados.
+
+Selecionar o nível reproduz um toque discreto, vibração de 8 ms quando suportada e tremida visual. A seleção revela o botão Entrar com o XP máximo possível; não entra diretamente. O valor efetivo depende dos acertos. X/Escape abre confirmação de saída; cancelar conserva a pergunta/rodada. A conclusão já salva não é desfeita ao fechar o resultado.
+
+Botões, chegada de pergunta e conclusão têm sinais sonoros diferentes. Sons da Jornada podem ser desligados nas configurações; Som de conquista segue sua preferência própria. Áudio só é iniciado por gesto; a ausência de Web Audio/vibração não impede jogar. Notas musicais somem totalmente e reaparecem com fade, de forma escalonada. Movimento reduzido é respeitado.
+
+O resultado anima o XP real indo para a barra e os números até o valor final, incluindo passagens de nível; a animação não altera XP salvo nem credita novamente. As 12 medalhas da Jornada contam apenas rodadas concluídas em Pessoal/Rolê. Estão na Jornada e nos filtros do perfil. Assets preservam os materiais do kit com ícones Compass/Sparkles. Regerar apenas essas medalhas: node scripts/build-journey-medals.mjs.
+
+Pessoal usa conhecimentos cotidianos, lógica, música básica e números, sem perguntas sobre atletas, premiados ou capitais específicas. Rolê mantém cultura geral variada. As três fases internas e as 20 perguntas continuam; falta de fatos elegíveis é preenchida por desafios numéricos únicos, sem diminuir a rodada.
+
+Validação: 78 testes de lógica/dados, renderização React da Jornada e ordem da navegação. Controle do navegador estava indisponível; animações, som e vibração ainda precisam de teste visual/auditivo em aparelho.
