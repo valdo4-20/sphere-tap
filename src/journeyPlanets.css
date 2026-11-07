@@ -21,3 +21,6 @@
 .journey-page .journey-stop-content .journey-node:not(.locked){background:transparent!important;box-shadow:none!important;border:0}
 .journey-page .journey-stop-content .journey-node.current:not(.locked):is(:hover,:active,[data-down=true]){background:transparent!important;box-shadow:none!important}
 .journey-page .journey-node-caption{padding:4px 9px;border-radius:10px;background:color-mix(in srgb,var(--panel) 85%,transparent);text-align:center}
+
+@media(prefers-reduced-motion:no-preference){.journey-planet.in-view .waterfall-stream{animation:waterfall-fall .85s linear infinite}.journey-planet.in-view .waterfall-splash{animation:waterfall-splash .9s ease-out infinite}}
+@keyframes waterfall-fall{to{stroke-dashoffset:-40}}@keyframes waterfall-splash{from{opacity:.8;transform:translateY(0)}to{opacity:0;transform:translateY(-5px)}}

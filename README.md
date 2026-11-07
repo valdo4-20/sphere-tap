@@ -300,3 +300,7 @@ Para continuar o trabalho em outro chat ou computador, ler [PROJECT_STATE.md](./
 ### 1.4.0 — Um mundo a cada descoberta
 
 Jornada com ilhas cúbicas compactas, seis biomas e mundos determinados pelo nível real. Futuros biomas ficam ocultos; o Pessoal respeita a data e o Rolê preserva a rodada compartilhada. Revelações com brilho, partículas, elementos animados e reduzir movimento. Sem migração ou substituição de progresso.
+
+### 1.5.0 — Seu caminho, seus símbolos
+
+Constelação de conquistas com progresso real, banners geométricos desbloqueáveis no perfil, emblemas e cores editáveis dos amigos e cachoeiras animadas. Desenhos originais inspirados nas referências do usuário; sem copiar imagens de terceiros. Formato anterior de perfil/amigos continua aceito. Todas as animações respeitam reduzir movimento.

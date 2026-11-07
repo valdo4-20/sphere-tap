@@ -30,7 +30,7 @@ try{
   await page.waitForTimeout(300);
   const geometry=await node.evaluate(b=>{const r=b.getBoundingClientRect(),p=document.querySelector('.journey-path').getBoundingClientRect(),s=getComputedStyle(b);return {overflow:document.documentElement.scrollWidth>innerWidth,offset:Math.abs(r.x+r.width/2-p.x-p.width/2),down:b.dataset.down,scale:s.scale}});
   assert.equal(geometry.overflow,false,`${width}: overflow`);assert.ok(geometry.offset<2);assert.equal(geometry.down,undefined);assert.equal(geometry.scale,'1');const nodePaint=await node.evaluate(el=>({background:getComputedStyle(el).backgroundColor,shadow:getComputedStyle(el).boxShadow}));assert.equal(nodePaint.background,'rgba(0, 0, 0, 0)');assert.equal(nodePaint.shadow,'none');
-  assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);await page.screenshot({path:`browser-checks/planets-${width}.png`});if(width===390)console.log('PLANET_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
+  assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);assert.ok(await page.locator('.waterfall-stream').count()>0);await page.screenshot({path:`browser-checks/planets-${width}.png`});if(width===390)console.log('PLANET_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
   assert.equal(await page.getByText('O XP depende dos acertos.').count(),0);assert.equal(await page.getByText('Conquistas da Jornada',{exact:true}).count(),0);
   const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.scrollIntoViewIfNeeded();const mapY=await page.evaluate(()=>scrollY);await enter.click();
   assert.equal(await page.locator('.journey-entry-scene').count(),0);await page.locator('.journey-answers button').first().waitFor();
@@ -54,7 +54,7 @@ try{
  {
  const {context,page,errors}=await contextFor(390,initial);
  await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();await page.getByRole('button',{name:'Amigos',exact:true}).click();await page.getByRole('button',{name:'Adicionar',exact:true}).click();
- await page.getByRole('textbox',{name:'Nome do amigo'}).fill('Alex');await page.getByRole('button',{name:'Salvar amigo',exact:true}).click();await page.locator('.friend-management').getByText('Alex',{exact:true}).waitFor();
+ await page.getByRole('textbox',{name:'Nome do amigo'}).fill('Alex');await page.getByRole('button',{name:'Chama',exact:true}).click();await page.getByRole('button',{name:'Salvar amigo',exact:true}).click();await page.locator('.friend-management').getByText('Alex',{exact:true}).waitFor();assert.equal(await page.locator('.friend-management .lucide-flame').count(),1);
  await page.getByRole('button',{name:'Editar Alex',exact:true}).click();await page.getByRole('textbox',{name:'Nome do amigo'}).fill('Alexandre');await page.getByRole('button',{name:'Salvar amigo',exact:true}).click();
  await page.reload();await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Rolê',exact:true}).click();assert.equal(await page.locator('.local-ranking').count(),0);
  const node=page.getByRole('button',{name:'Nível 1, selecionar',exact:true});await node.scrollIntoViewIfNeeded();await node.click();await page.getByRole('button',{name:'Entrar no nível 1',exact:true}).click();
@@ -71,7 +71,7 @@ try{
  assert.equal(await page.getByRole('button',{name:/Passar para/}).count(),0);
  await page.getByRole('region',{name:'Ranking do Rolê'}).waitFor();assert.equal(await page.locator('.match-ranking li').count(),2);await page.screenshot({path:'browser-checks/match-ranking.png'});
  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.locator('.journey-overlay').waitFor({state:'detached'});assert.equal(await page.locator('.local-ranking,.match-ranking').count(),0);
- let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.xp,300);assert.equal(saved.localFriends[0].journey.xp,300);
+ let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.localFriends[0].emblem,'flame');assert.equal(saved.journey.xp,300);assert.equal(saved.localFriends[0].journey.xp,300);
  assert.equal(await page.locator('[data-planet-level="2"]').getAttribute('data-biome'),'water');assert.equal(await page.locator('[data-planet-level="3"]').count(),0);
  const next=page.getByRole('button',{name:'Nível 2, selecionar',exact:true});await next.scrollIntoViewIfNeeded();await next.click();await page.getByRole('button',{name:'Entrar no nível 2',exact:true}).click();
  await page.getByRole('button',{name:'Adicionar ou editar amigos',exact:true}).click();await page.getByRole('button',{name:'Adicionar',exact:true}).click();await page.getByRole('textbox',{name:'Nome do amigo'}).fill('Greg');await page.getByRole('button',{name:'Salvar amigo',exact:true}).click();await page.getByRole('button',{name:'Voltar à partida',exact:true}).click();
@@ -111,7 +111,21 @@ try{
  const {context,page}=await contextFor(390,data,'reduce');await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Dia 2, selecionar',exact:true}).waitFor();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personalUnlockSeen,today);
  assert.equal(await page.locator('[data-planet-level="2"]').count(),1);assert.equal(await page.locator('[data-planet-level="3"]').count(),0);assert.equal(await page.locator('[data-planet-level="2"] .planet-art').evaluate(b=>getComputedStyle(b).animationName),'none');
- results.push({nextDateUnlocks:true,reducedMotionHonored:true});await context.close();
+ assert.equal(await page.locator('[data-planet-level="2"] .waterfall-stream').first().evaluate(el=>getComputedStyle(el).animationName),'none');results.push({nextDateUnlocks:true,reducedMotionHonored:true});await context.close();
+ }
+ // Real earned achievements unlock banners; locked banners only show their goal.
+ for(const width of [320,390,1280]){
+  const data=structuredClone(initial);data.displayName='Valdo';data.journey={...data.journey,role:1,personal:5,xp:500};data.achievements={'your-space':{earnedAt:'2026-11-07T12:00:00.000Z'},'journey-role-1':{earnedAt:'2026-11-07T12:00:00.000Z'},'journey-personal-5':{earnedAt:'2026-11-07T12:00:00.000Z'}};data.appearance.palette=width===390?'neve':'cristal';
+  const {context,page,errors}=await contextFor(width,data,width===320?'reduce':'no-preference');await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();
+  await page.locator('.banner-wardrobe summary').click();await page.getByRole('button',{name:'Banner Explorador',exact:true}).click();assert.equal(await page.getByRole('button',{name:'Banner Explorador',exact:true}).getAttribute('aria-pressed'),'true');
+  await page.reload();await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();await page.locator('.banner-wardrobe summary').click();assert.equal(await page.getByRole('button',{name:'Banner Explorador',exact:true}).getAttribute('aria-pressed'),'true');
+  await page.screenshot({path:`browser-checks/banners-${width}.png`});if(width===390)console.log('BANNER_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
+  await page.getByRole('button',{name:'Banner Coroa solar, bloqueado',exact:true}).click();const detail=page.getByRole('dialog',{name:'10 desafios em companhia',exact:true});await detail.waitFor();assert.equal(await detail.getByRole('button',{name:'Usar banner',exact:true}).count(),0);await detail.getByRole('button',{name:'Fechar',exact:true}).click();
+  await page.getByRole('button',{name:'Conquistas',exact:true}).click();const map=page.getByRole('group',{name:'Constelação de conquistas',exact:true});await map.waitFor();await map.scrollIntoViewIfNeeded();await page.waitForTimeout(600);assert.equal(await map.locator('.reward-node').count(),12);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  if(width===320)assert.equal(await map.locator('.reward-node').first().evaluate(el=>getComputedStyle(el).animationName),'none');
+  await page.screenshot({path:`browser-checks/rewards-${width}.png`});if(width===390)console.log('REWARD_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
+  await map.locator('.reward-node').first().click();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).waitFor();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).getByRole('button',{name:'Fechar',exact:true}).click();
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.profileDetails.banner,'voyager');assert.equal(saved.journey.xp,500);assert.deepEqual(errors,[]);results.push({rewardWidth:width,realBannerUnlock:true,bannerPersists:true,constellationAccessible:true});await context.close();
  }
  await writeFile('browser-checks/results.json',JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));
 }finally{await browser?.close();server.kill()}
