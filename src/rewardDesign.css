@@ -16,3 +16,4 @@
 .profile-page .profile-area-tabs button,.profile-page .profile-medal-tabs button{color:var(--text)!important;opacity:1!important}.profile-page .profile-area-tabs button[aria-pressed=true],.profile-page .profile-medal-tabs button[aria-pressed=true]{background:var(--panel)!important;border-color:var(--muted)}
 .profile-banner-hero h1{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto}.reward-links{stroke:color-mix(in srgb,var(--text) 32%,transparent);stroke-width:1}.reward-node.locked{border-color:var(--muted)}.reward-node.locked .medal-object{opacity:.7}.reward-node.growing .medal-object{opacity:.9}
 [data-theme=light] .profile-banner-art{color:color-mix(in srgb,var(--banner-color) 55%,#302139)}[data-theme=light] .banner-options .locked .profile-banner-art{opacity:.7}
+.profile-page .profile-banner-hero h1{margin-inline:auto!important;justify-self:center;align-self:center}.profile-banner-art.compact svg{stroke-width:2}
