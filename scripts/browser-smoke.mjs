@@ -31,8 +31,9 @@ try{
   const geometry=await node.evaluate(b=>{const r=b.getBoundingClientRect(),p=document.querySelector('.journey-path').getBoundingClientRect(),s=getComputedStyle(b);return {overflow:document.documentElement.scrollWidth>innerWidth,offset:Math.abs(r.x+r.width/2-p.x-p.width/2),down:b.dataset.down,scale:s.scale}});
   assert.equal(geometry.overflow,false,`${width}: overflow`);assert.ok(geometry.offset<2);assert.equal(geometry.down,undefined);assert.equal(geometry.scale,'1');
   assert.equal(await page.getByText('O XP depende dos acertos.').count(),0);assert.equal(await page.getByText('Conquistas da Jornada',{exact:true}).count(),0);
-  const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);const mapY=await page.evaluate(()=>scrollY);await enter.click();
+  const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.scrollIntoViewIfNeeded();const mapY=await page.evaluate(()=>scrollY);await enter.click();
   assert.equal(await page.locator('.journey-entry-scene').count(),0);await page.locator('.journey-answers button').first().waitFor();
+  const lockedY=await page.evaluate(()=>-parseFloat(document.body.style.top));console.log('map-entry',JSON.stringify({width,mapY,lockedY}));
   const questions=questionsFor(1,{mode:'personal',difficultyLevel:1,round:1});
   for(let i=0;i<questions.length;i++){
    await page.locator('.journey-answers button').nth(questions[i].correct).click();
@@ -41,7 +42,7 @@ try{
    await page.getByRole('button',{name:i===29?'Concluir':'Continuar',exact:true}).click();
   }
   await page.getByRole('heading',{name:'Você foi além.'}).waitFor();await page.screenshot({path:`browser-checks/result-${width}.png`});
-  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.getByText('Por hoje, você chegou lá.').waitFor();await page.waitForTimeout(100);assert.ok(Math.abs((await page.evaluate(()=>scrollY))-mapY)<3,'map position restored');assert.equal(await page.locator('.journey-node.current').count(),0);
+  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.getByText('Por hoje, você chegou lá.').waitFor();await page.waitForTimeout(100);assert.ok(Math.abs((await page.evaluate(()=>scrollY))-lockedY)<3,`map position restored at ${width}: expected ${lockedY}, got ${await page.evaluate(()=>scrollY)}`);assert.equal(await page.locator('.journey-node.current').count(),0);
   let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personal,1);assert.equal(saved.journey.xp,400);
   await page.reload();await page.locator('.journey-entry').click();await page.getByText('Por hoje, você chegou lá.').waitFor();
   await page.screenshot({path:`browser-checks/map-${width}.png`,fullPage:true});
