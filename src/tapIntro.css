@@ -30,3 +30,5 @@
  @keyframes intro-game-dismiss{to{opacity:0;scale:.9;filter:blur(5px)}}
 }
 @media(prefers-reduced-motion:reduce){.intro-game-wipe{display:none}.intro-is-leaving{opacity:0}}
+.intro-mascot-tap{position:relative;border:0;background:none;color:inherit;height:100%;width:100%;padding:0;display:grid;place-items:center}.intro-demo-count{position:absolute;right:10%;top:10%;background:#18e64d;color:#101110;border:3px solid #101110;border-radius:50px;padding:8px 14px;font-size:30px;font-weight:800}.intro-mascot-tap .intro-mascot{max-height:calc(100% - 26px);margin-bottom:26px}
+.tap-intro .intro-mascot-tap .intro-mascot{height:330px;max-height:330px;width:auto;max-width:100%;margin:0 0 40px}.tap-intro .intro-mascot-tap{min-height:0;overflow:visible}.intro-demo-count{z-index:2}@media(max-width:700px){.tap-intro .intro-mascot-tap .intro-mascot{height:250px;max-height:250px;margin-bottom:40px}}

@@ -27,7 +27,7 @@ export default function Onboarding({onComplete,initialIntent="monitor",initialNa
  function next(e){e.preventDefault();if(step===6)finish();else setStep(v=>v+1);}
  return <div className="welcome onboarding">
   <div className="aura-viewport"><Aura fullscreen color={color} motion={.3} pulse={demo}/></div>
-  <header className="onboarding-brand"><span className="wordmark">sphere. <em>tap</em></span><img src="./sphere-mark.png" alt="Sphere"/></header>
+  <header className="onboarding-brand"><span className="wordmark">sphere. <em>tap</em></span><img src="./tap-mark.svg" alt="Sphere"/></header>
   <form ref={form} className="welcome-content onboarding-content" onSubmit={next}>
    <div className="onboarding-step" key={step}>
     <h1 tabIndex={-1} ref={heading}>{titles[step]}</h1>

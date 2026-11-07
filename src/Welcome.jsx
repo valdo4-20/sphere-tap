@@ -106,6 +106,7 @@ export function Guide({ step, onStep, onDone, onRoute }) {
         role="region"
         aria-label="Guia do Sphere Tap"
       >
+        <img className="guide-mascot" src={`./artwork/tip-${step<3?'record':step<5?'history':step===5?'care':'history'}.png`} alt="" aria-hidden="true"/>
         <div className="row between">
           <span className="eyebrow">
             GUIA · {step + 1}/{guideSteps.length}

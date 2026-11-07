@@ -22,9 +22,9 @@ export default function TapIntro({onDone}) {
   <header className="tap-intro-brand"><span>sphere. <b>tap</b></span></header>
   <div className="tap-intro-main" key={page}>
    <div className="tap-intro-art">
-    {page===0&&<><Sparkles className="intro-spark"/><div className="intro-orbit"/><button className="intro-tap" aria-label="Experimentar toque, sem salvar consumo" onClick={()=>setCount(v=>v+1)}><span key={count}>{count?`+${count}`:<Plus/>}</span></button><div className="intro-hand-wrap"><Pointer className="intro-hand" aria-hidden="true"/></div><small>TOQUE PARA EXPERIMENTAR · NÃO SALVA</small></>}
-    {page===1&&<><div className="intro-chart"><BarChart3/><span>SEU HISTÓRICO</span><div className="intro-days">{[1,2,3,4,5,6,7].map(n=><i key={n}>{n}</i>)}</div></div><Sparkles className="intro-spark"/></>}
-    {page===2&&<><img className="intro-mascot" src="./artwork/tap-gnome-v1.png" alt="Gnomo verde do Sphere Tap, com chapéu de cogumelo, acenando"/><Sparkles className="intro-spark"/></>}
+    {page===0&&<><button className="intro-mascot-tap" aria-label="Experimentar toque, sem salvar consumo" onClick={()=>setCount(v=>v+1)}><img className="intro-mascot" src="./artwork/tip-record.png" alt="Gnomo ensinando a tocar no botão de registro"/>{count>0&&<span className="intro-demo-count" key={count}>+{count}</span>}</button><small>TOQUE PARA EXPERIMENTAR · NÃO SALVA</small></>}
+    {page===1&&<img className="intro-mascot" src="./artwork/tip-history.png" alt="Gnomo mostrando um quadro de histórico"/>}
+    {page===2&&<img className="intro-mascot" src="./artwork/tip-care.png" alt="Gnomo fazendo uma pausa tranquila"/>}
    </div>
    <div className="tap-intro-copy"><span className="tap-intro-label">{slide.label}</span><h1 ref={heading} tabIndex={-1}>{slide.title}</h1><p>{slide.body}</p></div>
   </div>

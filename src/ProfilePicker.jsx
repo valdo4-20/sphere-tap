@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Camera, ImagePlus, UserRound, Leaf, Moon, Sun, Heart, Sparkles, X } from "lucide-react";
-export const profileIcons={user:UserRound,leaf:Leaf,moon:Moon,sun:Sun,heart:Heart,sparkles:Sparkles};
+import TapMark from "./TapMark";
+export const profileIcons={user:TapMark,leaf:Leaf,moon:Moon,sun:Sun,heart:Heart,sparkles:Sparkles};
 export function Avatar({profile={},size=64}) {
- const Icon=profileIcons[profile.value]||UserRound;
+ const Icon=profileIcons[profile.value]||TapMark;
  return <span className="profile-avatar" style={{width:size,height:size}}>{profile.type==="photo"?<img src={profile.value} alt="Seu perfil"/>:profile.type==="emoji"?<span>{profile.value}</span>:<Icon size={size*.43}/>}</span>;
 }
 export default function ProfilePicker({value,onChange}) {
@@ -26,7 +27,7 @@ export default function ProfilePicker({value,onChange}) {
  }
  return <div className="profile-picker">
   <Avatar profile={value} size={92}/>
-  <div className="avatar-choices" aria-label="Ícones de perfil">{Object.entries(profileIcons).map(([id,Icon])=><button type="button" key={id} className="icon-button" aria-label={"Ícone "+({user:"pessoa",leaf:"folha",moon:"lua",sun:"sol",heart:"coração",sparkles:"estrelas"}[id])} aria-pressed={value?.type==="icon"&&value.value===id} onClick={()=>onChange({type:"icon",value:id})}><Icon size={22}/></button>)}</div>
+  <div className="avatar-choices" aria-label="Ícones de perfil">{Object.entries(profileIcons).map(([id,Icon])=><button type="button" key={id} className="icon-button" aria-label={"Ícone "+({user:"gnomo",leaf:"folha",moon:"lua",sun:"sol",heart:"coração",sparkles:"estrelas"}[id])} aria-pressed={value?.type==="icon"&&value.value===id} onClick={()=>onChange({type:"icon",value:id})}><Icon size={22}/></button>)}</div>
   <div className="avatar-choices" aria-label="Emojis de perfil">{["🌿","🌙","🫧","🪷","🌻","🦋"].map(emoji=><button type="button" className="icon-button" key={emoji} aria-label={"Usar "+emoji} aria-pressed={value?.type==="emoji"&&value.value===emoji} onClick={()=>onChange({type:"emoji",value:emoji})}>{emoji}</button>)}</div>
   <div className="row"><button type="button" className="button secondary" onClick={()=>file.current.click()}><ImagePlus size={17}/>Escolher foto</button><button type="button" className="button secondary" onClick={camera}><Camera size={17}/>Câmera</button></div>
   <input ref={file} type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={upload} hidden aria-label="Foto de perfil"/>
