@@ -1,6 +1,6 @@
 {
   "name": "sphere-tap",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,10 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "node --test",
-    "test:browser": "node scripts/browser-smoke.mjs"
+    "test:browser": "node scripts/browser-smoke.mjs",
+    "test:flows": "node scripts/qa-flows.mjs",
+    "test:visual": "node scripts/qa-aura-opening.mjs",
+    "audit:questions": "node scripts/audit-questions.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

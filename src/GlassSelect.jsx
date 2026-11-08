@@ -4,13 +4,19 @@ export default function GlassSelect({children,value,defaultValue,name,onChange,d
   const options=React.Children.toArray(children).flatMap(child=>child?.props?.children && child.type===React.Fragment ? React.Children.toArray(child.props.children):[child]).filter(React.isValidElement);
   const [local,setLocal]=useState(defaultValue ?? options[0]?.props.value ?? "");
   const selected=String(value ?? local), [open,setOpen]=useState(false);
-  const root=useRef(null), input=useRef(null), trigger=useRef(null), listId=useId();
+  const root=useRef(null), input=useRef(null), trigger=useRef(null), pendingFocus=useRef(null), listId=useId();
   const current=options.find(o=>String(o.props.value)===selected);
   useEffect(()=>{
     const close=e=>{if(!root.current?.contains(e.target))setOpen(false)};
     document.addEventListener("pointerdown",close);
     return ()=>document.removeEventListener("pointerdown",close);
   },[]);
+  useEffect(()=>{
+    if(!open)return;
+    const buttons=[...root.current.querySelectorAll('[role="option"]:not(:disabled)')];
+    const target=pendingFocus.current==='End'?buttons.at(-1):pendingFocus.current==='Home'?buttons[0]:buttons.find(b=>b.getAttribute('aria-selected')==='true')||buttons[0];
+    pendingFocus.current=null;target?.focus({preventScroll:true});
+  },[open]);
   function choose(next) {
     setLocal(next); setOpen(false);
     if(input.current)input.current.value=next;
@@ -18,9 +24,10 @@ export default function GlassSelect({children,value,defaultValue,name,onChange,d
     trigger.current?.focus();
   }
   return <div className="sphere-select" ref={root} onKeyDown={e=>{
-    if(e.key==="Escape"){setOpen(false);trigger.current?.focus();e.stopPropagation();}
+    if(disabled)return;
+    if(e.key==="Escape"&&open){setOpen(false);trigger.current?.focus({preventScroll:true});e.stopPropagation();}
     if(["ArrowDown","ArrowUp","Home","End"].includes(e.key)){
-      e.preventDefault();setOpen(true);
+      e.preventDefault();if(!open){pendingFocus.current=e.key;setOpen(true);return;}
       const buttons=[...root.current.querySelectorAll('[role="option"]:not(:disabled)')];
       const i=buttons.indexOf(document.activeElement);
       const next=e.key==="Home"?0:e.key==="End"?buttons.length-1:e.key==="ArrowDown"?(i+1)%buttons.length:(i<=0?buttons.length-1:i-1);

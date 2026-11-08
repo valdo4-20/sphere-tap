@@ -1,5 +1,7 @@
 # Sphere Tap
 
+**Estado atual: versão 1.6.0.** Publicado no [site oficial](https://valdo4-20.github.io/sphere-tap/). As seções datadas abaixo registram etapas anteriores; consulte [PROJECT_STATE.md](PROJECT_STATE.md) e [QA 1.6.0](docs/QA-1.6.0.md) para os fluxos e limites da validação atual.
+
 PWA estática para acompanhar consumo, gastos e cuidado pessoal. React + Vite + Tailwind CSS + Lucide React. Interface em português e identidade do Sphere UI Kit fornecido pelo usuário, sem player ou motor musical.
 
 ## Executar

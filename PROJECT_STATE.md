@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.5.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.6.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -56,3 +56,14 @@ Banners originais em SVG inspirados nas referências geométricas/orbitais do us
 Amigos têm emblemas com símbolo e paleta ampliada; essa é a exceção autorizada para cores azuis em identidade dos participantes. Cores anteriores, nomes e pontos preservados. Campo emblem opcional para compatibilidade; exibir em gerenciamento, seleção, opiniões e rankings. Sem turnos individuais e sem mudar XP compartilhado.
 
 Cachoeiras de floresta e água têm filetes SVG com stroke-dashoffset descendente, recortados na face dos blocos, e respingos. Pausam fora da tela/aba/durante quiz; reduzir movimento mantém tudo estático. Banners e constelações também respeitam reduzir movimento e aba oculta.
+
+## Revisão 1.6.0 — 7 de novembro de 2026
+
+- As quatro cenas fornecidas pelo usuário alternam entre aberturas. A silhueta fica estática no centro, diretamente sobre a imagem, sem placa, fundo ou borda. JPGs entram no cache offline. A abertura não acrescenta etapas ao cadastro.
+- Cadastro reduzido a cinco telas, sem a preparação artificial de 14 segundos. Nascimento e consentimento continuam sendo solicitados. A demonstração permanece isolada do consumo real.
+- Seleção do calendário de cuidado corrigida e identificada para leitores de tela. Botões, ícones, foco, campos e modais receberam ajustes comuns em `polish.css`.
+- Modais bloqueiam a rolagem do corpo e restauram posição/foco. Seletores recebem foco na primeira abertura por teclado; Escape fecha primeiro a lista e depois o modal.
+- AURA continua sendo o motor existente em canvas 2D. Ondas param quando estáticas ou com a página oculta. Cor e redimensionamento redesenham a AURA estática sem iniciar animação contínua.
+- Amigos continuam apenas no aparelho. Não foram adicionados conta, backend ou amigos online.
+- Perguntas importadas receberam explicações com contexto da fonte e auditoria estrutural dos 10 mil registros. Isso não equivale a conferir editorialmente cada fato externo.
+- Verificação: `docs/QA-1.6.0.md`. Chromium e WebKit no computador não equivalem a validação em um iPhone físico.

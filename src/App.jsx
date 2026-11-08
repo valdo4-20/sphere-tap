@@ -45,6 +45,7 @@ import "./refinements.css";
 import "./focus.css";
 import "./responsive.css";
 import "./revision.css";
+import "./polish.css";
 const STORAGE = "sphere-tap-v1";
 function App() {
   const [data, setData] = useState(() => {

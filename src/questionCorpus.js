@@ -5,9 +5,17 @@ export async function loadQuestionCorpus(){
   corpus=data.groups.filter(g=>new Set(g.rows.map(r=>r[1])).size>=4).map(g=>({...g,answers:[...new Set(g.rows.map(r=>r[1]))]}));return corpus.reduce((n,g)=>n+g.rows.length,0);
  }).catch(error=>{loading=undefined;throw error});return loading;
 }
+function explanationFor(group,subject,answer){
+ if(group==='cinema-director')return `A direção de “${subject}” é creditada a ${answer} na referência indicada.`;
+ if(group==='books-author')return `“${subject}” aparece com autoria de ${answer} no catálogo indicado.`;
+ if(group==='cities-country')return `${subject} fica em ${answer}, conforme o registro geográfico da fonte.`;
+ if(group==='pokemon-types')return `Na forma padrão, ${subject} tem os tipos: ${answer}. A fonte apresenta os dados dessa forma.`;
+ if(group==='pokemon-generation')return `${subject} estreou na ${answer}, conforme a referência da espécie.`;
+ return `${subject}: ${answer}.`;
+}
 function question(g,row,index){
  const [subject,answer,qid,reference]=row,others=[];let offset=index%g.answers.length;while(others.length<3){const text=g.answers[offset++%g.answers.length];if(text!==answer&&!others.includes(text))others.push(text)}
- return {id:`catalog-${g.id}-${qid}`,sourced:true,theme:g.theme,category:categories[g.theme],difficulty:2,prompt:g.prompt.replace('{s}',subject),options:[answer,...others],correct:0,explanation:`${subject}: ${answer}.`,source:g.property?`https://www.wikidata.org/wiki/${qid}#${g.property}`:reference,sourceName:g.sourceName,reference,license:g.license};
+ return {id:`catalog-${g.id}-${qid}`,sourced:true,theme:g.theme,category:categories[g.theme],difficulty:2,prompt:g.prompt.replace('{s}',subject),options:[answer,...others],correct:0,explanation:explanationFor(g.id,subject,answer),source:g.property?`https://www.wikidata.org/wiki/${qid}#${g.property}`:reference,sourceName:g.sourceName,reference,license:g.license};
 }
 export function corpusCandidates(level,countPerGroup=24){return corpus.flatMap(g=>Array.from({length:Math.min(countPerGroup,g.rows.length)},(_,i)=>{const index=((level-1)*countPerGroup+i)%g.rows.length;return question(g,g.rows[index],index)}))}
 export function corpusCount(){return corpus.reduce((n,g)=>n+g.rows.length,0)}

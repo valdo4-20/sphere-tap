@@ -1,3 +1,4 @@
+import {lockQuizScroll as lockDocumentScroll} from "./quizScroll";
 import DateTimePicker from "./DateTimePicker";
 import GlassSelect from "./GlassSelect";
 import React, { useEffect, useRef, useState } from "react";
@@ -19,12 +20,13 @@ export function PageTitle({ eyebrow, title, children, action }) {
 export function Dialog({ title, onClose, children, className = "", style }) {
   const ref = useRef(null);
   useEffect(() => {
-    const previous = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = "hidden";
-    ref.current.showModal();
+    const dialog=ref.current,opener=document.activeElement;
+    const unlock=lockDocumentScroll();
+    dialog.showModal();
     return () => {
-      ref.current?.close();
-      document.documentElement.style.overflow = previous;
+      dialog.close();
+      unlock();
+      if(opener?.isConnected)opener.focus({preventScroll:true});
     };
   }, []);
   return (
@@ -43,7 +45,7 @@ export function Dialog({ title, onClose, children, className = "", style }) {
     >
       <div className="dialog-header">
         <h2>{title}</h2>
-        <button className="icon-button" aria-label="Fechar" onClick={onClose}>
+        <button type="button" className="icon-button" aria-label="Fechar" onClick={onClose}>
           <X size={20} />
         </button>
       </div>

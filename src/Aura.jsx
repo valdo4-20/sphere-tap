@@ -21,6 +21,7 @@ export default function Aura({enabled=true,pulse=0,color="#a8a7cd",pulseColor,al
   const [reduced,setReduced]=useState(()=>matchMedia("(prefers-reduced-motion: reduce)").matches);
   useEffect(()=>{ const q=matchMedia("(prefers-reduced-motion: reduce)");const update=()=>setReduced(q.matches);q.addEventListener("change",update);return ()=>q.removeEventListener("change",update); },[]);
   const preferences=useMemo(()=>({ customPalette:preset==="cover"?palette(color):undefined, audioReactive:false, sensitivityMode:false, motionIntensity:Math.min(.65,Math.max(.1,motion)), colorIntensity:.65, brightness:.8, transitionSoftness:.85, freeze:!enabled||reduced }),[color,motion,enabled,reduced,preset]);
+  useEffect(()=>{if(!enabled||reduced)setPulseLayers([]);},[enabled,reduced]);
   useEffect(()=>{
     if(previous.current===pulse) return;
     previous.current=pulse;

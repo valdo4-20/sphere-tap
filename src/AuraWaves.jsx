@@ -3,7 +3,7 @@ const rgb=hex=>(hex.match(/[0-9a-f]{2}/gi)||['b7','be','ca']).map(n=>parseInt(n,
 const mix=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t));
 const reflect=n=>1-Math.abs(((n%2)+2)%2-1);
 export default function AuraWaves({color,pulse,pulseColor,enabled=true}){
- const ref=useRef(null),inputs=useRef({color,pulseColor}),pulses=useRef([]),sequence=useRef(0),previous=useRef(pulse);
+ const ref=useRef(null),redraw=useRef(null),inputs=useRef({color,pulseColor}),pulses=useRef([]),sequence=useRef(0),previous=useRef(pulse);
  inputs.current={color,pulseColor};
  useEffect(()=>{
   if(previous.current===pulse)return;
@@ -12,7 +12,7 @@ export default function AuraWaves({color,pulse,pulseColor,enabled=true}){
   pulses.current=[...pulses.current,{id:++sequence.current,startedAt:performance.now(),color:inputs.current.pulseColor||inputs.current.color}];
  },[pulse,enabled]);
  useEffect(()=>{
-  const canvas=ref.current,ctx=canvas.getContext('2d'),q=matchMedia('(prefers-reduced-motion: reduce)');let frame,last=0,w=0,h=0;
+  const canvas=ref.current,ctx=canvas.getContext('2d'),q=matchMedia('(prefers-reduced-motion: reduce)');if(!ctx)return;let frame=0,last=0,w=0,h=0;
   function resize(){const scale=Math.min(1,960/Math.max(innerWidth,innerHeight));w=canvas.width=Math.round(innerWidth*scale);h=canvas.height=Math.round(innerHeight*scale);draw(performance.now(),true)}
   function glow(x,y,r,c,a){const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${c},${a})`);g.addColorStop(.35,`rgba(${c},${a*.7})`);g.addColorStop(.72,`rgba(${c},${a*.2})`);g.addColorStop(1,`rgba(${c},0)`);ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2)}
   function draw(now,force=false){if(!force&&now-last<(q.matches?1000:42))return;last=now;ctx.clearRect(0,0,w,h);if(!enabled)return;const light=document.documentElement.dataset.theme==='light',t=q.matches?0:now/1000,base=rgb(inputs.current.color),cool=mix(base,[84,110,199],.3),warm=mix(base,[209,126,146],.3),r=Math.min(w,h)*.83,breath=q.matches?1:1+Math.sin(t*.8)*.055,alpha=light?.3:.48;
@@ -28,8 +28,12 @@ export default function AuraWaves({color,pulse,pulseColor,enabled=true}){
     }
    }
   }
-  function tick(now){frame=requestAnimationFrame(tick);if(!document.hidden)draw(now)}
-  resize();window.addEventListener('resize',resize);frame=requestAnimationFrame(tick);return()=>{cancelAnimationFrame(frame);window.removeEventListener('resize',resize)};
+  function tick(now){frame=0;if(document.hidden||!enabled||q.matches)return;draw(now);frame=requestAnimationFrame(tick)}
+  function resume(){cancelAnimationFrame(frame);frame=0;if(document.hidden)return;if(!enabled||q.matches)pulses.current=[];last=0;draw(performance.now(),true);if(enabled&&!q.matches)frame=requestAnimationFrame(tick)}
+  redraw.current=()=>draw(performance.now(),true);
+  resize();resume();window.addEventListener('resize',resize,{passive:true});document.addEventListener('visibilitychange',resume);q.addEventListener('change',resume);
+  return()=>{redraw.current=null;cancelAnimationFrame(frame);window.removeEventListener('resize',resize);document.removeEventListener('visibilitychange',resume);q.removeEventListener('change',resume)};
  },[enabled]);
+ useEffect(()=>{redraw.current?.();},[color,pulseColor]);
  return <canvas className='aura-fluid-waves' ref={ref} aria-hidden='true'/>;
 }

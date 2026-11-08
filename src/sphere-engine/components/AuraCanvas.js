@@ -741,12 +741,14 @@ export function AuraSurface({ currentTrack, isPlaying, isVideo = false, videoEle
   const activeAuraPreset = resolveTrackAuraPreset(currentTrack, auraPreset);
   const theme = document.documentElement.dataset.theme || "dark";
   const canvasRef = useRef(null);
+  const redrawRef = useRef(null);
   const targetColors = useRef(defaultArtworkPalette);
   const [contrastPalette, setContrastPalette] = useState(defaultArtworkPalette);
   const currentColors = useRef((auraPreferences.customPalette ?? defaultArtworkPalette).map((color) => ({ ...color })));
   const auraPreferencesRef = useRef(auraPreferences);
   useEffect(() => {
     auraPreferencesRef.current = auraPreferences;
+    redrawRef.current?.();
   }, [auraPreferences]);
   const [audioResponse] = useState(() => new AuraAudioResponse());
   useEffect(() => {
@@ -779,6 +781,7 @@ export function AuraSurface({ currentTrack, isPlaying, isVideo = false, videoEle
     if (auraPreferences.customPalette || isVideo || activeAuraPreset !== "cover" && !blendArtwork) {
       targetColors.current = auraPreferences.customPalette ?? (isVideo || activeAuraPreset === "cover" ? defaultArtworkPalette.map((color) => ({ ...color })) : presetPalettes[activeAuraPreset].map((hue) => ({ hue, saturation: 100, lightness: 50 })));
       setContrastPalette(targetColors.current);
+      redrawRef.current?.();
       return;
     }
     let cancelled = false;
@@ -786,6 +789,7 @@ export function AuraSurface({ currentTrack, isPlaying, isVideo = false, videoEle
       if (!cancelled) {
         targetColors.current = activeAuraPreset !== "cover" && blendArtwork ? blendArtworkPalette(presetPalettes[activeAuraPreset].map((hue) => ({ hue, saturation: 100, lightness: 50 })), palette) : palette;
         setContrastPalette(targetColors.current);
+        redrawRef.current?.();
       }
     });
     return () => {
@@ -827,6 +831,7 @@ export function AuraSurface({ currentTrack, isPlaying, isVideo = false, videoEle
     let pixelRatio = 1;
     let fullscreenResizeFrame = 0;
     let frames = 0;
+    let frozenDrawn = false;
     let lastReport = 0;
     let peakEnergy = 0;
     let reportFrames = 0;
@@ -885,7 +890,9 @@ export function AuraSurface({ currentTrack, isPlaying, isVideo = false, videoEle
       const delta = lastFrame ? Math.min((now - lastFrame) / 1e3, 0.1) : 1 / 60;
       lastFrame = now;
       time += delta;
-      if (preferences.freeze && frames > 0) return;
+      if (preferences.freeze && frozenDrawn) return;
+      frozenDrawn = true;
+      if(preferences.freeze)currentColors.current=targetColors.current.map(color=>({...color}));
       frames += 1;
       const softness = Math.max(0, Math.min(1, preferences.transitionSoftness ?? 0.5));
       const transitionSpeed = 2.4 + (1 - softness) * 9;
@@ -1101,6 +1108,7 @@ export function AuraSurface({ currentTrack, isPlaying, isVideo = false, videoEle
       if (!reducedMotion || isPlaying) frame = scheduleFrame(render);
     };
     const start = () => {
+      frozenDrawn=false;
       if (document.hidden && !backgroundRendering) return;
       if (frame) cancelFrame(frame);
       lastFrame = 0;
@@ -1118,6 +1126,7 @@ export function AuraSurface({ currentTrack, isPlaying, isVideo = false, videoEle
         if (frame) cancelFrame(frame);
         frame = 0;
         resize();
+        frozenDrawn=false;
         lastFrame = 0;
         lastAudioFrame = 0;
         pulseLatch.reset();
@@ -1132,6 +1141,12 @@ export function AuraSurface({ currentTrack, isPlaying, isVideo = false, videoEle
         start();
       }
     };
+    redrawRef.current=()=>{
+      frozenDrawn=false;lastFrame=0;
+      if(document.hidden&&!backgroundRendering)return;
+      if(frame)cancelFrame(frame);
+      frame=scheduleFrame(render);
+    };
     const onFullscreenChange = onResize;
     const resizeObserver = new ResizeObserver(onResize);
     resizeObserver.observe(canvas);
@@ -1141,6 +1156,7 @@ export function AuraSurface({ currentTrack, isPlaying, isVideo = false, videoEle
     document.addEventListener("fullscreenchange", onFullscreenChange);
     document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
+      redrawRef.current=null;
       if (frame) cancelFrame(frame);
       if (fullscreenResizeFrame) window.cancelAnimationFrame(fullscreenResizeFrame);
       document.removeEventListener("fullscreenchange", onFullscreenChange);

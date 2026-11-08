@@ -17,8 +17,11 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: node scripts/browser-smoke.mjs
+      - run: npm run test:flows
+      - run: npm run test:visual
+      - run: npm run audit:questions
       - uses: actions/upload-artifact@v4
         if: always()
         with:

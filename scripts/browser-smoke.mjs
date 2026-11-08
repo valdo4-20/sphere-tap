@@ -13,7 +13,7 @@ await loadQuestionCorpus();
 try{
  for(let i=0;i<80;i++){try{if((await fetch('http://127.0.0.1:4173')).ok)break}catch{}await new Promise(r=>setTimeout(r,100))}
  await mkdir('browser-checks',{recursive:true});
- browser=await chromium.launch({headless:true});
+ browser=await chromium.launch({headless:true,...(process.env.TAP_BROWSER_CHANNEL?{channel:process.env.TAP_BROWSER_CHANNEL}:{})});
  async function contextFor(width,data,reducedMotion='no-preference'){
   const context=await browser.newContext({viewport:{width,height:844},hasTouch:width<768,isMobile:width<768,reducedMotion});
   const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -30,7 +30,7 @@ try{
   await page.waitForTimeout(300);
   const geometry=await node.evaluate(b=>{const r=b.getBoundingClientRect(),p=document.querySelector('.journey-path').getBoundingClientRect(),s=getComputedStyle(b);return {overflow:document.documentElement.scrollWidth>innerWidth,offset:Math.abs(r.x+r.width/2-p.x-p.width/2),down:b.dataset.down,scale:s.scale}});
   assert.equal(geometry.overflow,false,`${width}: overflow`);assert.ok(geometry.offset<2);assert.equal(geometry.down,undefined);assert.equal(geometry.scale,'1');const nodePaint=await node.evaluate(el=>({background:getComputedStyle(el).backgroundColor,shadow:getComputedStyle(el).boxShadow}));assert.equal(nodePaint.background,'rgba(0, 0, 0, 0)');assert.equal(nodePaint.shadow,'none');
-  assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);assert.ok(await page.locator('.waterfall-stream').count()>0);await page.screenshot({path:`browser-checks/planets-${width}.png`});if(width===390)console.log('PLANET_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
+  assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);assert.ok(await page.locator('.waterfall-stream').count()>0);await page.screenshot({path:`browser-checks/planets-${width}.png`});
   assert.equal(await page.getByText('O XP depende dos acertos.').count(),0);assert.equal(await page.getByText('Conquistas da Jornada',{exact:true}).count(),0);
   const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.scrollIntoViewIfNeeded();const mapY=await page.evaluate(()=>scrollY);await enter.click();
   assert.equal(await page.locator('.journey-entry-scene').count(),0);await page.locator('.journey-answers button').first().waitFor();
@@ -119,11 +119,11 @@ try{
   const {context,page,errors}=await contextFor(width,data,width===320?'reduce':'no-preference');await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();
   const centeredName=await page.locator('.profile-banner-hero').evaluate(el=>{const hero=el.getBoundingClientRect(),name=el.querySelector('h1').getBoundingClientRect();return Math.abs(hero.x+hero.width/2-name.x-name.width/2)});assert.ok(centeredName<2,'profile name centered');await page.locator('.banner-wardrobe summary').click();await page.getByRole('button',{name:'Banner Explorador',exact:true}).click();assert.equal(await page.getByRole('button',{name:'Banner Explorador',exact:true}).getAttribute('aria-pressed'),'true');
   await page.reload();await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();await page.locator('.banner-wardrobe summary').click();assert.equal(await page.getByRole('button',{name:'Banner Explorador',exact:true}).getAttribute('aria-pressed'),'true');
-  await page.screenshot({path:`browser-checks/banners-${width}.png`});if(width===390)console.log('BANNER_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
+  await page.screenshot({path:`browser-checks/banners-${width}.png`});
   await page.getByRole('button',{name:'Banner Coroa solar, bloqueado',exact:true}).click();const detail=page.getByRole('dialog',{name:'10 desafios em companhia',exact:true});await detail.waitFor();assert.equal(await detail.getByRole('button',{name:'Usar banner',exact:true}).count(),0);await detail.getByRole('button',{name:'Fechar',exact:true}).click();
   await page.getByRole('button',{name:'Conquistas',exact:true}).click();const map=page.getByRole('group',{name:'Constelação de conquistas',exact:true});await map.waitFor();await map.scrollIntoViewIfNeeded();await page.waitForTimeout(600);assert.equal(await map.locator('.reward-node').count(),12);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   if(width===320)assert.equal(await map.locator('.reward-node').first().evaluate(el=>getComputedStyle(el).animationName),'none');
-  await page.screenshot({path:`browser-checks/rewards-${width}.png`});if(width===390)console.log('REWARD_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
+  await page.screenshot({path:`browser-checks/rewards-${width}.png`});
   await map.locator('.reward-node').first().click();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).waitFor();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).getByRole('button',{name:'Fechar',exact:true}).click();
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.profileDetails.banner,'voyager');assert.equal(saved.journey.xp,500);assert.deepEqual(errors,[]);results.push({rewardWidth:width,realBannerUnlock:true,bannerPersists:true,constellationAccessible:true});await context.close();
  }
