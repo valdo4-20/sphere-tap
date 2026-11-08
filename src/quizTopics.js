@@ -1,4 +1,5 @@
-import {corpusCandidates} from './questionCorpus.js';
+import {accessibleArtQuestions} from './quizArt.js';
+import {playableCorpusCandidates} from './questionCorpus.js';
 import {editorialQuestions} from './quizEditorial.js';
 import {countries} from './quizGeography.js';
 export const quizThemes={
@@ -47,11 +48,11 @@ const facts=[
  ['sport-3','Esportes',2,'Quem criou o símbolo dos anéis olímpicos?',['Pierre de Coubertin','Leonardo da Vinci','Albert Einstein','Isaac Newton'],'Pierre de Coubertin desenhou o símbolo em 1913.',olympics],
  ['sport-4','Esportes',2,'Os anéis olímpicos aparecem de qual forma no símbolo?',['Entrelaçados','Empilhados sem se tocar','Em uma espiral','Dentro de um quadrado'],'Os cinco anéis aparecem entrelaçados no símbolo olímpico.',olympics]
 ];
-export const topicQuestions=facts.map(([id,category,difficulty,prompt,options,explanation,source])=>({id,category,difficulty,prompt,options,correct:0,explanation,source,sourceName:id.startsWith('body')?'OpenStax · Rice University':id.startsWith('brhistory')?'STF':id.startsWith('art')?'Museu do Louvre':id.startsWith('cinema')?'Academia do Oscar':id.startsWith('geek')?(source.includes('nintendo')?'Nintendo':source.includes('minecraft')?'Mojang · Minecraft':'Star Wars · Lucasfilm'):'Comitê Olímpico Internacional'}));
+export const topicQuestions=[...accessibleArtQuestions,...facts.filter(q=>q[0]!=='art-4').map(([id,category,difficulty,prompt,options,explanation,source])=>({id,category,difficulty,prompt,options,correct:0,explanation,source,sourceName:id.startsWith('body')?'OpenStax · Rice University':id.startsWith('brhistory')?'STF':id.startsWith('art')?'Museu do Louvre':id.startsWith('cinema')?'Academia do Oscar':id.startsWith('geek')?(source.includes('nintendo')?'Nintendo':source.includes('minecraft')?'Mojang · Minecraft':'Star Wars · Lucasfilm'):'Comitê Olímpico Internacional'}))];
 const geography=countries.map((c,i)=>({id:`daily-world-${c.id}`,category:'Geografia',difficulty:1,prompt:`Em qual país fica ${c.capital}?`,options:[c.country,...countries.filter(x=>x.country!==c.country).slice(i%5,i%5+3).map(x=>x.country)],correct:0,explanation:`${c.capital} é a capital de ${c.country}.`,source:c.source,sourceName:'Wikidata · CC0'}));
 const dailyBank=[...topicQuestions,...editorialQuestions,...geography];
 export function mixDailyTopics(items,level,shuffle){
- const pool=[...dailyBank,...corpusCandidates(level)],themes=['biology','history','art','sport','science','geography','music','cinema','geek'],used=new Set(),chosen=[];
+ const pool=[...dailyBank,...playableCorpusCandidates(level)],themes=['biology','history','art','sport','science','geography','music','cinema','geek'],used=new Set(),chosen=[];
  // Twenty-eight facts; two short practical challenges remain optional variety.
  for(let i=0;i<28;i++){
   const theme=themes[(i+level)%themes.length],candidates=pool.filter(q=>themeFor(q).id===theme&&!used.has(q.prompt));

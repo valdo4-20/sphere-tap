@@ -19,3 +19,6 @@ function question(g,row,index){
 }
 export function corpusCandidates(level,countPerGroup=24){return corpus.flatMap(g=>Array.from({length:Math.min(countPerGroup,g.rows.length)},(_,i)=>{const index=((level-1)*countPerGroup+i)%g.rows.length;return question(g,g.rows[index],index)}))}
 export function corpusCount(){return corpus.reduce((n,g)=>n+g.rows.length,0)}
+
+// Bibliographic import remains auditable, but specialist titles are not suitable for normal rounds.
+export function playableCorpusCandidates(level){return corpusCandidates(level).filter(q=>!q.id.startsWith("catalog-books-author-"))}

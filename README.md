@@ -306,3 +306,9 @@ Jornada com ilhas cúbicas compactas, seis biomas e mundos determinados pelo ní
 ### 1.5.0 — Seu caminho, seus símbolos
 
 Constelação de conquistas com progresso real, banners geométricos desbloqueáveis no perfil, emblemas e cores editáveis dos amigos e cachoeiras animadas. Desenhos originais inspirados nas referências do usuário; sem copiar imagens de terceiros. Formato anterior de perfil/amigos continua aceito. Todas as animações respeitam reduzir movimento.
+
+### 1.6.4 — Perguntas e opiniões
+
+Removidos exercícios de posição/repetição de símbolos e autoria de livros importada sem curadoria. Arte/literatura recebe seleção em português com fontes primárias. Rolê revela acertos e erros de cada opinião e um resumo individual ao fim, preservando resposta e XP compartilhados, calendário, dados e progresso.
+
+O indicador pessoal de XP/nível/estrela volta ao mapa usando o progresso salvo, sem exibir ranking dos amigos. Os banners recebem margem de desenho para contornos e movimentos caberem por inteiro.

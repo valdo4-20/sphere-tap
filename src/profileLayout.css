@@ -52,3 +52,6 @@
  @keyframes banner-wing-left{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
  @keyframes banner-wing-right{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 }
+
+/* Leave a safe drawing margin for animated ornaments and strokes. */
+.profile-page .profile-banner-hero>.profile-banner-art{top:12px;bottom:12px;width:min(calc(100% - 24px),300px);overflow:visible}.profile-page .profile-banner-art svg{display:block;overflow:visible}.profile-page .banner-options>button{overflow:visible}.profile-page .profile-banner-art.compact{flex-shrink:0;overflow:visible}

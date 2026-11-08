@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.6.3**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.6.4**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -79,3 +79,13 @@ A abertura usa apenas a imagem de sinuca cósmica sem o mascote em primeiro plan
 ## Revisão 1.6.3
 
 Status bar da PWA configurada como black-translucent com viewport-fit=cover. Fundo ocupa a área disponível atrás dos indicadores; conteúdo e cadastro respeitam safe-area-inset-top. Cor de chrome do navegador acompanha a paleta. Temas claros solicitam status bar padrão para preservar legibilidade; temas escuros solicitam transparência. Não é uma promessa de ocultar hora/bateria; o resultado depende do iOS e da instalação existente. Verificação física permanece pendente.
+
+## Revisão 1.6.4 — qualidade das perguntas e resultados individuais
+
+- Retirados os geradores de contagem/repetição de símbolos, além dos exercícios de mera ordenação de nomes. Pessoal mantém 30 questões, cinco etapas e no máximo duas contas práticas, com o mesmo calendário/XP.
+- Grupo books-author (2.900 metadados do Gutenberg) permanece apenas no arquivo de origem para auditoria, fora das rodadas de ambos os modos. Não anunciar que os 10.000 registros são todos conteúdo adequado ou disponível para jogar. Arte/literatura usa curadoria com enunciados e títulos em português, fontes primárias (MoMA, MUNCH, Funarte e ABL); removida a pergunta sobre o ano exato do roubo da Mona Lisa.
+- Usuário confirmou que quer resultado por amigo: cada opinião mostra acerto/erro, ausência fica Sem escolha. Acertos são computados pelo índice correto já embaralhado, sem depender da resposta oficial do grupo. Resumo no fim inclui acertos e escolhas feitas por participante. Esses contadores são apenas da rodada e não mudam o formato do backup.
+- Regras de XP continuam compartilhadas entre participantes, com uma resposta oficial por pergunta; opiniões diferentes não viram turnos e ausentes não ganham XP. Confirmar repetidamente não duplica acertos.
+
+- Restaurado o indicador do próprio perfil na Jornada: XP total, nível do jogador, barra até o próximo nível e estrela com as oito classes existentes. Ele usa o progresso salvo e não é ranking dos amigos; não gira.
+- Banners têm viewBox com respiro para contornos/animações e miniaturas sem recorte. O smoke verifica todos os 14 desenhos e as oito classes da estrela, sem redefinir os dados de usuários reais.

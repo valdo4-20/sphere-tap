@@ -1,8 +1,9 @@
+import JourneyProgress from './JourneyProgress';
 import FriendEmblem from './FriendEmblem';
 import {loadQuestionCorpus} from './questionCorpus.js';
 import {animate} from 'motion/mini';
 import {lockQuizScroll} from './quizScroll.js';
-import {recordVote} from './groupVotes.js';
+import {recordVote,opinionOutcomes,confirmGroupAnswer} from './groupVotes.js';
 import React,{useEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {Star,Lock,LockOpen,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown,Sparkles} from 'lucide-react';
@@ -50,7 +51,7 @@ function Quiz({quiz,onClose,onAnswer,onNext,onReady,mode,onCue,onVote,onConfirm}
   const el=ref.current?.querySelector('.journey-opinion-picker');if(!el)return;
   const effect=animate(el,{opacity:[.45,1]},{duration:.18});return()=>effect.stop();
  },[quiz.draft]);
- const question=quiz.answers[quiz.index],theme=themeFor(question);
+ const question=quiz.answers[quiz.index],theme=themeFor(question),outcomes=quiz.players?opinionOutcomes(quiz.players,quiz.votes,question.correct):[];
  const requestClose=()=>{if(leaving)return;onCue('button');setConfirmExit(true)};
  const leave=()=>setLeaving(true);
  return createPortal(<div className={'journey-overlay'+(quiz.entering?' is-entering':'')+(leaving?' is-leaving':'')} style={{'--question-color':theme.color,'--question-ink':theme.ink}}>
@@ -63,15 +64,16 @@ function Quiz({quiz,onClose,onAnswer,onNext,onReady,mode,onCue,onVote,onConfirm}
     <div className='journey-result-stars' aria-label={`${quiz.stars} estrelas`}>{Array.from({length:3},(_,i)=><Star key={i} fill={i<quiz.stars?'currentColor':'none'} className={i<quiz.stars?'earned-star':''}/>)}</div>
     <p>{quiz.score===quiz.answers.length?'Fenomenal!':'Bom trabalho!'}</p>
     <p className='journey-earned-xp'>+{quiz.xp} XP</p><JourneyXP from={quiz.previousXP} to={quiz.previousXP+quiz.xp}/>
+    {quiz.friendIds&&<section className='opinion-round-summary' aria-label='Acertos de cada participante'><h3>Suas escolhas</h3><ul>{quiz.players.map(p=>{const result=quiz.opinionResults[p.id]||{answered:0,correct:0};return <li key={p.id}><FriendEmblem friend={p}/><span>{p.name}</span><b>{result.answered?`${result.correct} ${result.correct===1?'acerto':'acertos'} em ${result.answered} ${result.answered===1?'escolha':'escolhas'}`:'Sem escolhas registradas'}</b></li>})}</ul></section>}
     {quiz.friendIds&&<section className='match-ranking' aria-label='Ranking do Rolê'><h3>Ranking do Rolê</h3><ol>{quiz.ranking.map(r=><li key={r.id}><b>{r.place}</b><FriendEmblem friend={r}/><span>{r.name}</span><strong>{r.journey.xp} XP</strong></li>)}</ol></section>}
     <button className='journey-primary' disabled={leaving} onClick={leave}>Continuar a jornada</button>
    </>:<>
     <div className='journey-question-meter' role='progressbar' aria-label='Progresso do quiz' aria-valuenow={quiz.index+1} aria-valuemin={0} aria-valuemax={quiz.answers.length}><span style={{width:`${(quiz.index+1)/quiz.answers.length*100}%`}}/></div>
     <div className='journey-question-body' key={`${quiz.level}-${quiz.index}`}><small className='journey-question-category'><Sparkles size={13}/>{theme.name}</small><h2 id='quiz-title'>{question.prompt}</h2>
-     <div className='journey-answers'>{question.options.map((answer,i)=><button key={i} disabled={quiz.entering||leaving||quiz.selected!==null} aria-pressed={quiz.friendIds&&quiz.selected===null?quiz.draft===i:undefined} className={quiz.selected!==null?(i===question.correct?'correct':i===quiz.selected?'incorrect':''):quiz.draft===i?'draft':''} onClick={()=>onAnswer(i)}><span>{['A','B','C','D'][i]}</span><span className='journey-answer-copy'>{answer}</span>{quiz.players&&<span className='answer-voters'>{quiz.players.filter(p=>quiz.votes?.[p.id]===i).map(p=><i key={p.id} title={p.name} aria-label={p.name} style={{background:'transparent'}}><FriendEmblem friend={p}/></i>)}</span>}{quiz.selected!==null&&i===question.correct&&<Check size={17}/>}</button>)}</div>
+     <div className='journey-answers'>{question.options.map((answer,i)=><button key={i} disabled={quiz.entering||leaving||quiz.selected!==null} aria-pressed={quiz.friendIds&&quiz.selected===null?quiz.draft===i:undefined} className={quiz.selected!==null?(i===question.correct?'correct':i===quiz.selected?'incorrect':''):quiz.draft===i?'draft':''} onClick={()=>onAnswer(i)}><span>{['A','B','C','D'][i]}</span><span className='journey-answer-copy'>{answer}</span>{quiz.players&&<span className='answer-voters'>{quiz.players.filter(p=>quiz.votes?.[p.id]===i).map(p=><i key={p.id} className={quiz.selected!==null?(i===question.correct?'opinion-correct':'opinion-incorrect'):''} title={quiz.selected!==null?`${p.name}: ${i===question.correct?'acertou':'errou'}`:p.name} aria-label={quiz.selected!==null?`${p.name}: ${i===question.correct?'acertou':'errou'}`:p.name} style={{background:'transparent'}}><FriendEmblem friend={p}/>{quiz.selected!==null&&<span className='opinion-verdict'>{i===question.correct?<Check size={11}/>:<X size={11}/>}</span>}</i>)}</span>}{quiz.selected!==null&&i===question.correct&&<Check size={17}/>}</button>)}</div>
      {quiz.friendIds&&quiz.selected===null&&quiz.draft!==null&&<div className='journey-opinion-picker'><fieldset><legend>Quem escolheu?</legend>{quiz.players.map(p=><button key={p.id} style={{'--opinion-color':warmFriendColor(p.color)}} aria-label={`${p.name}: ${question.options[quiz.draft]}`} aria-pressed={quiz.votes?.[p.id]===quiz.draft} onClick={()=>onVote(p.id)}><FriendEmblem friend={p}/>{p.name}</button>)}</fieldset><button className='journey-primary' onClick={onConfirm}>Confirmar resposta</button></div>}
     </div>
-    {quiz.selected!==null&&<div className={'journey-feedback'+(quiz.selected===question.correct?' is-correct':'')} key={quiz.index} role='status'><b>{quiz.selected===question.correct?<><Sparkles size={19}/>{praiseFor(quiz.level,quiz.index)}</>:'Agora você já sabe.'}</b><p>{question.explanation}</p>{question.source&&<details className='journey-source'><summary>Fonte</summary><a href={question.source} target='_blank' rel='noreferrer'>{question.sourceName} ↗</a></details>}<button className='journey-primary' onClick={onNext}>{quiz.index===quiz.answers.length-1?'Concluir':'Continuar'}<ArrowRight size={16}/></button></div>}
+    {quiz.selected!==null&&<div className={'journey-feedback'+(quiz.selected===question.correct?' is-correct':'')} key={quiz.index} role='status'><b>{quiz.friendIds?'Escolhas reveladas':quiz.selected===question.correct?<><Sparkles size={19}/>{praiseFor(quiz.level,quiz.index)}</>:'Agora você já sabe.'}</b>{quiz.friendIds&&<><span className='group-answer-result'>Resposta do grupo: {quiz.selected===question.correct?'correta':'incorreta'}</span><ul className='opinion-outcomes' aria-label='Resultado das escolhas'>{outcomes.map(p=><li key={p.id} data-result={p.status}><FriendEmblem friend={p}/><span>{p.name}</span><b>{p.status==='unanswered'?'Sem escolha':p.status==='correct'?<><Check size={14}/>Acertou</>:<><X size={14}/>Errou</>}</b></li>)}</ul></>}<p>{question.explanation}</p>{question.source&&<details className='journey-source'><summary>Fonte</summary><a href={question.source} target='_blank' rel='noreferrer'>{question.sourceName} ↗</a></details>}<button className='journey-primary' onClick={onNext}>{quiz.index===quiz.answers.length-1?'Concluir':'Continuar'}<ArrowRight size={16}/></button></div>}
    </>}
   </section>
  </div>,document.body);
@@ -107,13 +109,13 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   entering.current=true;setLoading(true);setLoadError('');
   try{await loadQuestionCorpus()}catch{setLoadError('Não foi possível preparar as perguntas. Tente novamente.');setLoading(false);entering.current=false;return}
   setLoading(false);completion.current=false;cue('question');setChoosing(false);
-  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',draft:null,votes:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
+  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',draft:null,votes:{},opinionResults:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
  }
  function begin(n=level){if(personal)launch(n,[]);else{setManaging(false);setChoosing(true)}}
  function closeQuiz(){entering.current=false;setQuiz(null);if(quiz?.finished)setAdvance(level)}
  function answer(i){cue('button');setQuiz(q=>!q||q.entering||q.selected!==null||q.finished?q:q.friendIds?{...q,draft:i}:{...q,selected:i,score:q.score+(i===q.answers[q.index].correct?1:0)})}
  function vote(id){cue('button');setQuiz(q=>!q||q.selected!==null||q.draft===null?q:{...q,votes:recordVote(q.votes,id,q.draft,q.players.map(p=>p.id))})}
- function confirmAnswer(){setQuiz(q=>!q||q.selected!==null||q.draft===null?q:{...q,selected:q.draft,score:q.score+(q.draft===q.answers[q.index].correct?1:0)})}
+ function confirmAnswer(){cue('button');setQuiz(confirmGroupAnswer)}
  function next(){
   if(!quiz||quiz.selected===null||quiz.finished||completion.current)return;
   if(quiz.index===quiz.answers.length-1){
@@ -129,7 +131,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  const path='M '+positions.map(p=>`${p.x},${p.y}`).join(' L ');
  return <section className={'journey-page'+(quiz?' is-playing':'')} style={personal?{'--journey-tint':weeklyColor(level),'--journey-tint-ink':weeklyColor(level),'--journey-trail':weeklyColor(level)}:undefined}>
   <JourneyMotion/>
-  <header className='journey-heading'><h1>Descubra pelo caminho.</h1></header>
+  <header className='journey-heading'><h1>Descubra pelo caminho.</h1><JourneyProgress progress={owner}/></header>
   <div className='journey-switch' aria-label='Escolher modo'><button aria-pressed={personal} onClick={()=>{onChange(d=>({...enrollDaily(d),mode:'personal'}))}}><UserRound size={17}/><span>Modo Pessoal</span></button><button aria-pressed={!personal} onClick={()=>onChange(d=>({...d,mode:'role'}))}><Users size={18}/><span>Modo Rolê</span></button></div>
   {personal?<div className='journey-daily-card' role='status'><h2>{playable?edition.title:'Por hoje, você chegou lá.'}</h2>{!playable&&<p className='journey-next-date'>Próximo dia: {new Date(dailyLevelDate(owner,level,clock)+'T12:00:00').toLocaleDateString('pt-BR')}</p>}</div>
   :null}
