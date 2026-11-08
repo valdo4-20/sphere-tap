@@ -31,14 +31,16 @@ try{
   await page.waitForTimeout(300);
   const geometry=await node.evaluate(b=>{const r=b.getBoundingClientRect(),p=document.querySelector('.journey-path').getBoundingClientRect(),s=getComputedStyle(b);return {overflow:document.documentElement.scrollWidth>innerWidth,offset:Math.abs(r.x+r.width/2-p.x-p.width/2),down:b.dataset.down,scale:s.scale}});
   assert.equal(geometry.overflow,false,`${width}: overflow`);assert.ok(geometry.offset<2);assert.equal(geometry.down,undefined);assert.equal(geometry.scale,'1');const nodePaint=await node.evaluate(el=>({background:getComputedStyle(el).backgroundColor,shadow:getComputedStyle(el).boxShadow}));assert.equal(nodePaint.background,'rgba(0, 0, 0, 0)');assert.equal(nodePaint.shadow,'none');
-  assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);assert.ok(await page.locator('.journey-planet .mat-crystal').count()>0);await page.screenshot({path:`browser-checks/planets-${width}.png`});
+  assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);assert.ok(await page.locator('.journey-planet .mat-ground').count()>0);await page.screenshot({path:`browser-checks/planets-${width}.png`});
   assert.equal(await page.getByText('O XP depende dos acertos.').count(),0);assert.equal(await page.getByText('Conquistas da Jornada',{exact:true}).count(),0);
   const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.scrollIntoViewIfNeeded();assert.equal(await enter.evaluate(el=>getComputedStyle(el,'::before').animationName),'journey-invite-shine');const mapY=await page.evaluate(()=>scrollY);await enter.click();
   assert.equal(await page.locator('.journey-entry-scene').count(),0);await page.locator('.journey-answers button').first().waitFor();
   const lockedY=await page.evaluate(()=>-parseFloat(document.body.style.top));console.log('map-entry',JSON.stringify({width,mapY,lockedY}));
   const questions=questionsFor(1,{mode:'personal',difficultyLevel:1,round:1});
+  if(width===390){const first=questions.shift();await page.getByRole('button',{name:'Deixar para depois',exact:true}).click();questions.push(first);assert.equal(await page.locator('#quiz-title').textContent(),questions[0].prompt);assert.equal(await page.getByRole('progressbar',{name:'Progresso do quiz'}).getAttribute('aria-valuenow'),'1');}
   for(let i=0;i<questions.length;i++){
    if(i===0)await page.waitForTimeout(700);
+   if(i===questions.length-1)assert.equal(await page.getByRole('button',{name:'Deixar para depois',exact:true}).count(),0);
    await page.locator('.journey-answers button').nth(questions[i].correct).click();
    await page.locator('.journey-feedback.is-correct').waitFor();
    if(i===2){await page.locator('.journey-streak').filter({hasText:'3 seguidos'}).waitFor();assert.equal(await page.getByLabel('Tempo desta pergunta').count(),1)}
@@ -64,18 +66,18 @@ try{
  const node=page.getByRole('button',{name:'Nível 1, selecionar',exact:true});await node.scrollIntoViewIfNeeded();await node.click();await page.getByRole('button',{name:'Entrar no nível 1',exact:true}).click();
  const start=page.getByRole('button',{name:'Começar o Rolê',exact:true});assert.equal(await start.isDisabled(),true);await page.getByRole('checkbox',{name:'Alexandre',exact:true}).check();await start.click();await page.locator('.journey-answers button').first().waitFor();
  const questions=questionsFor(1);
- for(let i=0;i<20;i++){
+ for(let i=0;i<questions.length;i++){
   if(i===0){
    await page.locator('.journey-answers button').nth((questions[i].correct+1)%4).click();await page.getByRole('button',{name:new RegExp('Alexandre:')}).click();
    await page.locator('.journey-answers button').nth(questions[i].correct).click();await page.getByRole('button',{name:new RegExp('Você:')}).click();
    assert.equal(await page.locator('.answer-voters i').count(),2);await page.screenshot({path:'browser-checks/different-opinions.png'});
   }else await page.locator('.journey-answers button').nth(questions[i].correct).click();
-  await page.getByRole('button',{name:'Confirmar resposta',exact:true}).click();if(i===0){const outcomes=page.getByRole('list',{name:'Resultado das escolhas'});await outcomes.waitFor();assert.equal(await outcomes.locator('[data-result=correct]').count(),1);assert.equal(await outcomes.locator('[data-result=incorrect]').count(),1);assert.equal(await page.locator('.answer-voters .opinion-correct').count(),1);assert.equal(await page.locator('.answer-voters .opinion-incorrect').count(),1);await page.waitForTimeout(450);await page.screenshot({path:'browser-checks/individual-answer-outcomes.png'});console.log('OUTCOMES_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'))}else assert.equal(await page.locator('.opinion-outcomes [data-result=unanswered]').count(),2);await page.getByRole('button',{name:i===19?'Concluir':'Continuar',exact:true}).click();
+  await page.getByRole('button',{name:'Confirmar resposta',exact:true}).click();if(i===0){const outcomes=page.getByRole('list',{name:'Resultado das escolhas'});await outcomes.waitFor();assert.equal(await outcomes.locator('[data-result=correct]').count(),1);assert.equal(await outcomes.locator('[data-result=incorrect]').count(),1);assert.equal(await page.locator('.answer-voters .opinion-correct').count(),1);assert.equal(await page.locator('.answer-voters .opinion-incorrect').count(),1);await page.waitForTimeout(450);await page.screenshot({path:'browser-checks/individual-answer-outcomes.png'});console.log('OUTCOMES_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'))}else assert.equal(await page.locator('.opinion-outcomes [data-result=unanswered]').count(),2);await page.getByRole('button',{name:i===questions.length-1?'Concluir':'Continuar',exact:true}).click();
  }
  assert.equal(await page.getByRole('button',{name:/Passar para/}).count(),0);
  const summary=page.getByRole('region',{name:'Acertos de cada participante'});await summary.waitFor();await summary.getByText('1 acerto em 1 escolha',{exact:true}).waitFor();await summary.getByText('0 acertos em 1 escolha',{exact:true}).waitFor();await page.getByRole('region',{name:'Ranking do Rolê'}).waitFor();assert.equal(await page.locator('.match-ranking li').count(),2);await page.screenshot({path:'browser-checks/match-ranking.png'});
  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.locator('.journey-overlay').waitFor({state:'detached'});assert.equal(await page.locator('.local-ranking,.match-ranking').count(),0);
- let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.localFriends[0].emblem,'flame');assert.equal(saved.journey.xp,300);assert.equal(saved.localFriends[0].journey.xp,300);
+ let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.localFriends[0].emblem,'flame');assert.equal(saved.journey.xp,230);assert.equal(saved.localFriends[0].journey.xp,230);
  assert.equal(await page.locator('[data-planet-level="2"]').getAttribute('data-biome'),'water');assert.equal(await page.locator('[data-planet-level="3"]').count(),0);
  const next=page.getByRole('button',{name:'Nível 2, selecionar',exact:true});await next.scrollIntoViewIfNeeded();await next.click();await page.getByRole('button',{name:'Entrar no nível 2',exact:true}).click();
  await page.getByRole('button',{name:'Adicionar ou editar amigos',exact:true}).click();await page.getByRole('button',{name:'Adicionar',exact:true}).click();await page.getByRole('textbox',{name:'Nome do amigo'}).fill('Greg');await page.getByRole('button',{name:'Salvar amigo',exact:true}).click();await page.getByRole('button',{name:'Voltar à partida',exact:true}).click();
@@ -115,7 +117,7 @@ try{
  const {context,page}=await contextFor(390,data,'reduce');await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Dia 2, selecionar',exact:true}).waitFor();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personalUnlockSeen,today);
  assert.equal(await page.locator('[data-planet-level="2"]').count(),1);assert.equal(await page.locator('[data-planet-level="3"]').count(),0);assert.equal(await page.locator('[data-planet-level="2"] .planet-art').evaluate(b=>getComputedStyle(b).animationName),'none');
- assert.equal(await page.locator('[data-planet-level="2"] .mat-crystal').first().evaluate(el=>getComputedStyle(el).animationName),'none');results.push({nextDateUnlocks:true,reducedMotionHonored:true});await context.close();
+ assert.equal(await page.locator('[data-planet-level="2"] .island-particle').first().evaluate(el=>getComputedStyle(el).animationName),'none');results.push({nextDateUnlocks:true,reducedMotionHonored:true});await context.close();
  }
  // Real earned achievements unlock banners; locked banners only show their goal.
  for(const width of [320,390,1280]){
