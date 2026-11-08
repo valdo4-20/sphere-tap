@@ -117,3 +117,7 @@
 .journey-round-rhythm{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;font-size:12px}.journey-answer-clock{font-variant-numeric:tabular-nums;color:var(--muted)}.journey-streak{display:flex;align-items:center;gap:5px;color:var(--question-color);border:1px solid currentColor;border-radius:99px;padding:5px 9px}.journey-completed-label{font-size:14px;color:var(--text);margin:0 0 8px}.journey-performance-result{font-size:12px;color:var(--muted)}
 @media(prefers-reduced-motion:no-preference){.journey-streak{animation:journey-streak-pop .4s ease-out both}.journey-completed-label{animation:journey-invite-in .35s ease-out both}}
 @keyframes journey-streak-pop{0%{scale:.85;opacity:0}60%{scale:1.08;opacity:1}100%{scale:1;opacity:1}}
+
+.journey-answer-clock.is-quick{color:var(--question-color)}
+@media(prefers-reduced-motion:no-preference){.journey-answer-clock.is-quick{animation:journey-clock-spark .5s ease-out both}}
+@keyframes journey-clock-spark{0%{scale:1}45%{scale:1.14;text-shadow:0 0 10px currentColor}100%{scale:1;text-shadow:none}}
