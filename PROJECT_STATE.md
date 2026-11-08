@@ -122,3 +122,7 @@ Prévia privada (conta ChatGPT do proprietário): https://sphere-tap-planetas-v1
 ## Publicação 1.7.0
 
 Usuário solicitou git/push no GitHub Pages após a prévia. Validação funcional completa aprovada no run 42445666006 (119 testes, Chromium, WebKit, pacote, fluxos e auditoria). Promoção de versão altera somente metadados de lançamento e documentação. Mantém XP, datas, bloqueios e backup.
+
+## Correção de CI após 1.7.0
+
+Run 42446544442 falhou com ERR_CONNECTION_REFUSED: qa-planet-pack navegava antes de o Vite estar pronto. Agora aguarda HTTP 2xx, com prazo de 15 segundos, falha explícita para processo encerrado/erro de inicialização e porta estrita. Três testes cobrem servidor lento, falha de partida e prazo. Não altera UI, XP, calendário ou dados do app.
