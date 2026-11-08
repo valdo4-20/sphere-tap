@@ -108,6 +108,10 @@ function App() {
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.theme = visual.palette.light ? "light" : "dark";
+    const themeMeta=document.querySelector('meta[name="theme-color"]');
+    if(themeMeta)themeMeta.content=visual.palette.page;
+    const statusMeta=document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+    if(statusMeta)statusMeta.content=visual.palette.light?"default":"black-translucent";
     for (const [k, v] of Object.entries(themeVariables(visual.palette)))
       root.style.setProperty(k, v);
     root.style.setProperty("--active-aura", visual.color);

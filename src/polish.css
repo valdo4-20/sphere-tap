@@ -23,3 +23,8 @@ label{overflow-wrap:anywhere}.field-help{line-height:1.65}
 @media(max-width:480px){.form-grid{grid-template-columns:minmax(0,1fr)}.tap-dialog .dialog-header{padding:16px}.tap-dialog .dialog-body{padding:16px}.tap-dialog.medal-overlay .dialog-body{padding:0}.tap-update-dialog .dialog-body{padding:0}.onboarding .welcome-actions>.button{padding-inline:10px}.onboarding-step label{font-size:14px}}
 @media(prefers-reduced-motion:no-preference){.button,.quiet-button,.icon-button{transition:background-color .18s ease,border-color .18s ease,opacity .18s ease}.button:active:not(:disabled),.icon-button:active:not(:disabled){scale:.98}.tap-dialog:not(.medal-overlay):not(.tap-update-dialog)[open]>.dialog-body{animation:tap-panel-arrive .2s ease both}@keyframes tap-panel-arrive{from{opacity:0;translate:0 6px}to{opacity:1;translate:0 0}}}
 @media(prefers-reduced-motion:reduce){.button,.quiet-button,.icon-button{transition:none}.aura-tap-glow,.aura-pulse-layer,.aura-counter-wrap *{animation:none!important}.tap-dialog .dialog-body{animation:none!important}}
+
+/* Let the background extend behind iOS status indicators, keeping controls safe. */
+html{background-color:var(--page,#00372d)}
+.sphere-tap-shell>.content{padding-top:calc(80px + env(safe-area-inset-top,0px))}
+.onboarding{padding-top:env(safe-area-inset-top,0px)}

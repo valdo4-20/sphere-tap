@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.6.2**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.6.3**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -75,3 +75,7 @@ Abertura com fade-in e fade-out no fundo e na silhueta inteira. Apenas a opacida
 ## Revisão 1.6.2
 
 A abertura usa apenas a imagem de sinuca cósmica sem o mascote em primeiro plano, fornecida pelo usuário. Silhueta branca centralizada, sem placa ou borda, preservando os fades. As quatro cenas anteriores deixam de alternar.
+
+## Revisão 1.6.3
+
+Status bar da PWA configurada como black-translucent com viewport-fit=cover. Fundo ocupa a área disponível atrás dos indicadores; conteúdo e cadastro respeitam safe-area-inset-top. Cor de chrome do navegador acompanha a paleta. Temas claros solicitam status bar padrão para preservar legibilidade; temas escuros solicitam transparência. Não é uma promessa de ocultar hora/bateria; o resultado depende do iOS e da instalação existente. Verificação física permanece pendente.

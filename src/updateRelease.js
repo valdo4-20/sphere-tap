@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.6.2',
- title:'Um novo cenário para entrar.',
+ version:'1.6.3',
+ title:'Mais espaço para a sua AURA.',
  palette:{background:'#082c24',neutral:'#174639',accent:'#ffffff',text:'#ffffff'},
- changes:['Abertura com a nova imagem de sinuca cósmica.','Silhueta branca no centro, com fade de entrada e saída.'],
+ changes:['Ajuste para integrar o fundo à área da hora e bateria no iPhone.','Controles preservam a distância do recorte e a cor do navegador acompanha o tema.'],
 };
