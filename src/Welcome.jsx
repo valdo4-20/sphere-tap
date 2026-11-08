@@ -53,6 +53,24 @@ export const guideSteps = [
     body: "Comece uma pausa. Check-ins e notas são opcionais.",
   },
   {
+    route: "Jornada",
+    target: '.journey-page',
+    title: "Uma descoberta por dia.",
+    body: "No Pessoal, cada dia libera uma fase. No Rolê, escolha os amigos presentes para jogar juntos. O XP e a estrela acompanham sua evolução.",
+  },
+  {
+    route: "Perfil",
+    target: '.profile-page',
+    title: "Conheça suas recompensas.",
+    body: "No Perfil, abra Conquistas para ver os desafios e o que falta para concluí-los. Sequências de acertos, precisão e rodadas ágeis também rendem conquistas. Alguns marcos liberam banners: escolha o seu em Seu banner.",
+  },
+  {
+    route: "Configurações",
+    target: '[data-guide="aura-customization"]',
+    title: "Sua AURA, do seu jeito.",
+    body: "Em Perfil → Preferências, abra AURA e paletas de interface. Escolha um visual, uma paleta ou sua própria cor. Em Aparência e dicas, você também pode desligar o movimento.",
+  },
+  {
     route: "Configurações",
     target: '[data-guide="settings"]',
     title: "Tudo sob seu controle.",
@@ -61,6 +79,37 @@ export const guideSteps = [
 ];
 export function Guide({ step, onStep, onDone, onRoute }) {
   const [rect, setRect] = useState(null);
+  const companion = useRef(null);
+  const transition = useRef(null);
+  const [changing, setChanging] = useState(false);
+  const [completedStep, setCompletedStep] = useState(false);
+  const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  useEffect(() => {
+    if (!reducedMotion()) {
+      transition.current = companion.current?.animate(
+        [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { duration: 220, easing: "ease-out" },
+      );
+    }
+    return () => transition.current?.cancel();
+  }, [step]);
+  async function changeStep(next) {
+    if (changing) return;
+    if (reducedMotion()) { onStep(next); return; }
+    setChanging(true);
+    setCompletedStep(next > step);
+    transition.current?.cancel();
+    const animation = companion.current?.animate(
+      [{ opacity: 1, offset: 0 }, { opacity: 1, offset: .65 }, { opacity: 0 }],
+      { duration: 480, easing: "ease-in", fill: "forwards" },
+    );
+    transition.current = animation;
+    try { await animation?.finished; }
+    catch { return; }
+    onStep(next);
+    setChanging(false);
+    setCompletedStep(false);
+  }
   const current = guideSteps[step];
   useEffect(() => {
     onRoute(current.route);
@@ -102,7 +151,7 @@ export function Guide({ step, onStep, onDone, onRoute }) {
           style={{ ...rect, borderRadius: step === 0 ? "50%" : 24 }}
         />
       )}
-      <div className="guide-companion">
+      <div className="guide-companion" ref={companion} aria-busy={changing}>
        <div className="guide-mascot-peek" aria-hidden="true"><img className="guide-mascot" src={`./artwork/tip-${step<3?'record':step<5?'history':step===5?'care':'history'}.png`} alt=""/></div>
       <aside
         className="guide-card"
@@ -111,12 +160,12 @@ export function Guide({ step, onStep, onDone, onRoute }) {
       >
         <div className="row between">
           <span className="eyebrow">
-            GUIA · {step + 1}/{guideSteps.length}
+            {completedStep ? <span role="status"><Check size={12}/> Etapa concluída</span> : <>GUIA · {step + 1}/{guideSteps.length}</>}
           </span>
           <button
             className="icon-button"
             aria-label="Sair do guia"
-            onClick={onDone}
+            onClick={() => onDone(false)}
           >
             <X size={18} />
           </button>
@@ -126,15 +175,16 @@ export function Guide({ step, onStep, onDone, onRoute }) {
         <div className="row between">
           <button
             className="quiet-button"
-            disabled={step === 0}
-            onClick={() => onStep(step - 1)}
+            disabled={step === 0 || changing}
+            onClick={() => changeStep(step - 1)}
           >
             Voltar
           </button>
           <button
             className="button primary"
+            disabled={changing}
             onClick={() =>
-              step === guideSteps.length - 1 ? onDone() : onStep(step + 1)
+              step === guideSteps.length - 1 ? onDone(true) : changeStep(step + 1)
             }
           >
             {step === guideSteps.length - 1 ? "Concluir" : "Próximo"}

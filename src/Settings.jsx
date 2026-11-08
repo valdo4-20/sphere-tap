@@ -43,7 +43,7 @@ export default function Settings({
         Categorias, privacidade e apoio para usar o Tap.
       </PageTitle>
       <AppUpdateSettings/>
-      <details className="settings-disclosure" open>
+      <details className="settings-disclosure" data-guide="aura-customization" open>
         <summary>
           AURA e paletas de interface
           <ChevronDown size={17} />

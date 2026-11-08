@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.6.5',
+ version:'1.6.6',
  title:'Os detalhes no lugar.',
  palette:{background:'#082c24',neutral:'#174639',accent:'#ffffff',text:'#ffffff'},
- changes:['XP, nível e estrela ficam compactos no canto direito da Jornada, com suas cores de evolução.','Configurações com textos alinhados, interruptores consistentes e horário sem ultrapassar a tela.','O gnomo aparece na lateral do guia, espiando o canto para apresentar cada função.','Seu cuidado ganha uma coluna centralizada e controles que cabem na tela.'],
+ changes:['Sequências de acertos e tempo ativo ganham efeitos e novas conquistas, sem alterar o XP compartilhado.','Entrar no nível ganha brilho e resposta ao toque; o XP chega à barra e a estrela salta ao voltar para o mapa.','O guia explica como personalizar a AURA, jogar na Jornada e encontrar suas recompensas.','Cada etapa avançada recebe uma confirmação de conclusão.','O guia ganha uma transição suave ao avançar e voltar entre as etapas.','A animação respeita reduzir movimento e evita saltos ao tocar várias vezes.'],
 };

@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.6.5**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.6.6**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -90,10 +90,21 @@ Status bar da PWA configurada como black-translucent com viewport-fit=cover. Fun
 - Restaurado o indicador do próprio perfil na Jornada: XP total, nível do jogador, barra até o próximo nível e estrela com as oito classes existentes. Ele usa o progresso salvo e não é ranking dos amigos; não gira.
 - Banners têm viewBox com respiro para contornos/animações e miniaturas sem recorte. O smoke verifica todos os 14 desenhos e as oito classes da estrela, sem redefinir os dados de usuários reais.
 
-## Revisão 1.6.5 — indicador compacto, configurações e guia
+## Revisão 1.6.6 — indicador compacto, configurações e guia
 
 - XP/nível/estrela são um indicador pequeno (108px) no canto direito do cabeçalho da Jornada. Sem cartão largo; preserva oito classes/cores e a barra de nível, sem ranking dos amigos.
 - Configurações têm rótulos alinhados à esquerda e cinco interruptores com o mesmo controle, inclusive sons. Horário respeita a largura no Safari e rejeita valor vazio inválido, preservando a preferência anterior. Ações finais ficam acima da barra de navegação.
 - Guia interativo usa o PNG original do gnomo na lateral, espiando sobre a quina do balão. Não ocupa mais uma linha central no cartão nem cobre fechar/avançar. A entrada é curta, sem balanço contínuo; movimento reduzido mantém a ilustração estática. A abertura de sinuca e a introdução de três telas não foram substituídas.
 
 - Seu cuidado usa uma coluna centralizada, seletor de intenção com margem automática, formulários/pausa/ações contidos na largura e respiro sobre a navegação. Lógica de pausa e check-in preservada; testes cobrem iniciar/encerrar pausa, salvar nota e confirmação sem criar consumo.
+
+Guia interativo: transição de fade entre etapas (140 ms para sair, 220 ms para entrar), bloqueio de toques repetidos e troca imediata com reduzir movimento.
+
+Guia ampliado para dez etapas: Jornada, recompensas no Perfil e edição da AURA. Confirma cada etapa avançada e avisa quando o guia é concluído; fechar não dispara conclusão.
+
+Botão de entrada com brilho finito e resposta ao toque. Ao voltar de um nível concluído, XP conta até o total real e a estrela salta uma vez; reduzir movimento mantém atualização imediata.
+
+1.6.6 adiciona 19 conquistas: sequência 3/5/10/20/30, acertos em até 10s (5/25/100), rodadas perfeitas (1/5/20), ágeis com >=80% e média <=10s (1/5/20), Rolê com opiniões (1/5/20), banner equipado e amigo salvo. Métricas opcionais journey.performance preservadas no backup e validadas; não se inferem tempos de rodadas antigas. Tempo ativo só durante resposta, pausa com aba oculta e confirmação de saída; mínimo 500ms por resposta para conquista de agilidade. Só conclusão aceita credita métricas, não muda XP nem pontos dos amigos.
+Correções: rejeição AbortError esperada em View Transition é tratada e navegação fica acima do mapa; pop-up de conquista fica acima da barra.
+
+Causa do bloqueio na navegação após modal: shell.css deixava pointer-events:none em links do estado nav-collapsed; revision.css mantinha os links visíveis sem restaurar o toque. Botões da barra agora têm pointer-events:auto explícito.
