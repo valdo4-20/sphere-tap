@@ -1,6 +1,6 @@
 {
   "name": "sphere-tap",
-  "version": "1.6.6",
+  "version": "1.7.0-test.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,8 @@
     "test:browser": "node scripts/browser-smoke.mjs",
     "test:flows": "node scripts/qa-flows.mjs",
     "test:visual": "node scripts/qa-aura-opening.mjs",
-    "audit:questions": "node scripts/audit-questions.mjs"
+    "audit:questions": "node scripts/audit-questions.mjs",
+    "test:planet-pack": "node scripts/qa-planet-pack.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

@@ -1,3 +1,4 @@
+import {TROPHY_MONTHS,MONTHLY_XP_TARGET} from './monthlyJourney.js';
 import {profileBanners} from './profileBanners.js';
 import {dayKey,shiftDay,observation,validDay} from "./model.js";
 const baseCatalog=[
@@ -47,7 +48,8 @@ const playCatalog=[
 export const achievementCatalog=[...baseCatalog.map(a=>({...a,motif:motifs[a.id]})),...extraCatalog,
  ...series("journey-role",[1,5,10,25,50,100],"journeyRole",n=>n===1?"Primeira descoberta":n+" desafios em companhia",n=>"Concluir "+n+" rodada(s) do modo Rolê. Consumo não conta.","Jornada · Rolê","Compass"),
  ...series("journey-personal",[1,5,10,25,50,100],"journeyPersonal",n=>n===1?"Um tempo para aprender":n+" treinos pessoais",n=>"Concluir "+n+" rodada(s) do modo Pessoal. Sem sequência obrigatória.","Jornada · Pessoal","Sparkles"),
- ...playCatalog
+ ...playCatalog,
+ ...TROPHY_MONTHS.map(t=>({id:t.id,title:`${t.label}: ${t.name}`,description:`Conquistar a meta de XP de ${t.label.toLowerCase()} de ${t.month.slice(0,4)}. O troféu chega assim que a meta é atingida.`,group:"Jornada · Troféus mensais",rarity:"gold",motif:"Sparkles",metric:`monthly:${t.month}`,target:MONTHLY_XP_TARGET}))
 ];
 export function confirmedPauseDays(data,today=dayKey()){
  return Object.keys(data.days||{}).filter(k=>validDay(k)&&k<=today&&observation(data,k).paused).sort();
@@ -100,7 +102,7 @@ export function achievementProgress(data,today=dayKey()){
   "chosen-aura":Boolean(data.appearance?.preset&&data.appearance.preset!=="cover"),
   "gentle-reminder":data.preferences?.reminderEnabled===true
  };
- return achievementCatalog.map(a=>{const value=a.metric?metrics[a.metric]:a.target?pauses:flags[a.id]?1:0;return {...a,current:Math.min(value,a.target||1),total:a.target||1,eligible:value>=(a.target||1),earnedAt:data.achievements?.[a.id]?.earnedAt||null};});
+ return achievementCatalog.map(a=>{const month=a.metric?.startsWith("monthly:")?data.journey?.monthlyTrophies?.months?.[a.metric.slice(8)]:null,total=month?.targetXp||a.target||1;const value=a.metric?.startsWith("monthly:")?(month?.xp||0):a.metric?metrics[a.metric]:a.target?pauses:flags[a.id]?1:0;return {...a,current:Math.min(value,total),total,eligible:value>=total,earnedAt:data.achievements?.[a.id]?.earnedAt||null};});
 }
 export function unlockAchievements(data,at=new Date().toISOString()){
  const eligible=achievementProgress(data,dayKey(new Date(at))).filter(a=>a.eligible&&!a.earnedAt);
