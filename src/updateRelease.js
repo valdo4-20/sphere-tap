@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.5.1',
- title:'O verde do Tap.',
- palette:{background:'#00372d',neutral:'#0e4937',accent:'#bdff00',text:'#ffffff'},
- changes:['AURA padrão em verde para acompanhar a nova identidade.','Entrada com a silhueta estática, inteira e sem recortes.','Logo menor com contraste e novo ícone do aplicativo.'],
+ version:'1.5.2',
+ title:'Seu perfil, em harmonia.',
+ palette:{background:'#082c24',neutral:'#174639',accent:'#bcd8c1',text:'#ffffff'},
+ changes:['Amigos com seletores compactos e foto apenas no avatar do perfil.','Conquistas com abas organizadas, novos símbolos e transições.','Oito novos banners animados e carregamento das medalhas 3D com imagem de apoio.'],
 };

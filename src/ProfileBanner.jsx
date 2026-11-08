@@ -1,4 +1,36 @@
-import React from 'react';
+import React,{useEffect,useRef,useState} from 'react';
 import './rewardDesign.css';
-const outlines=['M12 12H188V234Q100 290 12 234Z','M14 22H74L100 5 126 22H186V246L100 281 14 246Z','M16 16H184V231Q184 264 100 282 16 264 16 231Z','M26 12H174L191 40V230L100 283 9 230V40Z','M12 25H68Q100 0 132 25H188V232L100 282 12 232Z','M18 20H80L100 4 120 20H182V230L160 248 100 284 40 248 18 230Z'];
-export default function ProfileBanner({banner,compact=false}){return <span className={'profile-banner-art'+(compact?' compact':'')} style={{'--banner-color':banner.color}} aria-hidden='true'><svg viewBox='0 0 200 300' fill='none'><path className='banner-outline' d={outlines[banner.shape]}/><path className='banner-inner' d={outlines[banner.shape]} transform='translate(10 13) scale(.9 .9)'/><g className='banner-orbits'><circle cx={banner.shape%2?115:64} cy='230' r='50'/><circle cx={banner.shape%2?115:64} cy='230' r='35'/><path d='M20 233Q105 160 181 227M22 254Q115 196 177 253'/><circle cx='100' cy='248' r='8'/><circle cx='150' cy='197' r='3'/></g><path d='M100 20V50M85 35H115M100 29L106 35 100 41 94 35Z'/></svg></span>}
+const outlines=['M12 12H188V234Q100 290 12 234Z','M14 22H74L100 5 126 22H186V246L100 281 14 246Z','M16 16H184V231Q184 264 100 282 16 264 16 231Z','M26 12H174L191 40V230L100 283 9 230V40Z','M12 25H68Q100 0 132 25H188V232L100 282 12 232Z','M18 20H80L100 4 120 20H182V230L160 248 100 284 40 248 18 230Z','M18 18Q100 0 182 18V246Q135 270 100 282 65 270 18 246Z','M28 10H172V230L154 252 100 286 46 252 28 230Z','M12 40L40 12H160L188 40V238L100 282 12 238Z','M100 6L186 40V238L100 285 14 238V40Z','M18 12H182V260H138L100 286 62 260H18Z','M20 24H70L100 8 130 24H180V240L100 280 20 240Z'];
+const decor={
+ dawn:'M28 254L100 194 172 254M100 194V265M47 230L57 241M153 230L143 241M73 207L78 221M127 207L122 221M35 264H165',
+ garden:'M100 270V192M100 244Q54 249 51 213 85 208 100 244ZM100 228Q143 233 150 197 118 193 100 228ZM100 263Q66 266 60 241M100 256Q134 263 146 235',
+ mountains:'M25 259L74 193 118 259M83 259L129 203 176 259M55 220L73 227 84 208M114 222L129 231 140 217M25 269H176',
+ moon:'M121 193Q67 197 73 237 79 274 127 263 95 247 100 222 104 201 121 193ZM49 213L55 220 49 227 43 220ZM151 238L157 245 151 252 145 245Z',
+ crown:'M44 215L68 230 100 196 132 230 156 215 145 258H55ZM55 267H145M100 211V249M70 238L74 249M130 238L126 249',
+ waves:'M23 213Q49 195 75 213T127 213T179 213M23 231Q49 213 75 231T127 231T179 231M23 249Q49 231 75 249T127 249M52 268Q78 250 104 268T156 268',
+ crystal:'M100 188L127 223 100 273 73 223ZM73 223H127M100 188V273M49 213L69 239 49 270 29 239ZM151 213L171 239 151 270 131 239Z',
+ deco:'M32 257V211L100 181 168 211V257M45 257V220L100 196 155 220V257M60 257V229L100 212 140 229V257M78 257V238L100 228 122 238V257M32 269H168',
+ mushrooms:'M40 229Q42 191 70 191 98 191 100 229ZM62 229V263Q70 270 78 263V229M109 243Q111 213 132 213 155 213 159 243ZM126 243V266H140V243M37 272Q100 259 164 272',
+ wings:'M100 266Q46 253 32 204 79 212 100 242 121 212 168 204 154 253 100 266ZM100 242V270M48 224L92 251M152 224L108 251M62 242L91 259M138 242L109 259',
+ steps:'M30 260H57V241H84V222H111V203H141V185M48 272H76V253H104V234H132V215H160M31 221L49 203 67 221M49 203V242'
+};
+const movingParts={
+ mushrooms:[
+  'M40 229Q42 191 70 191 98 191 100 229ZM62 229V263Q70 270 78 263V229',
+  'M109 243Q111 213 132 213 155 213 159 243ZM126 243V266H140V243',
+  'M37 272Q100 259 164 272'],
+ wings:[
+  'M100 266Q46 253 32 204 79 212 100 242ZM48 224L92 251M62 242L91 259',
+  'M100 266Q154 253 168 204 121 212 100 242ZM152 224L108 251M138 242L109 259',
+  'M100 242V270'],
+ crystal:[
+  'M100 188L127 223 100 273 73 223ZM73 223H127M100 188V273',
+  'M49 213L69 239 49 270 29 239Z',
+  'M151 213L171 239 151 270 131 239Z']
+};
+export default function ProfileBanner({banner,compact=false}){
+ const ref=useRef(null),[visible,setVisible]=useState(false);
+ useEffect(()=>{const observer=new IntersectionObserver(entries=>setVisible(entries.some(e=>e.isIntersecting)),{threshold:.05});observer.observe(ref.current);return()=>observer.disconnect();},[]);
+ const parts=movingParts[banner.motif]||decor[banner.motif]?.match(/M[^M]*/g);
+ return <span ref={ref} className={'profile-banner-art'+(compact?' compact':'')+(visible?' is-visible':'')} style={{'--banner-color':banner.color}} aria-hidden='true'><svg viewBox='0 0 200 300' fill='none'><path className='banner-outline' d={outlines[banner.shape]||outlines[0]}/><path className='banner-inner' d={outlines[banner.shape]||outlines[0]} transform='translate(10 13) scale(.9 .9)'/>{parts?<g className={'banner-decoration banner-motif-'+banner.motif}>{parts.map((d,i)=><g className={'banner-part banner-part-'+i} key={i} style={{'--part-delay':(-i*.65)+'s'}}><path d={d}/></g>)}</g>:<g className='banner-orbits'><circle cx='64' cy='230' r='50'/><circle cx='64' cy='230' r='35'/><path d='M20 233Q105 160 181 227M22 254Q115 196 177 253'/></g>}<path d='M100 20V50M85 35H115M100 29L106 35 100 41 94 35Z'/></svg></span>;
+}

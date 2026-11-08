@@ -1,0 +1,54 @@
+/* Scope the layout to the editor so shared journey styles cannot stretch options. */
+.friend-editor .friend-colors,.friend-editor .friend-symbols{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;width:100%;min-width:0}
+.friend-editor fieldset{min-width:0}
+.friend-editor .friend-colors>button,.friend-editor .friend-symbols>button{display:grid;place-items:center;width:100%!important;min-width:0;min-height:44px;height:44px!important;padding:4px!important;border-radius:12px!important;outline:none}
+.friend-editor .friend-colors .friend-emblem,.friend-editor .friend-symbols .friend-emblem{width:32px;height:32px}
+.friend-editor .friend-colors>button[aria-pressed=true],.friend-editor .friend-symbols>button[aria-pressed=true]{outline:none;border:1px solid var(--text)!important;background:var(--glass)!important;box-shadow:inset 0 0 0 1px var(--text)}
+.friend-editor .friend-colors>button:focus-visible,.friend-editor .friend-symbols>button:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+.profile-page .profile-banner-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:52px 18px 28px!important;min-height:430px;background:radial-gradient(ellipse at 50% 35%,color-mix(in srgb,var(--banner-color) 8%,transparent),transparent 70%)}
+.profile-page .profile-banner-hero h1{background:transparent;border-radius:0;padding:0;margin:0;max-width:100%;overflow-wrap:anywhere}
+.profile-banner-hero .profile-featured{margin-block:4px}.profile-banner-hero .profile-portrait{flex-shrink:0}.profile-banner-hero .profile-intent{margin:0}
+@media(max-width:380px){.friend-editor .friend-colors,.friend-editor .friend-symbols{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}}
+.profile-page .profile-medal-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:3px;padding:4px;min-width:0;border-radius:22px}
+.profile-page .profile-medal-tabs>button{min-width:0;width:100%;justify-content:center;gap:4px;padding:10px 5px;white-space:nowrap;font-size:12px;line-height:1.25;min-height:44px}
+.profile-page .profile-medal-tabs>.segmented-pill{pointer-events:none}
+.profile-page .profile-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.profile-filters>*{min-width:0}.profile-filters .sphere-select-trigger{width:100%;font-size:11px;padding-inline:10px}
+.profile-page .reward-constellation{width:min(100%,390px);margin-block:24px 32px;scroll-margin-block:20px}
+.medal-viewer{position:relative;width:100%;height:100%;isolation:isolate}.medal-loading-preview{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:1}.medal-loading-preview>.medal-object{width:100%;height:100%}.medal-viewer .medal-webgl{position:absolute;inset:0;width:100%;height:100%;opacity:0}.medal-viewer.is-ready .medal-webgl{opacity:1}.medal-viewer.is-ready .medal-loading-preview{opacity:0;visibility:hidden}
+.banner-decoration{stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;opacity:.8}
+@media(max-width:360px){.profile-page .profile-medal-tabs>button{font-size:11px;padding-inline:3px}.profile-page .profile-filters{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:no-preference){
+ .reward-constellation.is-visible .reward-core svg{animation:reward-core-arrive .65s cubic-bezier(.2,.8,.2,1) both,reward-core-breathe 4s 1s ease-in-out infinite}
+ .reward-constellation.is-visible .reward-links{animation:reward-map-arrive .6s ease both}
+ .medal-overlay .profile-medal-detail{animation:reward-detail-arrive .55s cubic-bezier(.16,1,.3,1) both}
+ .medal-overlay .profile-medal-detail>h2,.medal-overlay .profile-medal-detail>p,.medal-overlay .reward-detail-progress{animation:reward-detail-copy .5s .16s ease both}
+ .medal-viewer .medal-webgl,.medal-loading-preview{transition:opacity .3s ease,visibility .3s}
+ .banner-wardrobe[open] .banner-decoration{animation:banner-decor-arrive .8s ease both}
+ @keyframes reward-core-arrive{from{opacity:0;transform:scale(.4) rotate(-70deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+ @keyframes reward-core-breathe{50%{transform:scale(1.12)}}
+ @keyframes reward-map-arrive{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+ @keyframes reward-detail-arrive{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:none}}
+ @keyframes reward-detail-copy{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+ @keyframes banner-decor-arrive{from{opacity:0;transform:translateY(5px)}to{opacity:.8;transform:none}}
+}
+@media(prefers-reduced-motion:no-preference){.medal-overlay.is-closing .medal-overlay-stage{animation:medal-detail-close .22s ease both}.medal-overlay.is-closing .profile-medal-detail{animation:none}.medal-overlay.is-closing .dialog-header{opacity:0;transition:opacity .18s}@keyframes medal-detail-close{to{opacity:0;transform:translateY(12px) scale(.97)}}}
+.profile-banner-art:not(.is-visible) *{animation-play-state:paused!important}
+@media(prefers-reduced-motion:no-preference){
+ .banner-motif-waves .banner-part{animation:banner-wave-flow 4.4s ease-in-out var(--part-delay) infinite}
+ .banner-motif-garden .banner-part:not(.banner-part-0){transform-origin:100px 250px;animation:banner-leaf-sway 5.2s ease-in-out var(--part-delay) infinite}
+ .banner-motif-crystal .banner-part{transform-box:fill-box;transform-origin:center;animation:banner-crystal-float 5.6s ease-in-out var(--part-delay) infinite}
+ .banner-motif-crystal .banner-part path{animation:banner-crystal-glint 4s ease-in-out var(--part-delay) infinite}
+ .banner-motif-mushrooms .banner-part-0{transform-origin:70px 267px;animation:banner-mushroom-sway 4.5s ease-in-out infinite}
+ .banner-motif-mushrooms .banner-part-1{transform-origin:132px 267px;animation:banner-mushroom-sway 3.8s -.9s ease-in-out infinite}
+ .banner-motif-wings .banner-part-0{transform-origin:100px 255px;animation:banner-wing-left 4s ease-in-out infinite}
+ .banner-motif-wings .banner-part-1{transform-origin:100px 255px;animation:banner-wing-right 4s ease-in-out infinite}
+ .banner-motif-moon .banner-part{animation:banner-crystal-glint 5s ease-in-out var(--part-delay) infinite}
+ .banner-motif-dawn .banner-part,.banner-motif-crown .banner-part,.banner-motif-deco .banner-part,.banner-motif-steps .banner-part{animation:banner-crystal-glint 6s ease-in-out var(--part-delay) infinite}
+ @keyframes banner-wave-flow{0%,100%{transform:translate(-3px,0)}50%{transform:translate(4px,-2px)}}
+ @keyframes banner-leaf-sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(4deg)}}
+ @keyframes banner-crystal-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+ @keyframes banner-crystal-glint{0%,100%{opacity:.55}50%{opacity:1}}
+ @keyframes banner-mushroom-sway{0%,100%{transform:rotate(-2deg) scaleY(1)}50%{transform:rotate(3deg) scaleY(.97)}}
+ @keyframes banner-wing-left{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
+ @keyframes banner-wing-right{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
+}
