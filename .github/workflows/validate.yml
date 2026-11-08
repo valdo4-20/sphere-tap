@@ -18,6 +18,7 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
+      - run: npm run test:planet-pack
       - run: node scripts/browser-smoke.mjs
       - run: npm run test:flows
       - run: npm run test:visual

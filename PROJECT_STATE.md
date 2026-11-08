@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.6.6**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.7.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -108,3 +108,17 @@ Botão de entrada com brilho finito e resposta ao toque. Ao voltar de um nível 
 Correções: rejeição AbortError esperada em View Transition é tratada e navegação fica acima do mapa; pop-up de conquista fica acima da barra.
 
 Causa do bloqueio na navegação após modal: shell.css deixava pointer-events:none em links do estado nav-collapsed; revision.css mantinha os links visíveis sem restaurar o toque. Botões da barra agora têm pointer-events:auto explícito.
+
+## Prévia experimental — pacote de planetas 1.1 (1.7.0-test.1)
+
+Integração aprovada para publicação no GitHub Pages pelo usuário em 8 de novembro de 2026. Base 1.6.6; lançamento 1.7.0. Original do ZIP documentado em docs/planet-pack; geradores 1.1 sem dependências em src/planetPack. Integração renderiza só planetas liberados pela regra existente; IDs por instância, formas compactas, cachoeiras recortadas com respingos, brilhos de minérios e lanternas. Animações pausam fora da tela, aba oculta e durante quiz; reduzir movimento desliga efeitos. Rolê não tem calendário por fase, portanto usa comuns; dourados no Pessoal pela data dailyLevelDate, nunca por número nem data de consulta.
+
+Não existia meta mensal: para a prévia definiu-se 5600 XP = 14 rodadas pessoais iniciais perfeitas de 400 XP. A meta é fixada ao criar cada mês. Os 12 troféus são de novembro/2026 a outubro/2027; liberam imediatamente ao alcançar a meta, sem exigência de presença. Não atribuir XP anterior à instalação a meses não registrados.
+
+Registro opcional journey.monthlyTrophies após crédito real, deduplicado por fase/partida e data local da conclusão, validação e backup preservados. Presentes do Rolê recebem XP mensal igual ao compartilhado, mesmo com níveis distintos; ausentes intactos. Troféus/conquistas ficam no Perfil, não no mapa. Arte do troféu aparece apenas quando conquistado. Prévia em endereço próprio; para trazer progresso do oficial, importar backup em Preferências.
+
+Prévia privada (conta ChatGPT do proprietário): https://sphere-tap-planetas-v11-teste.bikyrt.chatgpt.site . Revisão da integração: https://github.com/valdo4-20/sphere-tap/pull/9 (aprovado pelo usuário para publicação no oficial).
+
+## Publicação 1.7.0
+
+Usuário solicitou git/push no GitHub Pages após a prévia. Validação funcional completa aprovada no run 42445666006 (119 testes, Chromium, WebKit, pacote, fluxos e auditoria). Promoção de versão altera somente metadados de lançamento e documentação. Mantém XP, datas, bloqueios e backup.

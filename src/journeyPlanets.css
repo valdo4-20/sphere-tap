@@ -24,3 +24,8 @@
 
 @media(prefers-reduced-motion:no-preference){.journey-planet.in-view .waterfall-stream{animation:waterfall-fall .85s linear infinite}.journey-planet.in-view .waterfall-splash{animation:waterfall-splash .9s ease-out infinite}}
 @keyframes waterfall-fall{to{stroke-dashoffset:-40}}@keyframes waterfall-splash{from{opacity:.8;transform:translateY(0)}to{opacity:0;transform:translateY(-5px)}}
+/* Pack 1.1: compact detailed islands, paused outside the viewport and while playing. */
+.journey-page .journey-planet{height:112px}.journey-page .journey-planet .planet-art>svg{width:100%;height:100%;overflow:hidden}.journey-planet[data-golden=true]{--planet-glow:#e4b84c}.journey-planet .planet-halo{background:radial-gradient(ellipse,var(--planet-glow),transparent 68%);inset:16% -6% 2%;opacity:.16}.journey-planet[data-golden=true] .planet-halo{opacity:.27}.journey-planet .planet-reveal-rays{border-color:var(--planet-glow)}
+@media(max-width:600px){.journey-page .journey-planet{height:96px}}
+@media(prefers-reduced-motion:no-preference){.journey-planet.in-view [class^=mat-]{transition:opacity .3s}.journey-planet.in-view .mat-ore{animation:pack-ore-glint 4.5s ease-in-out infinite alternate}.journey-planet.in-view .mat-glow{animation:pack-lantern 3.4s ease-in-out infinite alternate}.journey-planet.in-view .mat-vine,.journey-planet.in-view .mat-tuft{animation:pack-leaf-light 5s ease-in-out infinite alternate}}
+@keyframes pack-ore-glint{to{opacity:.55}}@keyframes pack-lantern{to{opacity:.5}}@keyframes pack-leaf-light{to{opacity:.78}}

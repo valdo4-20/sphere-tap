@@ -31,7 +31,7 @@ try{
   await page.waitForTimeout(300);
   const geometry=await node.evaluate(b=>{const r=b.getBoundingClientRect(),p=document.querySelector('.journey-path').getBoundingClientRect(),s=getComputedStyle(b);return {overflow:document.documentElement.scrollWidth>innerWidth,offset:Math.abs(r.x+r.width/2-p.x-p.width/2),down:b.dataset.down,scale:s.scale}});
   assert.equal(geometry.overflow,false,`${width}: overflow`);assert.ok(geometry.offset<2);assert.equal(geometry.down,undefined);assert.equal(geometry.scale,'1');const nodePaint=await node.evaluate(el=>({background:getComputedStyle(el).backgroundColor,shadow:getComputedStyle(el).boxShadow}));assert.equal(nodePaint.background,'rgba(0, 0, 0, 0)');assert.equal(nodePaint.shadow,'none');
-  assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);assert.ok(await page.locator('.waterfall-stream').count()>0);await page.screenshot({path:`browser-checks/planets-${width}.png`});
+  assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);assert.ok(await page.locator('.journey-planet .mat-crystal').count()>0);await page.screenshot({path:`browser-checks/planets-${width}.png`});
   assert.equal(await page.getByText('O XP depende dos acertos.').count(),0);assert.equal(await page.getByText('Conquistas da Jornada',{exact:true}).count(),0);
   const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.scrollIntoViewIfNeeded();assert.equal(await enter.evaluate(el=>getComputedStyle(el,'::before').animationName),'journey-invite-shine');const mapY=await page.evaluate(()=>scrollY);await enter.click();
   assert.equal(await page.locator('.journey-entry-scene').count(),0);await page.locator('.journey-answers button').first().waitFor();
@@ -115,7 +115,7 @@ try{
  const {context,page}=await contextFor(390,data,'reduce');await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Dia 2, selecionar',exact:true}).waitFor();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personalUnlockSeen,today);
  assert.equal(await page.locator('[data-planet-level="2"]').count(),1);assert.equal(await page.locator('[data-planet-level="3"]').count(),0);assert.equal(await page.locator('[data-planet-level="2"] .planet-art').evaluate(b=>getComputedStyle(b).animationName),'none');
- assert.equal(await page.locator('[data-planet-level="2"] .waterfall-stream').first().evaluate(el=>getComputedStyle(el).animationName),'none');results.push({nextDateUnlocks:true,reducedMotionHonored:true});await context.close();
+ assert.equal(await page.locator('[data-planet-level="2"] .mat-crystal').first().evaluate(el=>getComputedStyle(el).animationName),'none');results.push({nextDateUnlocks:true,reducedMotionHonored:true});await context.close();
  }
  // Real earned achievements unlock banners; locked banners only show their goal.
  for(const width of [320,390,1280]){

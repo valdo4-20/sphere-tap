@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import TestBuildNotice from "./TestBuildNotice";
 import {UpdateLifecycle} from './AppUpdate';
 import TapIntro from './TapIntro';
 import Opening from './Opening';
@@ -17,7 +18,7 @@ function Root(){
  });
  React.useEffect(()=>{const show=()=>setPreview(true);window.addEventListener('sphere-tap:show-intro',show);return()=>window.removeEventListener('sphere-tap:show-intro',show);},[]);
  if(boot)return <Opening onComplete={finishBoot}/>;
- return preview?<TapIntro onDone={()=>{const url=new URL(location.href);url.searchParams.delete('preview');history.replaceState(null,'',url);try{localStorage.setItem('sphere-tap-intro-seen','yes');sessionStorage.setItem("sphere-tap-opened","yes");}catch{}setPreview(false);}}/>:<App/>;
+ return preview?<TapIntro onDone={()=>{const url=new URL(location.href);url.searchParams.delete('preview');history.replaceState(null,'',url);try{localStorage.setItem('sphere-tap-intro-seen','yes');sessionStorage.setItem("sphere-tap-opened","yes");}catch{}setPreview(false);}}/>:<>{import.meta.env.VITE_TAP_TEST_PREVIEW==='true'&&<TestBuildNotice/>}<App/></>;
 }
 
 createRoot(document.getElementById("root")).render(<><UpdateLifecycle/><Root /></>);

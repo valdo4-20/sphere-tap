@@ -1,0 +1,2 @@
+import React from 'react';
+export default function TestBuildNotice(){return <aside className="test-build-notice" style={{position:'relative',zIndex:2,margin:'max(8px, env(safe-area-inset-top)) 16px 0',padding:'12px 14px',border:'1px solid #d8b87066',borderRadius:16,background:'#18392f',color:'#fff7dd',font:'12px/1.6 Inter,system-ui,sans-serif'}}><strong>Teste · Planetas 1.1</strong><br/>Seu progresso do oficial pode ser trazido pelo backup em Perfil → Preferências. Esta versão usa um endereço separado.</aside>}

@@ -1,8 +1,10 @@
+import {MonthlyTrophyArtwork} from './MonthlyTrophies';
 import {achievementCatalog} from "./achievements";
 import React,{useRef} from "react";
 import {Leaf} from 'lucide-react';
 export default function MedalArtwork({id,title="",locked=false,celebration=false,interactive=false}){
  const ref=useRef(null),drag=useRef(null),rotation=useRef({x:0,y:0});
+ if(id?.startsWith('trophy-'))return <MonthlyTrophyArtwork id={id} locked={locked} title={title}/>;
  const rarity=achievementCatalog.find(a=>a.id===id)?.rarity||"bronze";
  const metal={bronze:"#a97651",silver:"#aebdc7",gold:"#d6b367",platinum:"#bbd5d6",emerald:"#5a9b83",obsidian:"#6f5a87",diamond:"#bee3ee"}[rarity];
  function apply(){ref.current.style.setProperty('--medal-rx',rotation.current.x+'deg');ref.current.style.setProperty('--medal-ry',rotation.current.y+'deg');}
