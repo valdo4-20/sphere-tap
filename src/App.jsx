@@ -714,7 +714,8 @@ function App() {
         <Guide
           step={guide}
           onStep={setGuide}
-          onDone={() => {
+          onDone={(completed) => {
+            if (completed) notify("Guia concluído. Tudo pronto para explorar!");
             setGuide(null);
             setRoute("Hoje");
           }}

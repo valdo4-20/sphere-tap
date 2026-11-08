@@ -99,3 +99,5 @@ Status bar da PWA configurada como black-translucent com viewport-fit=cover. Fun
 - Seu cuidado usa uma coluna centralizada, seletor de intenção com margem automática, formulários/pausa/ações contidos na largura e respiro sobre a navegação. Lógica de pausa e check-in preservada; testes cobrem iniciar/encerrar pausa, salvar nota e confirmação sem criar consumo.
 
 Guia interativo: transição de fade entre etapas (140 ms para sair, 220 ms para entrar), bloqueio de toques repetidos e troca imediata com reduzir movimento.
+
+Guia ampliado para dez etapas: Jornada, recompensas no Perfil e edição da AURA. Confirma cada etapa avançada e avisa quando o guia é concluído; fechar não dispara conclusão.
