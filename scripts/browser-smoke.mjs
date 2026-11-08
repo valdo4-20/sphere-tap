@@ -115,7 +115,7 @@ try{
  const {context,page}=await contextFor(390,data,'reduce');await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Dia 2, selecionar',exact:true}).waitFor();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personalUnlockSeen,today);
  assert.equal(await page.locator('[data-planet-level="2"]').count(),1);assert.equal(await page.locator('[data-planet-level="3"]').count(),0);assert.equal(await page.locator('[data-planet-level="2"] .planet-art').evaluate(b=>getComputedStyle(b).animationName),'none');
- assert.equal(await page.locator('[data-planet-level="2"] .waterfall-stream').first().evaluate(el=>getComputedStyle(el).animationName),'none');results.push({nextDateUnlocks:true,reducedMotionHonored:true});await context.close();
+ assert.equal(await page.locator('[data-planet-level="2"] .mat-crystal').first().evaluate(el=>getComputedStyle(el).animationName),'none');results.push({nextDateUnlocks:true,reducedMotionHonored:true});await context.close();
  }
  // Real earned achievements unlock banners; locked banners only show their goal.
  for(const width of [320,390,1280]){

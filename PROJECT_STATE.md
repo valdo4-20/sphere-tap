@@ -116,3 +116,5 @@ Ainda não publicar no oficial. Branch de teste separada, base 1.6.6. Original d
 Não existia meta mensal: para a prévia definiu-se 5600 XP = 14 rodadas pessoais iniciais perfeitas de 400 XP. A meta é fixada ao criar cada mês. Os 12 troféus são de novembro/2026 a outubro/2027; liberam imediatamente ao alcançar a meta, sem exigência de presença. Não atribuir XP anterior à instalação a meses não registrados.
 
 Registro opcional journey.monthlyTrophies após crédito real, deduplicado por fase/partida e data local da conclusão, validação e backup preservados. Presentes do Rolê recebem XP mensal igual ao compartilhado, mesmo com níveis distintos; ausentes intactos. Troféus/conquistas ficam no Perfil, não no mapa. Arte do troféu aparece apenas quando conquistado. Prévia em endereço próprio; para trazer progresso do oficial, importar backup em Preferências.
+
+Prévia privada (conta ChatGPT do proprietário): https://sphere-tap-planetas-v11-teste.bikyrt.chatgpt.site . Revisão da integração: https://github.com/valdo4-20/sphere-tap/pull/9 (rascunho, não mesclar sem avaliação visual do usuário).
