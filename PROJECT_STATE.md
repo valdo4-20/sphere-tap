@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.6.1**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.6.2**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -71,3 +71,7 @@ Cachoeiras de floresta e água têm filetes SVG com stroke-dashoffset descendent
 ## Revisão 1.6.1
 
 Abertura com fade-in e fade-out no fundo e na silhueta inteira. Apenas a opacidade muda; não há placa, recortes, giro ou deformação. Transições verificadas em Chromium e WebKit, com tempos reduzidos para movimento reduzido.
+
+## Revisão 1.6.2
+
+A abertura usa apenas a imagem de sinuca cósmica sem o mascote em primeiro plano, fornecida pelo usuário. Silhueta branca centralizada, sem placa ou borda, preservando os fades. As quatro cenas anteriores deixam de alternar.
