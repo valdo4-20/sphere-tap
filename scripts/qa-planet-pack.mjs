@@ -27,7 +27,7 @@ try{
   }
   {
    const d=seed();d.journey.role=1;const {context,p,errors}=await session(d,{motion:'no-preference'});await nav(p,'Jornada');const water=p.locator('[data-planet-level="2"]');await water.scrollIntoViewIfNeeded();await p.waitForTimeout(350);const stream=water.locator('.waterfall-stream').first();await stream.waitFor({state:'attached'});assert.notEqual(await stream.evaluate(el=>getComputedStyle(el).animationName),'none');const a=await stream.evaluate(el=>getComputedStyle(el).strokeDashoffset);await p.waitForTimeout(250);const b=await stream.evaluate(el=>getComputedStyle(el).strokeDashoffset);assert.notEqual(a,b,'water actually falls');await p.screenshot({path:`browser-checks/pack-water-${engine}.png`});if(engine==='webkit')console.log('PACK_WATER_JPEG:'+(await p.screenshot({type:'jpeg',quality:60})).toString('base64'));const node=p.getByRole('button',{name:'Nível 2, selecionar',exact:true});
-   await node.dispatchEvent('pointerdown',{pointerId:1,pointerType:'touch',isPrimary:true,button:0,clientX:180,clientY:300});await p.waitForTimeout(650);await node.dispatchEvent('pointerup',{pointerId:1,pointerType:'touch',isPrimary:true});
+   await node.hover();await p.mouse.down();await p.clock.runFor(650);await p.mouse.up();
    const inspect=p.locator('.island-inspect-dialog');await inspect.waitFor();const scene=inspect.locator('.island-scene');
    if(engine==='chromium'){
     await p.waitForFunction(()=>document.querySelector('.island-scene')?.dataset.renderer==='webgl');
