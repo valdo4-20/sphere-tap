@@ -1,3 +1,4 @@
+import './interfaceRepairs.css';
 import React, { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -101,12 +102,13 @@ export function Guide({ step, onStep, onDone, onRoute }) {
           style={{ ...rect, borderRadius: step === 0 ? "50%" : 24 }}
         />
       )}
+      <div className="guide-companion">
+       <div className="guide-mascot-peek" aria-hidden="true"><img className="guide-mascot" src={`./artwork/tip-${step<3?'record':step<5?'history':step===5?'care':'history'}.png`} alt=""/></div>
       <aside
         className="guide-card"
         role="region"
         aria-label="Guia do Sphere Tap"
       >
-        <img className="guide-mascot" src={`./artwork/tip-${step<3?'record':step<5?'history':step===5?'care':'history'}.png`} alt="" aria-hidden="true"/>
         <div className="row between">
           <span className="eyebrow">
             GUIA · {step + 1}/{guideSteps.length}
@@ -140,6 +142,7 @@ export function Guide({ step, onStep, onDone, onRoute }) {
           </button>
         </div>
       </aside>
+      </div>
     </div>
   );
 }

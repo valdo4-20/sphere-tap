@@ -312,3 +312,7 @@ Constelação de conquistas com progresso real, banners geométricos desbloqueá
 Removidos exercícios de posição/repetição de símbolos e autoria de livros importada sem curadoria. Arte/literatura recebe seleção em português com fontes primárias. Rolê revela acertos e erros de cada opinião e um resumo individual ao fim, preservando resposta e XP compartilhados, calendário, dados e progresso.
 
 O indicador pessoal de XP/nível/estrela volta ao mapa usando o progresso salvo, sem exibir ranking dos amigos. Os banners recebem margem de desenho para contornos e movimentos caberem por inteiro.
+
+### 1.6.5 — Ajustes de interface
+
+XP, nível e estrela compactos no canto direito da Jornada; ajustes de alinhamento/interruptores/horário das configurações; gnomo na quina do balão do guia interativo. Dados e preferências continuam no mesmo formato.

@@ -1,3 +1,4 @@
+import './interfaceRepairs.css';
 import ItemIcon from "./ItemIcon";
 import Segmented from "./Segmented";
 import GlassSelect from "./GlassSelect";
@@ -245,7 +246,7 @@ export default function History({ data, onEdit, onAdd, onDaySave, onAdjust }) {
 export function Care({data,onChange,onDaySave,onCraving,onGoals}){
  const pause=data.pause&&!data.pause.endedAt;
  return <section className="route-transition care-minimal" data-guide="care"><PageTitle title="Seu cuidado."/>
- <label>Sua intenção<GlassSelect aria-label="Minha intenção" value={data.intent} onChange={e=>onChange(d=>({...d,intent:e.target.value}))}>{Object.entries(intentions).map(([id,v])=><option key={id} value={id}>{v.title}</option>)}</GlassSelect></label>
+ <label className="care-intent-picker">Sua intenção<GlassSelect aria-label="Minha intenção" value={data.intent} onChange={e=>onChange(d=>({...d,intent:e.target.value}))}>{Object.entries(intentions).map(([id,v])=><option key={id} value={id}>{v.title}</option>)}</GlassSelect></label>
  <section className="pause-focus"><Pause size={26}/><h2>{pause?"Uma pausa, no seu tempo.":"Espaço para uma pausa."}</h2>{pause&&<p>Desde {new Date(data.pause.startedAt).toLocaleDateString('pt-BR')}</p>}<button className="button primary" onClick={()=>onChange(d=>({...d,pause:pause?{...d.pause,endedAt:new Date().toISOString()}:{startedAt:new Date().toISOString(),endedAt:null}}))}>{pause?'Encerrar pausa':'Iniciar pausa'}</button><small>Dias sem consumo precisam ser confirmados.</small></section>
  <details className="compact-explanation"><summary>Como foi seu dia?</summary><DayCheck data={data} date={dayKey()} onSave={onDaySave}/></details>
  <details className="compact-explanation"><summary>Vontades e notas</summary><button className="button secondary" onClick={()=>onCraving()}><Plus size={15}/>Registrar vontade</button>{[...data.cravings].sort((a,b)=>new Date(b.time)-new Date(a.time)).slice(0,5).map(c=><button className="craving-row" key={c.id} onClick={()=>onCraving(c)}><span>{new Date(c.time).toLocaleDateString('pt-BR')}</span><span>Intensidade {c.intensity}/5</span></button>)}</details>
