@@ -35,7 +35,7 @@
 .profile-banner-art:not(.is-visible) *{animation-play-state:paused!important}
 @media(prefers-reduced-motion:no-preference){
  .banner-motif-waves .banner-part{animation:banner-wave-flow 4.4s ease-in-out var(--part-delay) infinite}
- .banner-motif-garden .banner-part:not(.banner-part-0){transform-origin:100px 250px;animation:banner-leaf-sway 5.2s ease-in-out var(--part-delay) infinite}
+ .banner-motif-garden .banner-part:not(.banner-part-0),.banner-motif-fern .banner-part:not(.banner-part-0){transform-origin:100px 250px;animation:banner-leaf-sway 5.2s ease-in-out var(--part-delay) infinite}
  .banner-motif-crystal .banner-part{transform-box:fill-box;transform-origin:center;animation:banner-crystal-float 5.6s ease-in-out var(--part-delay) infinite}
  .banner-motif-crystal .banner-part path{animation:banner-crystal-glint 4s ease-in-out var(--part-delay) infinite}
  .banner-motif-mushrooms .banner-part-0{transform-origin:70px 267px;animation:banner-mushroom-sway 4.5s ease-in-out infinite}

@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.5.2',
- title:'Seu perfil, em harmonia.',
+ version:'1.5.3',
+ title:'Uma Samambaia só sua.',
  palette:{background:'#082c24',neutral:'#174639',accent:'#bcd8c1',text:'#ffffff'},
- changes:['Amigos com seletores compactos e foto apenas no avatar do perfil.','Conquistas com abas organizadas, novos símbolos e transições.','Oito novos banners animados e carregamento das medalhas 3D com imagem de apoio.'],
+ changes:['Samambaia ganha um ramo próprio, com folhas finas em pares.','Jardim mantém suas folhas largas e o desenho original.','O novo ramo acompanha o balanço suave dos banners.'],
 };
