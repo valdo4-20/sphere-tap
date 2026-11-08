@@ -106,3 +106,5 @@ Botão de entrada com brilho finito e resposta ao toque. Ao voltar de um nível 
 
 1.6.6 adiciona 19 conquistas: sequência 3/5/10/20/30, acertos em até 10s (5/25/100), rodadas perfeitas (1/5/20), ágeis com >=80% e média <=10s (1/5/20), Rolê com opiniões (1/5/20), banner equipado e amigo salvo. Métricas opcionais journey.performance preservadas no backup e validadas; não se inferem tempos de rodadas antigas. Tempo ativo só durante resposta, pausa com aba oculta e confirmação de saída; mínimo 500ms por resposta para conquista de agilidade. Só conclusão aceita credita métricas, não muda XP nem pontos dos amigos.
 Correções: rejeição AbortError esperada em View Transition é tratada e navegação fica acima do mapa; pop-up de conquista fica acima da barra.
+
+Causa do bloqueio na navegação após modal: shell.css deixava pointer-events:none em links do estado nav-collapsed; revision.css mantinha os links visíveis sem restaurar o toque. Botões da barra agora têm pointer-events:auto explícito.
