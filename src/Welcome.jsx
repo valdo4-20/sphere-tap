@@ -61,6 +61,34 @@ export const guideSteps = [
 ];
 export function Guide({ step, onStep, onDone, onRoute }) {
   const [rect, setRect] = useState(null);
+  const companion = useRef(null);
+  const transition = useRef(null);
+  const [changing, setChanging] = useState(false);
+  const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  useEffect(() => {
+    if (!reducedMotion()) {
+      transition.current = companion.current?.animate(
+        [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { duration: 220, easing: "ease-out" },
+      );
+    }
+    return () => transition.current?.cancel();
+  }, [step]);
+  async function changeStep(next) {
+    if (changing) return;
+    if (reducedMotion()) { onStep(next); return; }
+    setChanging(true);
+    transition.current?.cancel();
+    const animation = companion.current?.animate(
+      [{ opacity: 1 }, { opacity: 0 }],
+      { duration: 140, easing: "ease-in", fill: "forwards" },
+    );
+    transition.current = animation;
+    try { await animation?.finished; }
+    catch { return; }
+    onStep(next);
+    setChanging(false);
+  }
   const current = guideSteps[step];
   useEffect(() => {
     onRoute(current.route);
@@ -102,7 +130,7 @@ export function Guide({ step, onStep, onDone, onRoute }) {
           style={{ ...rect, borderRadius: step === 0 ? "50%" : 24 }}
         />
       )}
-      <div className="guide-companion">
+      <div className="guide-companion" ref={companion} aria-busy={changing}>
        <div className="guide-mascot-peek" aria-hidden="true"><img className="guide-mascot" src={`./artwork/tip-${step<3?'record':step<5?'history':step===5?'care':'history'}.png`} alt=""/></div>
       <aside
         className="guide-card"
@@ -126,15 +154,16 @@ export function Guide({ step, onStep, onDone, onRoute }) {
         <div className="row between">
           <button
             className="quiet-button"
-            disabled={step === 0}
-            onClick={() => onStep(step - 1)}
+            disabled={step === 0 || changing}
+            onClick={() => changeStep(step - 1)}
           >
             Voltar
           </button>
           <button
             className="button primary"
+            disabled={changing}
             onClick={() =>
-              step === guideSteps.length - 1 ? onDone() : onStep(step + 1)
+              step === guideSteps.length - 1 ? onDone() : changeStep(step + 1)
             }
           >
             {step === guideSteps.length - 1 ? "Concluir" : "Próximo"}

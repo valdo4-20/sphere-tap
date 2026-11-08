@@ -313,6 +313,6 @@ Removidos exercícios de posição/repetição de símbolos e autoria de livros 
 
 O indicador pessoal de XP/nível/estrela volta ao mapa usando o progresso salvo, sem exibir ranking dos amigos. Os banners recebem margem de desenho para contornos e movimentos caberem por inteiro.
 
-### 1.6.5 — Ajustes de interface
+### 1.6.6 — Ajustes de interface
 
 XP, nível e estrela compactos no canto direito da Jornada; ajustes de alinhamento/interruptores/horário das configurações; gnomo na quina do balão do guia interativo. Dados e preferências continuam no mesmo formato.

@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.6.5**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.6.6**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -90,10 +90,12 @@ Status bar da PWA configurada como black-translucent com viewport-fit=cover. Fun
 - Restaurado o indicador do próprio perfil na Jornada: XP total, nível do jogador, barra até o próximo nível e estrela com as oito classes existentes. Ele usa o progresso salvo e não é ranking dos amigos; não gira.
 - Banners têm viewBox com respiro para contornos/animações e miniaturas sem recorte. O smoke verifica todos os 14 desenhos e as oito classes da estrela, sem redefinir os dados de usuários reais.
 
-## Revisão 1.6.5 — indicador compacto, configurações e guia
+## Revisão 1.6.6 — indicador compacto, configurações e guia
 
 - XP/nível/estrela são um indicador pequeno (108px) no canto direito do cabeçalho da Jornada. Sem cartão largo; preserva oito classes/cores e a barra de nível, sem ranking dos amigos.
 - Configurações têm rótulos alinhados à esquerda e cinco interruptores com o mesmo controle, inclusive sons. Horário respeita a largura no Safari e rejeita valor vazio inválido, preservando a preferência anterior. Ações finais ficam acima da barra de navegação.
 - Guia interativo usa o PNG original do gnomo na lateral, espiando sobre a quina do balão. Não ocupa mais uma linha central no cartão nem cobre fechar/avançar. A entrada é curta, sem balanço contínuo; movimento reduzido mantém a ilustração estática. A abertura de sinuca e a introdução de três telas não foram substituídas.
 
 - Seu cuidado usa uma coluna centralizada, seletor de intenção com margem automática, formulários/pausa/ações contidos na largura e respiro sobre a navegação. Lógica de pausa e check-in preservada; testes cobrem iniciar/encerrar pausa, salvar nota e confirmação sem criar consumo.
+
+Guia interativo: transição de fade entre etapas (140 ms para sair, 220 ms para entrar), bloqueio de toques repetidos e troca imediata com reduzir movimento.
