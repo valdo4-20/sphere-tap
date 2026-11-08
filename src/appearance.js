@@ -1,13 +1,13 @@
 export const palettes = [
   {
     id: "cristal",
-    name: "Cristal",
-    description: "Neutro, prata e vidro translúcido.",
-    page: "#0c0d10",
+    name: "Bosque",
+    description: "Verde profundo, lima e vidro translúcido.",
+    page: "#04271f",
     panel: "rgba(255,255,255,.045)",
     text: "#f3f3f2",
-    muted: "#a6a6ae",
-    aura: "#b7beca",
+    muted: "#adc3b5",
+    aura: "#9bd34b",
     light: false,
   },
   {

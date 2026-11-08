@@ -17,7 +17,7 @@ export default defineConfig({
     VitePWA({
       registerType: "prompt",
       injectRegister: false,
-      includeAssets: ["icon.svg", "apple-touch-icon.png"],
+      includeAssets: ["tap-app-icon.svg", "tap-apple-icon-v2.png"],
       manifest: {
         name: "Sphere Tap — No seu ritmo",
         short_name: "Sphere Tap",
@@ -28,9 +28,9 @@ export default defineConfig({
         start_url: "./",
         scope: "./",
         icons: [
-          { src: "icon-192.png", sizes: "192x192", type: "image/png" },
+          { src: "tap-icon-192-v2.png", sizes: "192x192", type: "image/png" },
           {
-            src: "icon-512.png",
+            src: "tap-icon-512-v2.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable",

@@ -6,7 +6,7 @@ import ProfilePicker from "./ProfilePicker";
 import Terms,{TERMS_VERSION} from "./Terms";
 import {intentions} from "./intentions";
 import {dayKey} from "./model";
-export default function Onboarding({onComplete,initialIntent="monitor",initialName="",initialProfile,initialBirthDate="",color="#b7beca"}){
+export default function Onboarding({onComplete,initialIntent="monitor",initialName="",initialProfile,initialBirthDate="",color="#9bd34b"}){
  const [step,setStep]=useState(0),[name,setName]=useState(initialName),[birthDate,setBirthDate]=useState(initialBirthDate),[profile,setProfile]=useState(initialProfile||{type:"icon",value:"user"}),[intent,setIntent]=useState(initialIntent),[accepted,setAccepted]=useState(false),[demo,setDemo]=useState(0),[storage,setStorage]=useState("Salvamento ativo"),[busy,setBusy]=useState(false),[ready,setReady]=useState(false),[preparation,setPreparation]=useState(0);
 
  const heading=useRef(null), form=useRef(null);

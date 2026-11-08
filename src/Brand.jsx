@@ -19,6 +19,6 @@ export default function Brand({light,onHome,photo}){
  },[]);
  return <div className={"floating-brand"+(photo?" brand-on-photo":"")+(scrollHidden?" brand-scroll-hidden":"")}>
   <button className={"floating-wordmark"+(idle?" brand-idle":"")} onClick={onHome} aria-label="Sphere Tap início"><span>sphere.</span><em>tap</em></button>
-  <button className="floating-logo" onClick={onHome} aria-label="Sphere Tap início"><img src={"./tap-mark.svg"} alt=""/></button>
+  <button className="floating-logo" onClick={onHome} aria-label="Sphere Tap início"><img src={light?"./tap-mark-black.svg":"./tap-mark-white.svg"} alt=""/></button>
  </div>;
 }

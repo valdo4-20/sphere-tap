@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.5.0',
- title:'Seu caminho, seus símbolos.',
- palette:{background:'#211c25',neutral:'#382e3b',accent:'#d9c3b0',text:'#faf7f2'},
- changes:['Explore suas conquistas em uma constelação de medalhas.','Desbloqueie banners e escolha emblemas coloridos para os amigos.','A água agora cai nas cachoeiras dos planetas, com filetes e respingos suaves.'],
+ version:'1.5.1',
+ title:'O verde do Tap.',
+ palette:{background:'#00372d',neutral:'#0e4937',accent:'#bdff00',text:'#ffffff'},
+ changes:['AURA padrão em verde para acompanhar a nova identidade.','Entrada com a silhueta estática, inteira e sem recortes.','Logo menor com contraste e novo ícone do aplicativo.'],
 };
