@@ -1,3 +1,4 @@
+import {profileBanners} from '../src/profileBanners.js';
 import {loadQuestionCorpus} from '../src/questionCorpus.js';
 import {chromium} from '@playwright/test';
 import {spawn} from 'node:child_process';
@@ -24,7 +25,7 @@ try{
   const data=structuredClone(initial);data.appearance.palette=width===390?'neve':'cristal';data.appearance.preset='eclipse';data.appearance.auraColor='#c77b91';
   const {context,page,errors}=await contextFor(width,data);
   await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Pessoal',exact:true}).click();
-  await page.getByRole('heading',{name:'Pequenas descobertas'}).waitFor();
+  await page.getByRole('heading',{name:'Pequenas descobertas'}).waitFor();await page.getByRole('region',{name:'Seu progresso na Jornada'}).getByText('Nível 1',{exact:true}).waitFor();
   const node=page.getByRole('button',{name:'Dia 1, selecionar',exact:true});await node.scrollIntoViewIfNeeded();
   for(let i=0;i<6;i++){if(width<768)await node.tap();else await node.click()}
   await page.waitForTimeout(300);
@@ -66,7 +67,7 @@ try{
    await page.locator('.journey-answers button').nth(questions[i].correct).click();await page.getByRole('button',{name:new RegExp('Você:')}).click();
    assert.equal(await page.locator('.answer-voters i').count(),2);await page.screenshot({path:'browser-checks/different-opinions.png'});
   }else await page.locator('.journey-answers button').nth(questions[i].correct).click();
-  await page.getByRole('button',{name:'Confirmar resposta',exact:true}).click();if(i===0){const outcomes=page.getByRole('list',{name:'Resultado das escolhas'});await outcomes.waitFor();assert.equal(await outcomes.locator('[data-result=correct]').count(),1);assert.equal(await outcomes.locator('[data-result=incorrect]').count(),1);assert.equal(await page.locator('.answer-voters .opinion-correct').count(),1);assert.equal(await page.locator('.answer-voters .opinion-incorrect').count(),1);await page.screenshot({path:'browser-checks/individual-answer-outcomes.png'});console.log('OUTCOMES_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'))}else assert.equal(await page.locator('.opinion-outcomes [data-result=unanswered]').count(),2);await page.getByRole('button',{name:i===19?'Concluir':'Continuar',exact:true}).click();
+  await page.getByRole('button',{name:'Confirmar resposta',exact:true}).click();if(i===0){const outcomes=page.getByRole('list',{name:'Resultado das escolhas'});await outcomes.waitFor();assert.equal(await outcomes.locator('[data-result=correct]').count(),1);assert.equal(await outcomes.locator('[data-result=incorrect]').count(),1);assert.equal(await page.locator('.answer-voters .opinion-correct').count(),1);assert.equal(await page.locator('.answer-voters .opinion-incorrect').count(),1);await page.waitForTimeout(450);await page.screenshot({path:'browser-checks/individual-answer-outcomes.png'});console.log('OUTCOMES_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'))}else assert.equal(await page.locator('.opinion-outcomes [data-result=unanswered]').count(),2);await page.getByRole('button',{name:i===19?'Concluir':'Continuar',exact:true}).click();
  }
  assert.equal(await page.getByRole('button',{name:/Passar para/}).count(),0);
  const summary=page.getByRole('region',{name:'Acertos de cada participante'});await summary.waitFor();await summary.getByText('1 acerto em 1 escolha',{exact:true}).waitFor();await summary.getByText('0 acertos em 1 escolha',{exact:true}).waitFor();await page.getByRole('region',{name:'Ranking do Rolê'}).waitFor();assert.equal(await page.locator('.match-ranking li').count(),2);await page.screenshot({path:'browser-checks/match-ranking.png'});
@@ -126,6 +127,20 @@ try{
   await page.screenshot({path:`browser-checks/rewards-${width}.png`});
   await map.locator('.reward-node').first().click();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).waitFor();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).getByRole('button',{name:'Fechar',exact:true}).click();
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.profileDetails.banner,'voyager');assert.equal(saved.journey.xp,500);assert.deepEqual(errors,[]);results.push({rewardWidth:width,realBannerUnlock:true,bannerPersists:true,constellationAccessible:true});await context.close();
+ }
+ // Restore the account's saved XP, player level and every evolving star color.
+ {
+ const data=structuredClone(initial);data.journey={...data.journey,xp:1500};const {context,page}=await contextFor(320,data,'reduce');
+ for(const [stars,rank] of [[0,'yellow'],[15,'orange'],[40,'red'],[80,'purple'],[140,'blue'],[220,'fire'],[340,'ice'],[500,'prismatic']]){
+  await page.evaluate(stars=>{const d=JSON.parse(localStorage.getItem('sphere-tap-v1'));d.journey.stars=stars;localStorage.setItem('sphere-tap-v1',JSON.stringify(d))},stars);await page.reload();await page.locator('.nav-glass').getByRole('button',{name:'Jornada',exact:true}).click();const panel=page.getByRole('region',{name:'Seu progresso na Jornada'});await panel.waitFor();assert.equal(await panel.getAttribute('data-star-rank'),rank);await panel.getByText('Nível 5',{exact:true}).waitFor();await panel.getByText('1500 XP',{exact:true}).waitFor();assert.equal(await panel.locator('svg').evaluate(el=>getComputedStyle(el).opacity),'1');assert.equal(await page.locator('.local-ranking').count(),0);
+ }await page.screenshot({path:'browser-checks/journey-saved-progress.png'});console.log('PROGRESS_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));results.push({savedProgressVisible:true,allStarClasses:true});await context.close();
+ }
+ // Every decorative shape fits inside the banner viewport and its containing card.
+ for(const width of [320,390]){
+ const data=structuredClone(initial);for(const b of profileBanners)if(b.achievement)data.achievements[b.achievement]={earnedAt:'2026-11-07T12:00:00.000Z'};
+ const {context,page}=await contextFor(width,data,'reduce');await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();await page.locator('.banner-wardrobe summary').click();
+ for(const b of profileBanners){await page.getByRole('button',{name:`Banner ${b.name}`,exact:true}).click();const violations=await page.locator('.profile-banner-art svg').evaluateAll(svgs=>svgs.flatMap(svg=>{const box=svg.viewBox.baseVal,root=svg.getScreenCTM().inverse(),errors=[];for(const shape of svg.querySelectorAll('path,circle')){const bounds=shape.getBBox(),m=root.multiply(shape.getScreenCTM());for(const [x,y] of [[bounds.x,bounds.y],[bounds.x+bounds.width,bounds.y],[bounds.x,bounds.y+bounds.height],[bounds.x+bounds.width,bounds.y+bounds.height]]){const p=new DOMPoint(x,y).matrixTransform(m);if(p.x<box.x+1||p.y<box.y+1||p.x>box.x+box.width-1||p.y>box.y+box.height-1)errors.push(shape.getAttribute('class')||shape.tagName)}}return errors}));assert.deepEqual(violations,[],`banner bounds: ${b.name}, ${width}`)}
+ await page.locator('.profile-banner-hero').scrollIntoViewIfNeeded();await page.screenshot({path:`browser-checks/banner-unclipped-${width}.png`});results.push({bannerWidth:width,allBannersFit:true});await context.close();
  }
  await writeFile('browser-checks/results.json',JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));
 }finally{await browser?.close();server.kill()}

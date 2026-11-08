@@ -1,3 +1,4 @@
+import JourneyProgress from './JourneyProgress';
 import FriendEmblem from './FriendEmblem';
 import {loadQuestionCorpus} from './questionCorpus.js';
 import {animate} from 'motion/mini';
@@ -130,7 +131,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  const path='M '+positions.map(p=>`${p.x},${p.y}`).join(' L ');
  return <section className={'journey-page'+(quiz?' is-playing':'')} style={personal?{'--journey-tint':weeklyColor(level),'--journey-tint-ink':weeklyColor(level),'--journey-trail':weeklyColor(level)}:undefined}>
   <JourneyMotion/>
-  <header className='journey-heading'><h1>Descubra pelo caminho.</h1></header>
+  <header className='journey-heading'><h1>Descubra pelo caminho.</h1><JourneyProgress progress={owner}/></header>
   <div className='journey-switch' aria-label='Escolher modo'><button aria-pressed={personal} onClick={()=>{onChange(d=>({...enrollDaily(d),mode:'personal'}))}}><UserRound size={17}/><span>Modo Pessoal</span></button><button aria-pressed={!personal} onClick={()=>onChange(d=>({...d,mode:'role'}))}><Users size={18}/><span>Modo Rolê</span></button></div>
   {personal?<div className='journey-daily-card' role='status'><h2>{playable?edition.title:'Por hoje, você chegou lá.'}</h2>{!playable&&<p className='journey-next-date'>Próximo dia: {new Date(dailyLevelDate(owner,level,clock)+'T12:00:00').toLocaleDateString('pt-BR')}</p>}</div>
   :null}
