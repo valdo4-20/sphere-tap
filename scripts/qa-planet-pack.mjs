@@ -1,3 +1,4 @@
+import {waitForPreview} from './wait-for-preview.mjs';
 import {chromium,webkit} from '@playwright/test';
 import {spawn} from 'node:child_process';
 import {mkdir} from 'node:fs/promises';
@@ -8,7 +9,8 @@ import {recordMonthlyXp} from '../src/planetPack/monthlyTrophies.mjs';
 import {addFriend,friendColors} from '../src/localFriends.js';
 import {loadQuestionCorpus} from '../src/questionCorpus.js';
 import {questionsFor} from '../src/journeyLogic.js';
-const server=spawn(process.execPath,['node_modules/vite/bin/vite.js','preview','--host','127.0.0.1','--port','4179'],{stdio:'ignore'});
+const server=spawn(process.execPath,['node_modules/vite/bin/vite.js','preview','--host','127.0.0.1','--port','4179','--strictPort'],{stdio:'ignore'});
+let startupError;server.once('error',error=>{startupError=error});
 await mkdir('browser-checks',{recursive:true});await loadQuestionCorpus();
 const seed=()=>{const d=structuredClone(initial);d.welcomeDone=true;d.displayName='Teste dos planetas';d.preferences.journeySound=false;d.preferences.achievementSound=false;d.achievements=Object.fromEntries(achievementCatalog.filter(a=>!a.id.startsWith('trophy-')).map(a=>[a.id,{earnedAt:'2026-11-07T12:00:00.000Z'}]));return d};
 const monthly=()=>recordMonthlyXp(null,{eventId:'seed-previous-completed-rounds',xp:5300,date:'2026-11-08',targetXp:5600});
@@ -17,6 +19,7 @@ async function session(data,{zone='America/Maceio',motion='reduce'}={}){const co
 const nav=(p,name)=>p.locator('.nav-glass').getByRole('button',{name,exact:true}).click();
 const saved=p=>p.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));
 try{
+ await waitForPreview('http://127.0.0.1:4179',{server,getStartupError:()=>startupError});
  for(const [engine,type] of [['chromium',chromium],['webkit',webkit]]){
   browser=await type.launch({headless:true});
   for(const zone of ['America/Maceio','Pacific/Kiritimati']){
