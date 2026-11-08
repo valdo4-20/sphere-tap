@@ -83,7 +83,7 @@ try{
  await page.getByRole('button',{name:'Remover Alexandre',exact:true}).click();await page.getByRole('button',{name:'Manter amigo',exact:true}).click();assert.equal(await page.locator('.friend-management>li').count(),2);
  await page.getByRole('button',{name:'Remover Alexandre',exact:true}).click();await page.getByRole('button',{name:'Remover amigo',exact:true}).click();assert.equal(await page.locator('.friend-management>li').count(),1);
  await page.getByRole('button',{name:'Voltar à partida',exact:true}).click();assert.equal(await page.getByRole('checkbox',{name:'Greg',exact:true}).isChecked(),true);
- await page.getByRole('button',{name:'Fechar',exact:true}).click();console.log('NAV_VIEWPORT',JSON.stringify(await page.evaluate(()=>({width:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,body:document.body.style.cssText,button:document.querySelector('.journey-start-action')?getComputedStyle(document.querySelector('.journey-start-action')).position:null}))));assert.equal(await page.locator('.nav-glass button').last().evaluate(el=>getComputedStyle(el).pointerEvents),'auto');await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();
+ await page.getByRole('button',{name:'Fechar',exact:true}).click();assert.equal(await page.locator('.nav-glass button').last().evaluate(el=>getComputedStyle(el).pointerEvents),'auto');await page.locator('.nav-glass').getByRole('button',{name:'Perfil',exact:true}).click();
  await page.getByRole('button',{name:'Conquistas',exact:true}).click();await page.getByRole('heading',{name:'Suas conquistas.'}).waitFor();
  assert.deepEqual(errors,[]);results.push({localFriendsPersist:true,sharedRoundXP:true,roleRequiresFriends:true,participantsEditableAtLevel:true,rankingOnlyAfterMatch:true,explicitRemoval:true,conquestsSeparate:true});await context.close();
  }
@@ -128,7 +128,7 @@ try{
   await page.getByRole('button',{name:'Conquistas',exact:true}).click();const map=page.getByRole('group',{name:'Constelação de conquistas',exact:true});await map.waitFor();await map.scrollIntoViewIfNeeded();await page.waitForTimeout(600);assert.equal(await map.locator('.reward-node').count(),12);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   if(width===320)assert.equal(await map.locator('.reward-node').first().evaluate(el=>getComputedStyle(el).animationName),'none');
   await page.screenshot({path:`browser-checks/rewards-${width}.png`});
-  await map.locator('.reward-node').first().click();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).waitFor();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).getByRole('button',{name:'Fechar',exact:true}).click();
+  await map.getByRole('button',{name:'Seu espaço, conquistada',exact:true}).click();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).waitFor();await page.getByRole('dialog',{name:'Seu espaço',exact:true}).getByRole('button',{name:'Fechar',exact:true}).click();
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.profileDetails.banner,'voyager');assert.equal(saved.journey.xp,500);assert.deepEqual(errors,[]);results.push({rewardWidth:width,realBannerUnlock:true,bannerPersists:true,constellationAccessible:true});await context.close();
  }
  // Restore the account's saved XP, player level and every evolving star color.

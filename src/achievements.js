@@ -44,9 +44,10 @@ const playCatalog=[
  {id:'chosen-banner',title:'Uma moldura sua',description:'Equipar um banner desbloqueado no Perfil.',group:'Seu espaço',motif:'ShieldCheck',rarity:'silver'},
  {id:'saved-friend',title:'Boa companhia',description:'Adicionar um amigo ao seu perfil.',group:'Seu espaço',motif:'UserRound',rarity:'bronze'}
 ];
-export const achievementCatalog=[...playCatalog,...baseCatalog.map(a=>({...a,motif:motifs[a.id]})),...extraCatalog,
+export const achievementCatalog=[...baseCatalog.map(a=>({...a,motif:motifs[a.id]})),...extraCatalog,
  ...series("journey-role",[1,5,10,25,50,100],"journeyRole",n=>n===1?"Primeira descoberta":n+" desafios em companhia",n=>"Concluir "+n+" rodada(s) do modo Rolê. Consumo não conta.","Jornada · Rolê","Compass"),
- ...series("journey-personal",[1,5,10,25,50,100],"journeyPersonal",n=>n===1?"Um tempo para aprender":n+" treinos pessoais",n=>"Concluir "+n+" rodada(s) do modo Pessoal. Sem sequência obrigatória.","Jornada · Pessoal","Sparkles")
+ ...series("journey-personal",[1,5,10,25,50,100],"journeyPersonal",n=>n===1?"Um tempo para aprender":n+" treinos pessoais",n=>"Concluir "+n+" rodada(s) do modo Pessoal. Sem sequência obrigatória.","Jornada · Pessoal","Sparkles"),
+ ...playCatalog
 ];
 export function confirmedPauseDays(data,today=dayKey()){
  return Object.keys(data.days||{}).filter(k=>validDay(k)&&k<=today&&observation(data,k).paused).sort();
