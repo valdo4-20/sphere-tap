@@ -1,4 +1,4 @@
-import {corpusCandidates} from './questionCorpus.js';
+import {playableCorpusCandidates} from './questionCorpus.js';
 import {topicQuestions} from './quizTopics.js';
 import {personalQuestions} from './journeyDaily.js';
 export {localDate,availableDailyLevel} from './journeyDaily.js';
@@ -48,7 +48,7 @@ export function questionsFor(level,{difficultyLevel=level,mode='role',round=leve
  if(mode==='personal')return personalQuestions(level,{difficultyLevel});
  const rng=random((level*2654435761+round*97+(mode==='personal'?1234567:0))>>>0),used=new Set(),items=[],categoryCounts=new Map();
  for(const [phaseIndex,phase] of questionPlan(difficultyLevel).entries()){
-  const available=[...questionBank,...corpusCandidates(level)].filter(q=>!q.everyday&&(mode!=='personal'||q.everyday||/^(music-[1-4]|logic-[1-4]|space-[1-3])$/.test(q.id))&&(q.difficulty<=phase.tier||q.sourced)&&!used.has(q.prompt));
+  const available=[...questionBank,...playableCorpusCandidates(level)].filter(q=>!q.everyday&&(mode!=='personal'||q.everyday||/^(music-[1-4]|logic-[1-4]|space-[1-3])$/.test(q.id))&&(q.difficulty<=phase.tier||q.sourced)&&!used.has(q.prompt));
   const preferred=shuffle(available.filter(q=>q.difficulty>=Math.max(1,phase.tier-1)),rng);
   const candidates=[...preferred,...shuffle(available.filter(q=>!preferred.includes(q)),rng)],selected=[];
   for(let i=0;i<phase.facts;i++){candidates.sort((a,b)=>(categoryCounts.get(a.category)||0)-(categoryCounts.get(b.category)||0));const q=candidates.shift();if(!q)break;selected.push(q);categoryCounts.set(q.category,(categoryCounts.get(q.category)||0)+1)}

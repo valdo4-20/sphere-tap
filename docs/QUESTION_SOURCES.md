@@ -30,3 +30,7 @@ O tamanho do catálogo não determina a frequência de um tema. O Pessoal altern
 - Howler: https://howlerjs.com/ — avaliado; o app já possui sinais de áudio e não precisa de outro motor.
 
 Mantemos a AURA existente e evitamos adicionar shaders contínuos à leitura. Feedback curto, cores por tema e opiniões por nome/cor reduzem a dependência de uma pessoa lendo tudo em voz alta. Não há narração automática.
+
+## Curadoria 1.6.4
+
+Os 2.900 registros de autoria do Gutenberg foram retirados das rodadas: títulos obscuros em inglês não eram uma boa experiência de cultura geral. O JSON original continua arquivado para rastreabilidade, sem significar 10.000 perguntas ativas. Arte/literatura passa a usar enunciados originais em português sobre obras conhecidas, com fontes por questão em src/quizArt.js (MoMA, MUNCH, Funarte e Academia Brasileira de Letras). Geradores de posição e repetição de símbolos foram removidos. Volume do catálogo não é critério de qualidade ou familiaridade.
