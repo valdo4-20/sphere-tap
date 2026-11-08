@@ -33,7 +33,7 @@ try{
   assert.equal(geometry.overflow,false,`${width}: overflow`);assert.ok(geometry.offset<2);assert.equal(geometry.down,undefined);assert.equal(geometry.scale,'1');const nodePaint=await node.evaluate(el=>({background:getComputedStyle(el).backgroundColor,shadow:getComputedStyle(el).boxShadow}));assert.equal(nodePaint.background,'rgba(0, 0, 0, 0)');assert.equal(nodePaint.shadow,'none');
   assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);assert.ok(await page.locator('.waterfall-stream').count()>0);await page.screenshot({path:`browser-checks/planets-${width}.png`});
   assert.equal(await page.getByText('O XP depende dos acertos.').count(),0);assert.equal(await page.getByText('Conquistas da Jornada',{exact:true}).count(),0);
-  const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.scrollIntoViewIfNeeded();const mapY=await page.evaluate(()=>scrollY);await enter.click();
+  const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.scrollIntoViewIfNeeded();assert.equal(await enter.evaluate(el=>getComputedStyle(el,'::before').animationName),'journey-invite-shine');const mapY=await page.evaluate(()=>scrollY);await enter.click();
   assert.equal(await page.locator('.journey-entry-scene').count(),0);await page.locator('.journey-answers button').first().waitFor();
   const lockedY=await page.evaluate(()=>-parseFloat(document.body.style.top));console.log('map-entry',JSON.stringify({width,mapY,lockedY}));
   const questions=questionsFor(1,{mode:'personal',difficultyLevel:1,round:1});
@@ -45,6 +45,7 @@ try{
   }
   await page.getByRole('heading',{name:'Você foi além.'}).waitFor();await page.screenshot({path:`browser-checks/result-${width}.png`});
   await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.locator('.journey-overlay').waitFor({state:'detached'});await page.getByText('Por hoje, você chegou lá.').waitFor();await page.waitForTimeout(100);assert.ok(Math.abs((await page.evaluate(()=>scrollY))-lockedY)<3,`map position restored at ${width}: expected ${lockedY}, got ${await page.evaluate(()=>scrollY)}`);assert.equal(await page.locator('.journey-node.current').count(),0);
+  await page.locator('.journey-progress-xp').filter({hasText:'400 XP'}).waitFor();assert.equal(await page.locator('.journey-xp-gain').textContent(),'+400 XP');
   let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personal,1);assert.equal(saved.journey.xp,400);
   await page.reload();await page.locator('.journey-entry').click();await page.getByText('Por hoje, você chegou lá.').waitFor();
   await page.screenshot({path:`browser-checks/map-${width}.png`,fullPage:true});
