@@ -82,6 +82,7 @@ function Quiz({quiz,onClose,onAnswer,onNext,onReady,mode,onCue,onVote,onConfirm}
 export default function Journey({progress,onChange,account,onAccountChange,onBusy}){
  const owner=progress||migrateJourney(null);
  const [quiz,setQuiz]=useState(null),[selectedLevel,setSelectedLevel]=useState(null),[feedback,setFeedback]=useState(0),[participants,setParticipants]=useState([]),[choosing,setChoosing]=useState(false),[managing,setManaging]=useState(false),[unlock,setUnlock]=useState(null),[advance,setAdvance]=useState(null),[clock,setClock]=useState(()=>new Date()),[loading,setLoading]=useState(false),[loadError,setLoadError]=useState('');
+ const [reward,setReward]=useState(null);
  const entering=useRef(false),completion=useRef(false),busyCallback=useRef(onBusy);
  busyCallback.current=onBusy;
  const data=owner,mode=data.mode,personal=mode==='personal',done=data[mode],level=done+1;
@@ -112,7 +113,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',draft:null,votes:{},opinionResults:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
  }
  function begin(n=level){if(personal)launch(n,[]);else{setManaging(false);setChoosing(true)}}
- function closeQuiz(){entering.current=false;setQuiz(null);if(quiz?.finished)setAdvance(level)}
+ function closeQuiz(){entering.current=false;setQuiz(null);if(quiz?.finished){setAdvance(level);setReward({id:Date.now(),xp:quiz.xp,from:quiz.previousXP});}}
  function answer(i){cue('button');setQuiz(q=>!q||q.entering||q.selected!==null||q.finished?q:q.friendIds?{...q,draft:i}:{...q,selected:i,score:q.score+(i===q.answers[q.index].correct?1:0)})}
  function vote(id){cue('button');setQuiz(q=>!q||q.selected!==null||q.draft===null?q:{...q,votes:recordVote(q.votes,id,q.draft,q.players.map(p=>p.id))})}
  function confirmAnswer(){cue('button');setQuiz(confirmGroupAnswer)}
@@ -131,7 +132,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  const path='M '+positions.map(p=>`${p.x},${p.y}`).join(' L ');
  return <section className={'journey-page'+(quiz?' is-playing':'')} style={personal?{'--journey-tint':weeklyColor(level),'--journey-tint-ink':weeklyColor(level),'--journey-trail':weeklyColor(level)}:undefined}>
   <JourneyMotion/>
-  <header className='journey-heading'><h1>Descubra pelo caminho.</h1><JourneyProgress progress={owner}/></header>
+  <header className='journey-heading'><h1>Descubra pelo caminho.</h1><JourneyProgress progress={owner} reward={reward}/></header>
   <div className='journey-switch' aria-label='Escolher modo'><button aria-pressed={personal} onClick={()=>{onChange(d=>({...enrollDaily(d),mode:'personal'}))}}><UserRound size={17}/><span>Modo Pessoal</span></button><button aria-pressed={!personal} onClick={()=>onChange(d=>({...d,mode:'role'}))}><Users size={18}/><span>Modo Rolê</span></button></div>
   {personal?<div className='journey-daily-card' role='status'><h2>{playable?edition.title:'Por hoje, você chegou lá.'}</h2>{!playable&&<p className='journey-next-date'>Próximo dia: {new Date(dailyLevelDate(owner,level,clock)+'T12:00:00').toLocaleDateString('pt-BR')}</p>}</div>
   :null}

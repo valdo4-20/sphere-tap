@@ -101,3 +101,5 @@ Status bar da PWA configurada como black-translucent com viewport-fit=cover. Fun
 Guia interativo: transição de fade entre etapas (140 ms para sair, 220 ms para entrar), bloqueio de toques repetidos e troca imediata com reduzir movimento.
 
 Guia ampliado para dez etapas: Jornada, recompensas no Perfil e edição da AURA. Confirma cada etapa avançada e avisa quando o guia é concluído; fechar não dispara conclusão.
+
+Botão de entrada com brilho finito e resposta ao toque. Ao voltar de um nível concluído, XP conta até o total real e a estrela salta uma vez; reduzir movimento mantém atualização imediata.
