@@ -318,3 +318,9 @@ O indicador pessoal de XP/nível/estrela volta ao mapa usando o progresso salvo,
 XP, nível e estrela compactos no canto direito da Jornada; ajustes de alinhamento/interruptores/horário das configurações; gnomo na quina do balão do guia interativo. Dados e preferências continuam no mesmo formato.
 
 A Jornada inclui o pacote de planetas 1.1 e troféus mensais do gnomo. Domingos dourados seguem a data programada da fase; a meta mensal é de 5.600 XP de novas rodadas concluídas.
+
+### 1.8.0 — Explore no seu tempo
+
+Segure uma ilha liberada para inspecioná-la em 3D, com montagem por blocos e giro completo. Biomas têm luz, partículas e vegetação próprias; cristais não aparecem em todas as ilhas. O caminho mantém os níveis centralizados e espaçados.
+
+O primeiro Rolê tem 13 perguntas; os próximos têm 20 e o Pessoal continua com 30. “Deixar para depois” leva a pergunta ao fim da rodada, preservando o tempo gasto e exigindo resposta antes da conclusão. XP já salvo, calendário e desbloqueios são preservados.

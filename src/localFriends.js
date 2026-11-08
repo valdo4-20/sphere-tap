@@ -8,12 +8,12 @@ export function removeFriend(data,id){return {...data,localFriends:(data.localFr
 export function completeFriendRound(data,id,level,score){const friend=(data.localFriends||[]).find(f=>f.id===id);if(!friend)return data;const journey=completeJourney(friend.journey,'role',level,score);if(journey===friend.journey)return data;return {...data,localFriends:data.localFriends.map(f=>f.id===id?{...f,journey}:f)}}
 export function localRanking(data){return [{id:'self',name:data.displayName||'Você',color:data.appearance?.auraColor||friendColors[0],journey:data.journey||migrateJourney(null)},...(data.localFriends||[])].map((f,index)=>({...f,order:index,level:playerProgress(f.journey.xp).level})).sort((a,b)=>b.journey.xp-a.journey.xp||b.journey.stars-a.journey.stars||a.order-b.order).map((f,index,rows)=>({...f,place:index&&f.journey.xp===rows[index-1].journey.xp?rows.findIndex(r=>r.journey.xp===f.journey.xp)+1:index+1}))}
 // One shared answer sequence credits every selected participant atomically.
-export function completeGroupRound(data,matchId,challengeLevel,score,friendIds,now=new Date()){
- if(typeof matchId!=='string'||!/^[a-zA-Z0-9-]{1,80}$/.test(matchId)||!Number.isSafeInteger(challengeLevel)||challengeLevel<1||!Number.isInteger(score)||score<0||score>20||!Array.isArray(friendIds)||!friendIds.length||new Set(friendIds).size!==friendIds.length||friendIds.some(id=>!(data.localFriends||[]).some(f=>f.id===id)))return data;
+export function completeGroupRound(data,matchId,challengeLevel,score,friendIds,now=new Date(),total=20){
+ if(typeof matchId!=='string'||!/^[a-zA-Z0-9-]{1,80}$/.test(matchId)||!Number.isSafeInteger(challengeLevel)||challengeLevel<1||!Number.isInteger(score)||score<0||score>total||![13,20].includes(total)||(total===13&&challengeLevel!==1)||!Array.isArray(friendIds)||!friendIds.length||new Set(friendIds).size!==friendIds.length||friendIds.some(id=>!(data.localFriends||[]).some(f=>f.id===id)))return data;
  if(data.journey?.mode!=='role'||data.journey.lastMatchId===matchId)return data;
- const owner=completeJourney(data.journey,'role',challengeLevel,score,now,{eventId:'match:'+matchId});if(owner===data.journey)return data;
- const xp=earnedXP(score,challengeLevel);
- return {...data,journey:{...owner,lastMatchId:matchId},localFriends:data.localFriends.map(f=>{if(!friendIds.includes(f.id))return f;const next=completeJourney(f.journey,'role',f.journey.role+1,score,now,{xp,eventId:'match:'+matchId});return {...f,journey:{...next,xp:f.journey.xp+xp,lastMatchId:matchId}}})};
+ const owner=completeJourney(data.journey,'role',challengeLevel,score,now,{eventId:'match:'+matchId,total});if(owner===data.journey)return data;
+ const xp=earnedXP(score,challengeLevel,total);
+ return {...data,journey:{...owner,lastMatchId:matchId},localFriends:data.localFriends.map(f=>{if(!friendIds.includes(f.id))return f;const next=completeJourney(f.journey,'role',f.journey.role+1,score,now,{xp,total,eventId:'match:'+matchId});return {...f,journey:{...next,xp:f.journey.xp+xp,lastMatchId:matchId}}})};
 }
 export function groupRanking(data){return localRanking(data)}
 export function warmFriendColor(color){return color}

@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.7.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.8.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -126,3 +126,13 @@ Usuário solicitou git/push no GitHub Pages após a prévia. Validação funcion
 ## Correção de CI após 1.7.0
 
 Run 42446544442 falhou com ERR_CONNECTION_REFUSED: qa-planet-pack navegava antes de o Vite estar pronto. Agora aguarda HTTP 2xx, com prazo de 15 segundos, falha explícita para processo encerrado/erro de inicialização e porta estrita. Três testes cobrem servidor lento, falha de partida e prazo. Não altera UI, XP, calendário ou dados do app.
+
+## 1.8.0 — Exploração e ritmo da Jornada
+
+Segurar uma ilha já liberada abre a inspeção 3D sob demanda (Three.js/OrbitControls), com montagem por blocos, fade e fundo desfocado. Arraste ou use os botões/teclado para girar 360 graus. Biomas têm cores e partículas próprias; cristais faceteados ficam no bioma cristal, gelo e algumas ilhas douradas. Gerador original 1.1 preservado; adaptação visual em islandScenery/islandSvg. Mapa leve em SVG; cena 3D carregada apenas ao explorar, 30fps, DPR limitado a 1,5, pausada ao ocultar e descartada ao fechar. Reduzir movimento apresenta cena pronta e estática, com rotação manual. Falha de WebGL exibe SVG.
+
+Níveis alinhados no mesmo eixo, com espaço extra para nomes e botão de entrada. Primeiro Rolê: 13 perguntas acessíveis em fases 3/6/4; seguintes 20, Pessoal 30. XP proporcional ao total real (gabarito inicial 230), sem recalcular saldos existentes; chamadas legadas de 20 respostas permanecem compatíveis. Calendário, XP mensal, ausentes e desbloqueios mantidos.
+
+Botão “Deixar para depois” disponível antes de confirmar: move a pergunta para o fim, não atribui pontos, não interrompe sequência e não elimina perguntas. Escolhas provisórias do grupo são limpas, tempo ativo já gasto é conservado. Última pergunta precisa ser respondida para concluir.
+
+Validação: 129 testes unitários e build local passaram. Validação visual Chromium/WebKit na CI antes de publicar.

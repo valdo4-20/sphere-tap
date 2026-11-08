@@ -1,3 +1,5 @@
+import {roleQuestionCount} from './roundRules.js';
+export {roleQuestionCount} from './roundRules.js';
 import {playableCorpusCandidates} from './questionCorpus.js';
 import {topicQuestions} from './quizTopics.js';
 import {personalQuestions} from './journeyDaily.js';
@@ -47,7 +49,7 @@ export function questionsFor(level,{difficultyLevel=level,mode='role',round=leve
  if(!Number.isSafeInteger(level)||level<1)throw new RangeError('Nível inválido');
  if(mode==='personal')return personalQuestions(level,{difficultyLevel});
  const rng=random((level*2654435761+round*97+(mode==='personal'?1234567:0))>>>0),used=new Set(),items=[],categoryCounts=new Map();
- for(const [phaseIndex,phase] of questionPlan(difficultyLevel).entries()){
+ for(const [phaseIndex,phase] of (level===1?[{name:'Aquecimento',count:3,facts:3,tier:1},{name:'Exploração',count:6,facts:6,tier:1},{name:'Desafio final',count:4,facts:4,tier:1}]:questionPlan(difficultyLevel)).entries()){
   const available=[...questionBank,...playableCorpusCandidates(level)].filter(q=>!q.everyday&&(mode!=='personal'||q.everyday||/^(music-[1-4]|logic-[1-4]|space-[1-3])$/.test(q.id))&&(q.difficulty<=phase.tier||q.sourced)&&!used.has(q.prompt));
   const preferred=shuffle(available.filter(q=>q.difficulty>=Math.max(1,phase.tier-1)),rng);
   const candidates=[...preferred,...shuffle(available.filter(q=>!preferred.includes(q)),rng)],selected=[];

@@ -1,3 +1,4 @@
+import {biomeEnergy} from './islandScenery';
 import React,{memo,useEffect,useMemo,useId,useRef,useState} from 'react';
 import {planetSVG,planetFor} from './journeyPlanets';
 import './journeyPlanets.css';
@@ -5,5 +6,5 @@ export default memo(function JourneyPlanet({level,scheduledDate,reveal=false}){
  const instanceId=useId();
  const ref=useRef(null),[visible,setVisible]=useState(false),svg=useMemo(()=>planetSVG(level,{scheduledDate,instanceId}),[level,scheduledDate,instanceId]),world=planetFor(level,scheduledDate);
  useEffect(()=>{const el=ref.current,observer=new IntersectionObserver(entries=>setVisible(entries.some(e=>e.isIntersecting)),{rootMargin:'50px'});observer.observe(el);return()=>observer.disconnect()},[]);
- return <span ref={ref} className={`journey-planet${visible?' in-view':''}${reveal?' planet-reveal':''}`} data-planet-level={level} data-biome={world.kind} data-asset-id={world.id} data-golden={world.golden} style={{'--planet-glow':world.theme.fluid}} aria-hidden='true'><span className='planet-halo'/><span className='planet-art' dangerouslySetInnerHTML={{__html:svg}}/><span className='planet-reveal-rays'/></span>;
+ return <span ref={ref} className={`journey-planet${visible?' in-view':''}${reveal?' planet-reveal':''}`} data-planet-level={level} data-biome={world.kind} data-asset-id={world.id} data-golden={world.golden} data-energy={biomeEnergy[world.biome].particle} style={{'--planet-glow':biomeEnergy[world.biome].colors[0],'--planet-light':biomeEnergy[world.biome].colors[1]}} aria-hidden='true'><span className='planet-halo'/><span className='planet-art' dangerouslySetInnerHTML={{__html:svg}}/><span className='planet-reveal-rays'/></span>;
 });

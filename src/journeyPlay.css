@@ -121,3 +121,10 @@
 .journey-answer-clock.is-quick{color:var(--question-color)}
 @media(prefers-reduced-motion:no-preference){.journey-answer-clock.is-quick{animation:journey-clock-spark .5s ease-out both}}
 @keyframes journey-clock-spark{0%{scale:1}45%{scale:1.14;text-shadow:0 0 10px currentColor}100%{scale:1;text-shadow:none}}
+
+.journey-defer{display:block;min-height:44px;margin:18px auto 0;padding:10px 20px;border:1px solid color-mix(in srgb,var(--question-color) 40%,transparent);border-radius:999px;background:transparent;color:inherit;font:inherit;cursor:pointer;transition:background .18s,transform .18s}
+.journey-defer:hover{background:color-mix(in srgb,var(--question-color) 12%,transparent)}
+.journey-defer:active{transform:scale(.97)}
+.journey-defer:focus-visible{outline:2px solid var(--question-color);outline-offset:4px}
+.journey-defer:disabled{opacity:.5;cursor:default}
+@media(prefers-reduced-motion:reduce){.journey-defer{transition:none}.journey-defer:active{transform:none}}
