@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.6.0',
- title:'Um Tap mais cuidado.',
+ version:'1.6.1',
+ title:'Uma entrada mais suave.',
  palette:{background:'#082c24',neutral:'#174639',accent:'#bdff00',text:'#ffffff'},
- changes:['Novas cenas na abertura, com a silhueta central e estática.','Cadastro mais rápido, calendário corrigido e controles mais organizados.','Melhorias na AURA estática, nos modais e na leitura das explicações.'],
+ changes:['Fade de entrada e saída nas cenas da abertura.','A silhueta também aparece e desaparece suavemente, sem deformações.'],
 };

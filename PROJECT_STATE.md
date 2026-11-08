@@ -2,7 +2,7 @@
 
 Fonte de verdade: `valdo4-20/sphere-tap`, branch `main`.
 Site oficial: https://valdo4-20.github.io/sphere-tap/
-Versão de código: **1.6.0**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
+Versão de código: **1.6.1**. A versão realmente servida pode ser conferida em `update-info.js` do site e no workflow Deploy to GitHub Pages. O app instalado só adota uma atualização quando a pessoa aceita.
 
 ## Decisões atuais — 7 de novembro de 2026
 
@@ -67,3 +67,7 @@ Cachoeiras de floresta e água têm filetes SVG com stroke-dashoffset descendent
 - Amigos continuam apenas no aparelho. Não foram adicionados conta, backend ou amigos online.
 - Perguntas importadas receberam explicações com contexto da fonte e auditoria estrutural dos 10 mil registros. Isso não equivale a conferir editorialmente cada fato externo.
 - Verificação: `docs/QA-1.6.0.md`. Chromium e WebKit no computador não equivalem a validação em um iPhone físico.
+
+## Revisão 1.6.1
+
+Abertura com fade-in e fade-out no fundo e na silhueta inteira. Apenas a opacidade muda; não há placa, recortes, giro ou deformação. Transições verificadas em Chromium e WebKit, com tempos reduzidos para movimento reduzido.
