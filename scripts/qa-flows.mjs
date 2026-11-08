@@ -11,6 +11,25 @@ async function session(engine,width,data){const context=await browser.newContext
 const saved=p=>p.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));
 const nav=(p,name)=>p.locator('.nav-glass').getByRole('button',{name,exact:true}).click();
 async function geometry(p,label){assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,label+' overflow');}
+async function settingsGuideChecks(engine,width){
+ const {context,p,errors}=await session(engine,width,fixture());await nav(p,'Perfil');await p.getByRole('button',{name:'Preferências do perfil',exact:true}).click();await p.getByText('Aparência e dicas',{exact:true}).click();
+ const switches=p.getByRole('switch');assert.equal(await switches.count(),5);for(const control of await switches.all()){const box=await control.boundingBox();assert.ok(Math.abs(box.width-44)<1&&Math.abs(box.height-26)<1,'consistent switches');const alignment=await control.evaluate(el=>getComputedStyle(el.parentElement.querySelector('span')).textAlign);assert.equal(alignment,'left')}
+ const sound=p.getByRole('switch',{name:'Sons da Jornada',exact:true});await sound.check();const achievement=p.getByRole('switch',{name:'Som de conquista',exact:true});await achievement.check();const reminder=p.getByRole('switch',{name:'Lembrete de check-in no app',exact:true});await reminder.check();
+ const timeInput=p.locator('.reminder-time-field input[type=time]');await timeInput.fill('12:45');assert.equal((await saved(p)).preferences.reminderTime,'12:45');await timeInput.fill('');assert.equal((await saved(p)).preferences.reminderTime,'12:45');await timeInput.fill('12:45');
+ const limits=await timeInput.evaluate(el=>{const r=el.getBoundingClientRect(),p=el.closest('.settings-page').getBoundingClientRect();return {left:r.left,right:r.right,min:p.left,max:p.right}});assert.ok(limits.left>=limits.min-1&&limits.right<=limits.max+1,engine+' time stays within settings');await geometry(p,'settings '+engine+' '+width);await timeInput.scrollIntoViewIfNeeded();await p.screenshot({path:`browser-checks/settings-controls-${engine}-${width}.png`});if(engine==='webkit'&&width===390)console.log('SETTINGS_PREVIEW_JPEG:'+(await p.screenshot({type:'jpeg',quality:55})).toString('base64'));
+ await p.reload();const persisted=(await saved(p)).preferences;assert.equal(persisted.reminderTime,'12:45');assert.equal(persisted.journeySound,true);assert.equal(persisted.achievementSound,true);assert.equal(persisted.reminderEnabled,true);
+ await nav(p,'Perfil');await p.getByRole('button',{name:'Preferências do perfil',exact:true}).click();await p.getByText('Aparência e dicas',{exact:true}).click();await p.getByRole('button',{name:'Abrir guia interativo',exact:true}).click();
+ for(let i=0;i<7;i++){
+  const guide=p.getByRole('region',{name:'Guia do Sphere Tap',exact:true});await guide.waitFor();const g=await guide.boundingBox(),viewport=p.viewportSize();assert.ok(g.x>=0&&g.x+g.width<=viewport.width+1&&g.y>=0&&g.y+g.height<=viewport.height,engine+' guide fits');const overlap=await p.locator('.guide-mascot-peek').evaluate(el=>{const r=el.getBoundingClientRect(),card=document.querySelector('.guide-card').getBoundingClientRect(),close=document.querySelector('.guide-card [aria-label="Sair do guia"]').getBoundingClientRect();return {onSide:r.x+r.width/2<card.x+card.width*.45,clearOfClose:r.right<close.left}});assert.equal(overlap.onSide,true);assert.equal(overlap.clearOfClose,true);
+  if(i===0){await p.screenshot({path:`browser-checks/guide-corner-${engine}-${width}.png`});if(engine==='webkit'&&width===390)console.log('GUIDE_PREVIEW_JPEG:'+(await p.screenshot({type:'jpeg',quality:55})).toString('base64'))}
+  await guide.getByRole('button',{name:i===6?'Concluir':'Próximo',exact:true}).click();
+ }
+ await p.locator('.guide-layer').waitFor({state:'detached'});assert.equal((await saved(p)).entries.length,0);
+ await nav(p,'Perfil');await p.getByRole('button',{name:'Meu cuidado',exact:true}).click();const care=p.locator('.care-minimal');await care.waitFor();const centered=await care.locator('.care-intent-picker').evaluate(el=>{const r=el.getBoundingClientRect(),parent=el.closest('.care-minimal').getBoundingClientRect();return Math.abs(r.x+r.width/2-parent.x-parent.width/2)});assert.ok(centered<2,'care intention centered');await geometry(p,'care '+engine+' '+width);
+ await care.getByRole('button',{name:'Iniciar pausa',exact:true}).click();assert.ok((await saved(p)).pause.startedAt);await care.getByRole('button',{name:'Encerrar pausa',exact:true}).click();assert.ok((await saved(p)).pause.endedAt);
+ await care.locator('summary').filter({hasText:'Como foi seu dia?'}).click();await care.locator('input[name=confirmed]').check();await care.locator('textarea[name=note]').fill('Nota de teste de interface');await care.getByRole('button',{name:'Salvar check-in',exact:true}).click();assert.equal((await saved(p)).days[dayKey()].note,'Nota de teste de interface');assert.equal((await saved(p)).days[dayKey()].confirmed,true);assert.equal((await saved(p)).entries.length,0);await geometry(p,'care expanded '+engine+' '+width);await p.screenshot({path:`browser-checks/care-aligned-${engine}-${width}.png`});if(engine==='webkit'&&width===390)console.log('CARE_PREVIEW_JPEG:'+(await p.screenshot({type:'jpeg',quality:55})).toString('base64'));
+assert.deepEqual(errors,[]);results.push({engine,width,settingsAligned:true,timeFits:true,switchesPersist:true,cornerGuideWorks:true});await context.close();
+}
 try{
  for(let i=0;i<80;i++){try{if((await fetch(base)).ok)break}catch{}await new Promise(r=>setTimeout(r,100))}await mkdir('browser-checks',{recursive:true});
  for(const engine of ['chromium','webkit']){
@@ -44,6 +63,7 @@ try{
  assert.deepEqual(errors,[]);console.log(engine+' '+palette+' CRUD, backup and offline OK');results.push({engine,palette,registerEditDeleteUndo:true,calendarSelect:true,backupRestore:true,offlineReload:true});await context.close();
  }
  if(engine==='chromium')for(const width of [320,768,1280]){const{context,p,errors}=await session(engine,width,fixture());for(const name of ['Hoje','Carteira','Progresso','Perfil']){await nav(p,name);await geometry(p,name+' '+width);}await p.getByRole('button',{name:'Conquistas',exact:true}).click();await geometry(p,'Conquistas '+width);assert.deepEqual(errors,[]);results.push({engine,width,layout:true});await context.close();}
+ for(const width of [320,390,768,1280])await settingsGuideChecks(engine,width);
  await browser.close();browser=null;
  }
  await writeFile('browser-checks/flows-results.json',JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));

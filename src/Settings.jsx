@@ -1,3 +1,4 @@
+import './interfaceRepairs.css';
 import DatePicker from "./DatePicker";
 import {AppUpdateSettings} from './AppUpdate';
 import AuraPreview from "./AuraPreview";
@@ -135,8 +136,8 @@ export default function Settings({
           Aparência e dicas
           <ChevronDown size={17} />
         </summary>
-        <label className="toggle-row"><span><b>Sons da Jornada</b><small>Botões, perguntas e conclusão do desafio.</small></span><input type="checkbox" checked={data.preferences.journeySound!==false} onChange={e=>onChange(d=>({...d,preferences:{...d.preferences,journeySound:e.target.checked}}))}/></label>
-        <label className="toggle-row"><span><b>Som de conquista</b><small>Apenas para novos marcos de cuidado.</small></span><input type="checkbox" checked={data.preferences.achievementSound!==false} onChange={e=>onChange(d=>({...d,preferences:{...d.preferences,achievementSound:e.target.checked}}))}/></label>
+        <label className="toggle-row"><span><b>Sons da Jornada</b><small>Botões, perguntas e conclusão do desafio.</small></span><input type="checkbox" role="switch" aria-label="Sons da Jornada" checked={data.preferences.journeySound!==false} onChange={e=>onChange(d=>({...d,preferences:{...d.preferences,journeySound:e.target.checked}}))}/></label>
+        <label className="toggle-row"><span><b>Som de conquista</b><small>Apenas para novos marcos de cuidado.</small></span><input type="checkbox" role="switch" aria-label="Som de conquista" checked={data.preferences.achievementSound!==false} onChange={e=>onChange(d=>({...d,preferences:{...d.preferences,achievementSound:e.target.checked}}))}/></label>
         <label className="toggle-row">
           <span>
             <b>Movimento da AURA</b>
@@ -145,6 +146,7 @@ export default function Settings({
           <input
             type="checkbox"
             role="switch"
+            aria-label="Movimento da AURA"
             checked={data.aura}
             onChange={(e) =>
               onChange((d) => ({ ...d, aura: e.target.checked }))
@@ -159,6 +161,7 @@ export default function Settings({
           <input
             type="checkbox"
             role="switch"
+            aria-label="Dicas contextuais"
             checked={data.preferences.tips}
             onChange={(e) =>
               onChange((d) => ({
@@ -178,6 +181,7 @@ export default function Settings({
           <input
             type="checkbox"
             role="switch"
+            aria-label="Lembrete de check-in no app"
             checked={data.preferences.reminderEnabled}
             onChange={(e) =>
               onChange((d) => ({
@@ -191,20 +195,14 @@ export default function Settings({
           />
         </label>
         {data.preferences.reminderEnabled && (
-          <label>
+          <label className="reminder-time-field">
             Horário do lembrete
             <input
               type="time"
+              aria-label="Horário do lembrete"
+              required
               value={data.preferences.reminderTime}
-              onChange={(e) =>
-                onChange((d) => ({
-                  ...d,
-                  preferences: {
-                    ...d.preferences,
-                    reminderTime: e.target.value,
-                  },
-                }))
-              }
+              onChange={(e) => {const value=e.target.value;if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(value))return;onChange(d=>({...d,preferences:{...d.preferences,reminderTime:value}}));}}
             />
           </label>
         )}
