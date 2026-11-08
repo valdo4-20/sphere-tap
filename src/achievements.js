@@ -1,3 +1,4 @@
+import {profileBanners} from './profileBanners.js';
 import {dayKey,shiftDay,observation,validDay} from "./model.js";
 const baseCatalog=[
  {id:"your-space",title:"Seu espaço",rarity:"bronze",description:"Dar um nome ao seu perfil.",group:"Seu cuidado"},
@@ -34,7 +35,16 @@ const extraCatalog=[
  {id:"gentle-reminder",title:"Um lembrete gentil",description:"Optar por um lembrete de check-in no app.",group:"Seu cuidado",motif:"Leaf",rarity:"bronze"}
 ];
 const motifs={"your-space":"UserRound","check-in":"NotebookPen","pause-intent":"Pause","pause-1":"Leaf","pause-3":"Sprout","pause-7":"Flower2","pause-14":"Trees","pause-30":"Wind","less-consumption":"TrendingDown","urge-awareness":"HeartHandshake","budget-choice":"Wallet","backup":"ShieldCheck"};
-export const achievementCatalog=[...baseCatalog.map(a=>({...a,motif:motifs[a.id]})),...extraCatalog,
+const playCatalog=[
+ ...series('quiz-streak',[3,5,10,20,30],'quizStreak',n=>n+' na mesma sintonia',n=>'Acertar '+n+' perguntas seguidas em uma rodada concluída.','Jornada · Acertos','Sparkles'),
+ ...series('quiz-quick',[5,25,100],'quizQuick',n=>n+' ideias rápidas',n=>'Acertar '+n+' perguntas em até 10 segundos de leitura ativa, em rodadas concluídas.','Jornada · Ritmo','Wind'),
+ ...series('quiz-perfect',[1,5,20],'quizPerfect',n=>n===1?'Sem deixar passar':n+' rodadas perfeitas',n=>'Concluir '+n+' rodada(s) com todas as respostas corretas.','Jornada · Acertos','Star'),
+ ...series('quiz-fast',[1,5,20],'quizFast',n=>n===1?'No seu ritmo, com precisão':n+' rodadas ágeis',n=>'Concluir '+n+' rodada(s) com pelo menos 80% de acertos e média de até 10 segundos por pergunta. Tempo em segundo plano não conta.','Jornada · Ritmo','Wind'),
+ ...series('quiz-opinions',[1,5,20],'quizOpinions',n=>n===1?'Cada voz conta':n+' conversas em cores',n=>'Concluir '+n+' Rolê(s) com escolhas dos participantes registradas.','Jornada · Rolê','Users'),
+ {id:'chosen-banner',title:'Uma moldura sua',description:'Equipar um banner desbloqueado no Perfil.',group:'Seu espaço',motif:'ShieldCheck',rarity:'silver'},
+ {id:'saved-friend',title:'Boa companhia',description:'Adicionar um amigo ao seu perfil.',group:'Seu espaço',motif:'UserRound',rarity:'bronze'}
+];
+export const achievementCatalog=[...playCatalog,...baseCatalog.map(a=>({...a,motif:motifs[a.id]})),...extraCatalog,
  ...series("journey-role",[1,5,10,25,50,100],"journeyRole",n=>n===1?"Primeira descoberta":n+" desafios em companhia",n=>"Concluir "+n+" rodada(s) do modo Rolê. Consumo não conta.","Jornada · Rolê","Compass"),
  ...series("journey-personal",[1,5,10,25,50,100],"journeyPersonal",n=>n===1?"Um tempo para aprender":n+" treinos pessoais",n=>"Concluir "+n+" rodada(s) do modo Pessoal. Sem sequência obrigatória.","Jornada · Pessoal","Sparkles")
 ];
@@ -64,6 +74,7 @@ export function achievementProgress(data,today=dayKey()){
  const months={};pauseKeys.forEach(k=>months[k.slice(0,7)]=(months[k.slice(0,7)]||0)+1);
  const backupDates=[...(data.careMilestones?.backupDays||[]),...(data.careMilestones?.backupPreparedAt?[dayKey(new Date(data.careMilestones.backupPreparedAt))]:[])].filter(k=>validDay(k)&&k<=today);
  const metrics={
+ quizStreak:data.journey?.performance?.maxStreak||0,quizQuick:data.journey?.performance?.quickCorrect||0,quizPerfect:data.journey?.performance?.perfectRounds||0,quizFast:data.journey?.performance?.fastRounds||0,quizOpinions:data.journey?.performance?.opinionRounds||0,
  journeyRole:data.journey?.role||0,journeyPersonal:data.journey?.personal||0,
  pauses,pauseWeeks:new Set(pauseKeys.map(k=>shiftDay(k,-((new Date(k+"T12:00").getDay()+6)%7)))).size,
  pauseMonths:Object.keys(months).length,maxMonthPauses:Math.max(0,...Object.values(months)),
@@ -75,6 +86,7 @@ export function achievementProgress(data,today=dayKey()){
  };
  const confirmed=Object.entries(data.days||{}).some(([k,v])=>validDay(k)&&k<=today&&v.confirmed===true);
  const flags={
+ "chosen-banner":profileBanners.some(b=>b.id===data.profileDetails?.banner&&b.achievement&&data.achievements?.[b.achievement]),"saved-friend":Boolean(data.localFriends?.length),
   "your-space":Boolean(data.displayName?.trim()),
   "check-in":confirmed,"pause-intent":Boolean(data.pause?.startedAt),
   "less-consumption":reducedQuantities(data,today),

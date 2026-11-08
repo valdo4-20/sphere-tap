@@ -62,7 +62,7 @@ export const guideSteps = [
     route: "Perfil",
     target: '.profile-page',
     title: "Conheça suas recompensas.",
-    body: "No Perfil, abra Conquistas para ver os desafios e o que falta para concluí-los. Alguns marcos liberam banners: escolha o seu em Seu banner.",
+    body: "No Perfil, abra Conquistas para ver os desafios e o que falta para concluí-los. Sequências de acertos, precisão e rodadas ágeis também rendem conquistas. Alguns marcos liberam banners: escolha o seu em Seu banner.",
   },
   {
     route: "Configurações",

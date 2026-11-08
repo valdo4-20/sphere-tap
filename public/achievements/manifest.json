@@ -802,5 +802,119 @@
     "title": "100 treinos pessoais",
     "rarity": "gold",
     "coin": "journey-personal-100.svg"
+  },
+  {
+    "id": "quiz-streak-3",
+    "title": "3 na mesma sintonia",
+    "rarity": "bronze",
+    "coin": "quiz-streak-3.svg"
+  },
+  {
+    "id": "quiz-streak-5",
+    "title": "5 na mesma sintonia",
+    "rarity": "bronze",
+    "coin": "quiz-streak-5.svg"
+  },
+  {
+    "id": "quiz-streak-10",
+    "title": "10 na mesma sintonia",
+    "rarity": "silver",
+    "coin": "quiz-streak-10.svg"
+  },
+  {
+    "id": "quiz-streak-20",
+    "title": "20 na mesma sintonia",
+    "rarity": "silver",
+    "coin": "quiz-streak-20.svg"
+  },
+  {
+    "id": "quiz-streak-30",
+    "title": "30 na mesma sintonia",
+    "rarity": "gold",
+    "coin": "quiz-streak-30.svg"
+  },
+  {
+    "id": "quiz-quick-5",
+    "title": "5 ideias rápidas",
+    "rarity": "bronze",
+    "coin": "quiz-quick-5.svg"
+  },
+  {
+    "id": "quiz-quick-25",
+    "title": "25 ideias rápidas",
+    "rarity": "bronze",
+    "coin": "quiz-quick-25.svg"
+  },
+  {
+    "id": "quiz-quick-100",
+    "title": "100 ideias rápidas",
+    "rarity": "silver",
+    "coin": "quiz-quick-100.svg"
+  },
+  {
+    "id": "quiz-perfect-1",
+    "title": "Sem deixar passar",
+    "rarity": "bronze",
+    "coin": "quiz-perfect-1.svg"
+  },
+  {
+    "id": "quiz-perfect-5",
+    "title": "5 rodadas perfeitas",
+    "rarity": "bronze",
+    "coin": "quiz-perfect-5.svg"
+  },
+  {
+    "id": "quiz-perfect-20",
+    "title": "20 rodadas perfeitas",
+    "rarity": "silver",
+    "coin": "quiz-perfect-20.svg"
+  },
+  {
+    "id": "quiz-fast-1",
+    "title": "No seu ritmo, com precisão",
+    "rarity": "bronze",
+    "coin": "quiz-fast-1.svg"
+  },
+  {
+    "id": "quiz-fast-5",
+    "title": "5 rodadas ágeis",
+    "rarity": "bronze",
+    "coin": "quiz-fast-5.svg"
+  },
+  {
+    "id": "quiz-fast-20",
+    "title": "20 rodadas ágeis",
+    "rarity": "silver",
+    "coin": "quiz-fast-20.svg"
+  },
+  {
+    "id": "quiz-opinions-1",
+    "title": "Cada voz conta",
+    "rarity": "bronze",
+    "coin": "quiz-opinions-1.svg"
+  },
+  {
+    "id": "quiz-opinions-5",
+    "title": "5 conversas em cores",
+    "rarity": "bronze",
+    "coin": "quiz-opinions-5.svg"
+  },
+  {
+    "id": "quiz-opinions-20",
+    "title": "20 conversas em cores",
+    "rarity": "silver",
+    "coin": "quiz-opinions-20.svg"
+  },
+  {
+    "id": "chosen-banner",
+    "title": "Uma moldura sua",
+    "rarity": "silver",
+    "coin": "chosen-banner.svg"
+  },
+  {
+    "id": "saved-friend",
+    "title": "Boa companhia",
+    "rarity": "bronze",
+    "coin": "saved-friend.svg"
   }
 ]

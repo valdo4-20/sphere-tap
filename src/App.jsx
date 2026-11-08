@@ -77,14 +77,18 @@ function App() {
     const update = () => {setRouteState(nextRoute);if(nextRoute==="Perfil")setProfileSection(nextSection)};
     if (
       nextRoute === route ||
+      guide !== null ||
       matchMedia("(prefers-reduced-motion: reduce)").matches ||
       typeof document.startViewTransition !== "function"
     ) {
       update();
       return;
     }
-    document.startViewTransition(update);
-  }, [route]);
+    const transition=document.startViewTransition(update);
+    // A newer navigation can legitimately skip this visual transition.
+    transition.ready.catch(error=>{if(error.name!=="AbortError")console.error(error)});
+    transition.finished.catch(error=>{if(error.name!=="AbortError")console.error(error)});
+  }, [route,guide]);
   const [celebrations,setCelebrations]=useState([]),[journeyBusy,setJourneyBusy]=useState(false),[profileSection,setProfileSection]=useState('profile');
   const celebration=celebrations[0]||null;
   const closeCelebration=useCallback(()=>setCelebrations(list=>list.slice(1)),[]);

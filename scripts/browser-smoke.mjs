@@ -38,15 +38,17 @@ try{
   const lockedY=await page.evaluate(()=>-parseFloat(document.body.style.top));console.log('map-entry',JSON.stringify({width,mapY,lockedY}));
   const questions=questionsFor(1,{mode:'personal',difficultyLevel:1,round:1});
   for(let i=0;i<questions.length;i++){
+   if(i===0)await page.waitForTimeout(700);
    await page.locator('.journey-answers button').nth(questions[i].correct).click();
    await page.locator('.journey-feedback.is-correct').waitFor();
+   if(i===2){await page.locator('.journey-streak').filter({hasText:'3 seguidos'}).waitFor();assert.equal(await page.getByLabel('Tempo desta pergunta').count(),1)}
    if(i===1)await page.screenshot({path:`browser-checks/question-${width}.png`});
    await page.getByRole('button',{name:i===29?'Concluir':'Continuar',exact:true}).click();
   }
   await page.getByRole('heading',{name:'Você foi além.'}).waitFor();await page.screenshot({path:`browser-checks/result-${width}.png`});
   await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.locator('.journey-overlay').waitFor({state:'detached'});await page.getByText('Por hoje, você chegou lá.').waitFor();await page.waitForTimeout(100);assert.ok(Math.abs((await page.evaluate(()=>scrollY))-lockedY)<3,`map position restored at ${width}: expected ${lockedY}, got ${await page.evaluate(()=>scrollY)}`);assert.equal(await page.locator('.journey-node.current').count(),0);
   await page.locator('.journey-progress-xp').filter({hasText:'400 XP'}).waitFor();assert.equal(await page.locator('.journey-xp-gain').textContent(),'+400 XP');
-  let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personal,1);assert.equal(saved.journey.xp,400);
+  let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personal,1);assert.equal(saved.journey.xp,400);assert.equal(saved.journey.performance.maxStreak,30);assert.equal(saved.journey.performance.perfectRounds,1);assert.ok(saved.achievements['quiz-streak-30']);
   await page.reload();await page.locator('.journey-entry').click();await page.getByText('Por hoje, você chegou lá.').waitFor();
   await page.screenshot({path:`browser-checks/map-${width}.png`,fullPage:true});
   assert.equal(await page.locator('.journey-page .local-ranking').count(),0);assert.equal(await page.locator('.aura-viewport>.aura-engine').getAttribute('data-aura-preset'),'eclipse');assert.equal(await page.locator('.aura-viewport>.aura-engine').getAttribute('data-aura-color'),'#c77b91');
