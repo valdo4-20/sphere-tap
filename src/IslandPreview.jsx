@@ -25,13 +25,24 @@ function VoxelGnome(){
  </svg>;
 }
 export default function IslandPreview({level,scheduledDate,onClose}){
- const asset=useMemo(()=>planetFor(level,scheduledDate),[level,scheduledDate]),energy=biomeEnergy[asset.biome],controlsRef=useRef(null),[rotation,setRotation]=useState(45),[phase,setPhase]=useState('day');
+ const asset=useMemo(()=>planetFor(level,scheduledDate),[level,scheduledDate]),energy=biomeEnergy[asset.biome],controlsRef=useRef(null),dialogRef=useRef(null),closeRef=useRef(null),[rotation,setRotation]=useState(45),[phase,setPhase]=useState('day');
  useEffect(()=>{const start=Date.now(),timer=setInterval(()=>setPhase(Math.floor((Date.now()-start)/18000)%2?'night':'day'),1000);return()=>clearInterval(timer)},[]);
- useEffect(()=>{const old=document.body.style.overflow;document.body.style.overflow='hidden';const key=e=>{if(e.key==='Escape')onClose()};window.addEventListener('keydown',key);return()=>{document.body.style.overflow=old;window.removeEventListener('keydown',key)}},[onClose]);
+ useEffect(()=>{
+  const previous=document.activeElement,old=document.body.style.overflow;document.body.style.overflow='hidden';closeRef.current?.focus({preventScroll:true});
+  const key=e=>{
+   if(e.key==='Escape'){e.preventDefault();onClose();return}
+   if(e.key!=='Tab')return;
+   const items=[...dialogRef.current.querySelectorAll('button:not(:disabled),[tabindex="0"]')].filter(el=>el.getClientRects().length),first=items[0],last=items.at(-1);
+   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus({preventScroll:true})}
+   else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus({preventScroll:true})}
+  };
+  window.addEventListener('keydown',key);
+  return()=>{document.body.style.overflow=old;window.removeEventListener('keydown',key);if(previous?.isConnected)previous.focus?.({preventScroll:true})};
+ },[onClose]);
  const placeholder=<span className='island-scene-loading' dangerouslySetInnerHTML={{__html:planetSVG(level,{scheduledDate,instanceId:'inspect-loading',animated:false})}}/>;
- return createPortal(<main className={'island-fullscreen island-phase-'+phase+' island-weather-'+(asset.biome==='snow'?'snow':asset.biome==='water'?'mist':'clear')} style={{'--island-energy':energy.colors[0],'--island-light':energy.colors[1]}} role="dialog" aria-modal="true" aria-label={'Explorar '+asset.name}>
+ return createPortal(<main ref={dialogRef} tabIndex={-1} className={'island-fullscreen island-phase-'+phase+' island-weather-'+(asset.biome==='snow'?'snow':asset.biome==='water'?'mist':'clear')} style={{'--island-energy':energy.colors[0],'--island-light':energy.colors[1]}} role="dialog" aria-modal="true" aria-labelledby="island-explore-title">
   <div className="island-sky" aria-hidden="true"/><div className="island-atmosphere" aria-hidden="true"/>
-  <header className="island-fullscreen-header"><div><span className="island-eyebrow">ESFERA · EXPLORAÇÃO</span><h1>{asset.name}</h1><p>Um pequeno mundo para descobrir, sem pressa.</p></div><button className="island-exit" onClick={onClose} aria-label="Fechar exploração"><X size={22}/></button></header>
+  <header className="island-fullscreen-header"><div><span className="island-eyebrow">ESFERA · EXPLORAÇÃO</span><h1 id="island-explore-title">{asset.name}</h1><p>Um pequeno mundo para descobrir, sem pressa.</p></div><button ref={closeRef} type="button" className="island-exit" onClick={onClose} aria-label="Fechar exploração"><X size={22}/></button></header>
   <div className="island-fullscreen-stage" tabIndex={0} aria-label="Ilha em blocos. Arraste para girar."><div className="island-preview-energy" aria-hidden="true"/><Suspense fallback={placeholder}><IslandScene asset={asset} controlsRef={controlsRef} onRotation={setRotation}/></Suspense><VoxelGnome/><div className="island-ground-glow" aria-hidden="true"/></div>
   <div className="island-fullscreen-footer"><div className="island-orbit-controls" aria-label="Girar a ilha"><button className="quiet-button" aria-label="Girar ilha para a esquerda" onClick={()=>controlsRef.current?.rotate(-Math.PI/4)}><RotateCcw size={18}/></button><span>{rotation}°</span><button className="quiet-button" aria-label="Girar ilha para a direita" onClick={()=>controlsRef.current?.rotate(Math.PI/4)}><RotateCw size={18}/></button><button className="quiet-button" onClick={()=>controlsRef.current?.reset()}>Reposicionar</button></div><p className="island-orbit-hint">Arraste para explorar em 360° · {phase==='day'?'Dia':'Noite'}</p></div>
  </main>,document.body);
