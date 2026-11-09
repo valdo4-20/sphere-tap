@@ -28,7 +28,7 @@ try{
   {
    const d=seed();d.journey.role=1;const {context,p,errors}=await session(d,{motion:'no-preference'});await nav(p,'Jornada');const water=p.locator('[data-planet-level="2"]');await water.scrollIntoViewIfNeeded();await p.waitForTimeout(350);const stream=water.locator('.waterfall-stream').first();await stream.waitFor({state:'attached'});assert.notEqual(await stream.evaluate(el=>getComputedStyle(el).animationName),'none');const a=await stream.evaluate(el=>getComputedStyle(el).strokeDashoffset);await p.waitForTimeout(250);const b=await stream.evaluate(el=>getComputedStyle(el).strokeDashoffset);assert.notEqual(a,b,'water actually falls');await p.screenshot({path:`browser-checks/pack-water-${engine}.png`});if(engine==='webkit')console.log('PACK_WATER_JPEG:'+(await p.screenshot({type:'jpeg',quality:60})).toString('base64'));const node=p.getByRole('button',{name:'Nível 2, selecionar',exact:true});
    await node.hover();await p.mouse.down();await p.clock.runFor(650);await p.mouse.up();
-   const inspect=p.locator('.island-inspect-dialog');await inspect.waitFor();const scene=inspect.locator('.island-scene');
+   const inspect=p.locator('.island-fullscreen');await inspect.waitFor();const scene=inspect.locator('.island-scene');
    if(engine==='chromium'){
     await p.waitForFunction(()=>document.querySelector('.island-scene')?.dataset.renderer==='webgl');
     await p.waitForFunction(()=>document.querySelector('.island-scene')?.dataset.assembled==='true');
@@ -38,7 +38,7 @@ try{
     const full=Number(await scene.getAttribute('data-rotation'));assert.ok(Math.abs(full-angle)<3,'full 360 degree orbit');
     await inspect.screenshot({path:'browser-checks/island-3d-orbit.png'});console.log('ISLAND_3D_JPEG:'+(await inspect.screenshot({type:'jpeg',quality:60})).toString('base64'));
    }
-   await inspect.getByRole('button',{name:'Fechar',exact:true}).click();await inspect.waitFor({state:'detached'});
+   await inspect.getByRole('button',{name:'Fechar exploração',exact:true}).click();await inspect.waitFor({state:'detached'});
    assert.equal(await p.locator('[data-planet-level="3"]').count(),0);
    await node.click();
    const spacing=await p.evaluate(()=>{const button=document.querySelector('.journey-start-action').getBoundingClientRect(),locked=document.querySelector('.journey-node.locked').getBoundingClientRect(),path=document.querySelector('.journey-path').getBoundingClientRect();return {gap:locked.top-button.bottom,centers:[...document.querySelectorAll('.journey-node')].map(n=>{const r=n.getBoundingClientRect();return Math.abs(r.left+r.width/2-path.left-path.width/2)})}});assert.ok(spacing.gap>50,JSON.stringify(spacing));assert.ok(spacing.centers.every(x=>x<2));
