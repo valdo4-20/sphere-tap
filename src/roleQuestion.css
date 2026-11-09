@@ -1,0 +1,32 @@
+/* Rolê only: short event effects, no continuous rendering or map overrides. */
+.role-question{--person:var(--question-color);min-width:0}
+.role-question-heading{display:flex;gap:10px;align-items:flex-start;margin:18px 0}
+.role-question-heading h2{flex:1;min-width:0;margin:0!important;font-size:clamp(22px,5vw,30px);line-height:1.35;overflow-wrap:anywhere}
+.role-voice{flex:none;display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:50%;color:var(--text)}
+.role-answer-context{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin-bottom:10px}
+.role-answer-context>span:last-child{display:flex;gap:6px;align-items:center}
+.role-opinions{padding:12px 8px;border:1px solid var(--line);border-radius:18px;margin-bottom:18px;min-width:0}
+.role-voters{display:flex;gap:5px;overflow-x:auto;overscroll-behavior-x:contain;padding:3px;scrollbar-width:thin}
+.role-voters>button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;flex:0 0 65px;min-height:76px;padding:6px 4px;border:1px solid transparent;border-radius:14px;color:var(--muted);font-size:11px;transition:background .15s,border-color .15s}
+.role-voters>button:first-child{color:var(--question-color)}
+.role-voters>button[aria-pressed=true]{border-color:var(--person);background:color-mix(in srgb,var(--person) 9%,transparent);color:var(--text)}
+.role-voters>button:disabled{opacity:1;cursor:default}
+.role-voters .friend-emblem{width:36px;height:36px;flex:none}
+.role-voters>button>span:last-child{max-width:64px;overflow-wrap:anywhere}
+.role-opinions p{font-size:11px!important;color:var(--muted);line-height:1.5;margin:12px 5px 0!important;text-align:center}
+.role-answers button.role-opinion-selected{border-color:var(--question-color);box-shadow:inset 0 0 0 1px var(--question-color)}
+.role-answers .answer-voters{flex-shrink:0;max-width:90px}
+.role-answers .answer-voters i{background:transparent}
+.role-question button:focus-visible{outline:2px solid var(--question-color);outline-offset:3px}
+@media(prefers-reduced-motion:no-preference){
+ .role-question{animation:role-question-in .22s ease-out both}
+ .role-answers button{transition:background .16s,border-color .16s,transform .12s}
+ .role-answers button:not(:disabled):active{transform:scale(.98)}
+ .role-feedback{animation:role-question-in .23s ease-out both}
+ .role-answers button.correct>svg{animation:role-check-in .28s ease-out both}
+}
+@keyframes role-question-in{from{opacity:0;translate:0 7px}to{opacity:1;translate:0 0}}
+@keyframes role-check-in{from{scale:.5;opacity:0}to{scale:1;opacity:1}}
+@media(prefers-reduced-motion:reduce){.role-voters>button{transition:none}}
+
+.role-topic-row{display:flex;justify-content:space-between;align-items:center;gap:8px}.role-topic-row .journey-streak{font-size:11px}

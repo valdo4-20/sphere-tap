@@ -65,14 +65,21 @@ try{
  await page.reload();await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Rolê',exact:true}).click();assert.equal(await page.locator('.local-ranking').count(),0);
  const node=page.getByRole('button',{name:'Nível 1, selecionar',exact:true});await node.scrollIntoViewIfNeeded();await node.click();await page.getByRole('button',{name:'Entrar no nível 1',exact:true}).click();
  const start=page.getByRole('button',{name:'Começar o Rolê',exact:true});assert.equal(await start.isDisabled(),true);await page.getByRole('checkbox',{name:'Alexandre',exact:true}).check();await start.click();await page.locator('.journey-answers button').first().waitFor();
- const questions=questionsFor(1);
+ const questions=questionsFor(1,{mode:'role'});
  for(let i=0;i<questions.length;i++){
   if(i===0){
-   await page.locator('.journey-answers button').nth((questions[i].correct+1)%4).click();await page.getByRole('button',{name:new RegExp('Alexandre:')}).click();
-   await page.locator('.journey-answers button').nth(questions[i].correct).click();await page.getByRole('button',{name:new RegExp('Você:')}).click();
-   assert.equal(await page.locator('.answer-voters i').count(),2);await page.screenshot({path:'browser-checks/different-opinions.png'});
-  }else await page.locator('.journey-answers button').nth(questions[i].correct).click();
-  await page.getByRole('button',{name:'Confirmar resposta',exact:true}).click();if(i===0){const outcomes=page.getByRole('list',{name:'Resultado das escolhas'});await outcomes.waitFor();assert.equal(await outcomes.locator('[data-result=correct]').count(),1);assert.equal(await outcomes.locator('[data-result=incorrect]').count(),1);assert.equal(await page.locator('.answer-voters .opinion-correct').count(),1);assert.equal(await page.locator('.answer-voters .opinion-incorrect').count(),1);await page.waitForTimeout(450);await page.screenshot({path:'browser-checks/individual-answer-outcomes.png'});console.log('OUTCOMES_PREVIEW_JPEG:'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'))}else assert.equal(await page.locator('.opinion-outcomes [data-result=unanswered]').count(),2);await page.getByRole('button',{name:i===questions.length-1?'Concluir':'Continuar',exact:true}).click();
+   await page.getByRole('button',{name:'Opinião de Alexandre',exact:true}).click();
+   await page.locator('.journey-answers button').nth((questions[i].correct+1)%4).click();
+   await page.getByRole('button',{name:'Opinião de Você',exact:true}).click();
+   await page.locator('.journey-answers button').nth(questions[i].correct).click();
+   assert.equal(await page.locator('.answer-voters i').count(),2);
+   await page.getByRole('button',{name:'Grupo',exact:true}).click();
+  }
+  await page.locator('.journey-answers button').nth(questions[i].correct).click();
+  await page.locator('.role-feedback').waitFor();
+  assert.equal(await page.getByRole('button',{name:'Confirmar resposta',exact:true}).count(),0);
+  assert.equal(await page.locator('.role-voters>button').count(),3);
+  await page.getByRole('button',{name:i===questions.length-1?'Concluir':'Próxima',exact:true}).click();
  }
  assert.equal(await page.getByRole('button',{name:/Passar para/}).count(),0);
  const summary=page.getByRole('region',{name:'Acertos de cada participante'});await summary.waitFor();await summary.getByText('1 acerto em 1 escolha',{exact:true}).waitFor();await summary.getByText('0 acertos em 1 escolha',{exact:true}).waitFor();await page.getByRole('region',{name:'Ranking do Rolê'}).waitFor();assert.equal(await page.locator('.match-ranking li').count(),2);await page.screenshot({path:'browser-checks/match-ranking.png'});

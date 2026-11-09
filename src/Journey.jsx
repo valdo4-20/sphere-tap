@@ -1,3 +1,5 @@
+import RoleQuestion from './RoleQuestion.jsx';
+import {answerRoleQuestion} from './roleRound.js';
 import {deferQuestion} from './quizQueue.js';
 import IslandNode from './IslandNode';
 import IslandPreview from './IslandPreview';
@@ -8,7 +10,7 @@ import FriendEmblem from './FriendEmblem';
 import {loadQuestionCorpus} from './questionCorpus.js';
 import {animate} from 'motion/mini';
 import {lockQuizScroll} from './quizScroll.js';
-import {recordVote,opinionOutcomes,confirmGroupAnswer} from './groupVotes.js';
+import {opinionOutcomes,confirmGroupAnswer} from './groupVotes.js';
 import React,{useEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {Star,Lock,LockOpen,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown,Sparkles} from 'lucide-react';
@@ -85,6 +87,7 @@ function Quiz({quiz,onClose,onAnswer,onNext,onDefer,onReady,mode,onCue,onVote,on
     {quiz.friendIds&&<section className='match-ranking' aria-label='Ranking do Rolê'><h3>Ranking do Rolê</h3><ol>{quiz.ranking.map(r=><li key={r.id}><b>{r.place}</b><FriendEmblem friend={r}/><span>{r.name}</span><strong>{r.journey.xp} XP</strong></li>)}</ol></section>}
     <button className='journey-primary' disabled={leaving} onClick={leave}>Continuar a jornada</button>
    </>:<>
+    {quiz.friendIds?<RoleQuestion quiz={quiz} answerTime={answerTime} onAnswer={onAnswer} onNext={onNext} onDefer={onDefer} onVoter={onVote} disabled={quiz.entering||leaving}/>:<>
     <div className='journey-round-rhythm'><span key={`${quiz.index}:${quiz.selected}`} className={'journey-answer-clock'+(quiz.selected===quiz.answers[quiz.index]?.correct&&elapsed>=500&&elapsed<=10000?' is-quick':'')} aria-label='Tempo desta pergunta'>{clockText(elapsed)}</span>{quiz.performance?.streak>=3&&<span className='journey-streak' key={quiz.performance.streak}><Sparkles size={14}/>{quiz.performance.streak} seguidos</span>}</div>
     <div className='journey-question-meter' role='progressbar' aria-label='Progresso do quiz' aria-valuenow={quiz.index+1} aria-valuemin={0} aria-valuemax={quiz.answers.length}><span style={{width:`${(quiz.index+1)/quiz.answers.length*100}%`}}/></div>
     <div className='journey-question-body' key={`${quiz.level}-${quiz.index}-${questionKey}`}><small className='journey-question-category'><Sparkles size={13}/>{theme.name}</small><h2 id='quiz-title'>{question.prompt}</h2>
@@ -93,6 +96,7 @@ function Quiz({quiz,onClose,onAnswer,onNext,onDefer,onReady,mode,onCue,onVote,on
     </div>
     {quiz.selected===null&&quiz.index<quiz.answers.length-1&&<button className='journey-defer' disabled={quiz.entering||leaving} onClick={()=>onDefer(answerTime())}>Deixar para depois</button>}
     {quiz.selected!==null&&<div className={'journey-feedback'+(quiz.selected===question.correct?' is-correct':'')} key={quiz.index} role='status'><b>{quiz.friendIds?'Escolhas reveladas':quiz.selected===question.correct?<><Sparkles size={19}/>{praiseFor(quiz.level,quiz.index)}</>:'Agora você já sabe.'}</b>{quiz.friendIds&&<><span className='group-answer-result'>Resposta do grupo: {quiz.selected===question.correct?'correta':'incorreta'}</span><ul className='opinion-outcomes' aria-label='Resultado das escolhas'>{outcomes.map(p=><li key={p.id} data-result={p.status}><FriendEmblem friend={p}/><span>{p.name}</span><b>{p.status==='unanswered'?'Sem escolha':p.status==='correct'?<><Check size={14}/>Acertou</>:<><X size={14}/>Errou</>}</b></li>)}</ul></>}<p>{question.explanation}</p>{question.source&&<details className='journey-source'><summary>Fonte</summary><a href={question.source} target='_blank' rel='noreferrer'>{question.sourceName} ↗</a></details>}<button className='journey-primary' onClick={onNext}>{quiz.index===quiz.answers.length-1?'Concluir':'Continuar'}<ArrowRight size={16}/></button></div>}
+    </>}
    </>}
   </section>
  </div>,document.body);
@@ -129,12 +133,12 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   entering.current=true;setLoading(true);setLoadError('');
   try{await loadQuestionCorpus()}catch{setLoadError('Não foi possível preparar as perguntas. Tente novamente.');setLoading(false);entering.current=false;return}
   setLoading(false);completion.current=false;cue('question');setChoosing(false);
-  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',draft:null,votes:{},opinionResults:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
+  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',voter:null,draft:null,votes:{},opinionResults:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
  }
  function begin(n=level){if(personal)launch(n,[]);else{setManaging(false);setChoosing(true)}}
  function closeQuiz(){entering.current=false;setQuiz(null);if(quiz?.finished){setAdvance(level);setReward({id:Date.now(),xp:quiz.xp,from:quiz.previousXP});}}
- function answer(i,ms){cue('button');setQuiz(q=>!q||q.entering||q.selected!==null||q.finished?q:q.friendIds?{...q,draft:i}:{...q,selected:i,score:q.score+(i===q.answers[q.index].correct?1:0),performance:answerPerformance(q.performance,i===q.answers[q.index].correct,ms)})}
- function vote(id){cue('button');setQuiz(q=>!q||q.selected!==null||q.draft===null?q:{...q,votes:recordVote(q.votes,id,q.draft,q.players.map(p=>p.id))})}
+ function answer(i,ms){cue('button');setQuiz(q=>!q||q.entering||q.selected!==null||q.finished?q:q.friendIds?answerRoleQuestion(q,i,ms):{...q,selected:i,score:q.score+(i===q.answers[q.index].correct?1:0),performance:answerPerformance(q.performance,i===q.answers[q.index].correct,ms)})}
+ function vote(id){cue('button');setQuiz(q=>!q||q.selected!==null?q:{...q,voter:id===null||q.players?.some(p=>p.id===id)?id:null})}
  function confirmAnswer(ms){cue('button');setQuiz(q=>{const next=confirmGroupAnswer(q);return next===q?q:{...next,performance:answerPerformance(q.performance,q.draft===q.answers[q.index].correct,ms)}})}
  function defer(ms){cue('question');setQuiz(q=>deferQuestion(q,ms))}
  function next(){
@@ -145,7 +149,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
    if(quiz.friendIds)onAccountChange?.(d=>{const next=completeGroupRound(d,quiz.matchId,quiz.level,quiz.score,quiz.friendIds,new Date(),quiz.answers.length);return next===d?d:{...next,journey:completePerformance(d.journey,next.journey,quiz)}});
    else onChange(d=>completePerformance(d,completeJourney(d,mode,quiz.level,quiz.score),quiz));
    setQuiz(q=>({...q,finished:true,stars:starsFor(q.score,q.answers.length),xp:earnedXP(q.score,q.challengeLevel,q.answers.length),...(q.friendIds?{ranking}:{})}));
-  }else{cue('question');setQuiz(q=>({...q,index:q.index+1,selected:null,draft:null,votes:{}}))}
+  }else{cue('question');setQuiz(q=>({...q,index:q.index+1,selected:null,voter:null,draft:null,votes:{}}))}
  }
  const positions=journeyPositions(nodes,{current:level,selected,done,playable}),pathHeight=positions.reduce((sum,p)=>sum+p.height,0);
  const path='M '+positions.map(p=>`${p.x},${p.y}`).join(' L ');

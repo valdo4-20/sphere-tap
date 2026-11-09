@@ -4,5 +4,5 @@ export function deferQuestion(quiz, elapsed = 0) {
  const answers = [...quiz.answers], [question] = answers.splice(quiz.index, 1);
  answers.push(question);
  const key = question.id || question.prompt;
- return {...quiz, answers, draft:null, votes:{}, deferredTimes:{...quiz.deferredTimes,[key]:Number.isFinite(elapsed)?Math.max(0,elapsed):0}};
+ return {...quiz, answers, voter:null, draft:null, votes:{}, deferredTimes:{...quiz.deferredTimes,[key]:Number.isFinite(elapsed)?Math.max(0,elapsed):0}};
 }
