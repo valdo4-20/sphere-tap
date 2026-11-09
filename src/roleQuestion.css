@@ -2,7 +2,6 @@
 .role-question{--person:var(--question-color);min-width:0}
 .role-question-heading{display:flex;gap:10px;align-items:flex-start;margin:18px 0}
 .role-question-heading h2{flex:1;min-width:0;margin:0!important;font-size:clamp(22px,5vw,30px);line-height:1.35;overflow-wrap:anywhere}
-.role-voice{flex:none;display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:50%;color:var(--text)}
 .role-answer-context{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin-bottom:10px}
 .role-answer-context>span:last-child{display:flex;gap:6px;align-items:center}
 .role-opinions{padding:12px 8px;border:1px solid var(--line);border-radius:18px;margin-bottom:18px;min-width:0}
