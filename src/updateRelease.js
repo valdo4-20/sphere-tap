@@ -1,6 +1,6 @@
 export const updateRelease={
- version:'1.8.1',
- title:'O Rolê ficou mais direto.',
+ version:'1.8.2',
+ title:'Mais variedade pelo caminho.',
  palette:{background:'#082c24',neutral:'#174639',accent:'#ffffff',text:'#ffffff'},
- changes:['Toque na resposta do grupo para ver o resultado na hora.','Grupo e amigos sempre visíveis, com opiniões individuais opcionais.','Leitura da pergunta em voz alta e animações leves nas perguntas, respostas e sequências.','Progresso, XP compartilhado e calendário preservados.'],
+ changes:['Perguntas selecionadas com mais cuidado e alternativas melhores.','Histórico por perfil para espaçar repetições e equilibrar os temas.','Dificuldade gradual e seleções especiais nos níveis dourados.','Rolê com 100 níveis disponíveis; treino diário, XP e troféus preservados.'],
 };

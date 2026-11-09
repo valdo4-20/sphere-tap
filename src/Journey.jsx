@@ -18,7 +18,7 @@ import {Star,Lock,LockOpen,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown
 import JourneyMotion from './JourneyMotion.jsx';
 import JourneyPlanet from './JourneyPlanet.jsx';
 import {planetFor,planetIsVisible} from './journeyPlanets';
-import {questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,earnedXP} from './journeyLogic.js';
+import {MAX_ROLE_LEVEL,questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,earnedXP} from './journeyLogic.js';
 import {dailyStatus,enrollDaily,dailyEdition,dailyLevelDate,weeklyColor} from './journeyDaily.js';
 import {themeFor,praiseFor} from './quizTopics.js';
 import {completeGroupRound,groupRanking,warmFriendColor} from './localFriends.js';
@@ -110,7 +110,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  const entering=useRef(false),completion=useRef(false),busyCallback=useRef(onBusy);
  busyCallback.current=onBusy;
  const data=owner,mode=data.mode,personal=mode==='personal',done=data[mode],level=done+1;
- const daily=dailyStatus(owner,clock),playable=!personal||daily.canPlay,edition=dailyEdition(level),nodes=visibleLevels(done);
+ const daily=dailyStatus(owner,clock),playable=personal?daily.canPlay:done<MAX_ROLE_LEVEL,edition=dailyEdition(level),nodes=visibleLevels(done,{limit:personal?Infinity:MAX_ROLE_LEVEL});
  const selected=selectedLevel===`${mode}:${level}`,challengeLevel=personal?data.role+1:level;
  const roster=(account?.localFriends||[]).filter(f=>participants.includes(f.id));
  useEffect(()=>{busyCallback.current?.(Boolean(quiz)||choosing||Boolean(inspection));return()=>busyCallback.current?.(false)},[Boolean(quiz),choosing,Boolean(inspection)]);
@@ -163,6 +163,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   <JourneyMotion/>
   <header className='journey-heading'><h1>Descubra pelo caminho.</h1><JourneyProgress progress={owner} reward={reward}/></header>
   <div className='journey-switch' aria-label='Escolher modo'><button aria-pressed={personal} onClick={()=>{onChange(d=>({...enrollDaily(d),mode:'personal'}))}}><UserRound size={17}/><span>Modo Pessoal</span></button><button aria-pressed={!personal} onClick={()=>onChange(d=>({...d,mode:'role'}))}><Users size={18}/><span>Modo Rolê</span></button></div>
+  {!personal&&done>=MAX_ROLE_LEVEL&&<p role='status'>Você concluiu os 100 níveis disponíveis do Rolê. Seu progresso está salvo.</p>}
   {personal?<div className='journey-daily-card' role='status'><h2>{playable?edition.title:'Por hoje, você chegou lá.'}</h2>{!playable&&<p className='journey-next-date'>Próximo dia: {new Date(dailyLevelDate(owner,level,clock)+'T12:00:00').toLocaleDateString('pt-BR')}</p>}</div>
   :null}
   {choosing&&<Dialog title={managing?'Amigos':'Quem vem para o Rolê?'} onClose={()=>setChoosing(false)} className='journey-players-dialog'>

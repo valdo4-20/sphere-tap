@@ -6,7 +6,7 @@ permissions:
   contents: read
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v6
@@ -23,6 +23,7 @@ jobs:
       - run: npm run test:flows
       - run: npm run test:visual
       - run: npm run audit:questions
+      - run: npm run audit:curation
       - uses: actions/upload-artifact@v4
         if: always()
         with:

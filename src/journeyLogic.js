@@ -60,5 +60,5 @@ export function questionsFor(level,{difficultyLevel=level,mode='role',round=leve
  }
  return items.map(q=>{const indexed=shuffle(q.options.map((text,i)=>({text,correct:i===q.correct})),rng);return {...q,options:indexed.map(x=>x.text),correct:indexed.findIndex(x=>x.correct)}})
 }
-export {starsFor,visibleLevels,migrateJourney,completeJourney,starRanks,starRankFor,earnedXP,playerProgress,validJourney} from './journeyProgression.js';
+export {MAX_ROLE_LEVEL,starsFor,visibleLevels,migrateJourney,completeJourney,starRanks,starRankFor,earnedXP,playerProgress,validJourney} from './journeyProgression.js';
 

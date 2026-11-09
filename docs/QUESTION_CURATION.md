@@ -30,3 +30,9 @@ O lançamento identifica a ilha dourada pela data programada já usada pelo mapa
 Os valores anteriores vieram da auditoria inicial sem memória de exposição. A comparação mede o efeito combinado da curadoria e da seleção com histórico. Não significa diminuição da repetição acumulada: o conjunto elegível ficou menor.
 
 Validação local: 25 testes de seleção/Jornada, incluindo 10.000 níveis, mais 38 testes de calendário, persistência e troféus passaram. A compilação de sintaxe/importações JSX/CSS passou com dependências externas. O build Vite/PWA completo e o teste interativo no iPhone ainda precisam da execução da versão de teste.
+
+## Publicação 1.8.2
+
+A Jornada do Rolê fica limitada a 100 níveis disponíveis nesta edição. O calendário do treino Pessoal continua, para preservar a rotina diária e o calendário de troféus. Progresso anterior acima de 100 não é apagado nem reduzido. O limite não altera a quantidade de perguntas de cada rodada.
+
+O CI confirmou `npm test` e o build Vite/PWA da revisão inicial. A instalação dos navegadores falhou porque `ubuntu-latest` passou a usar Ubuntu 26.04, incompatível com o Playwright fixado no projeto. O workflow agora fixa Ubuntu 24.04 e executa também `audit:curation`.
