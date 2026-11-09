@@ -31,3 +31,25 @@
 .compact-entry-dialog .dialog-body .sphere-select>button{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .compact-entry-dialog .dialog-body .sphere-select>button>span{min-inline-size:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @supports not (overflow:clip){.compact-entry-dialog>.dialog-body{overflow-x:hidden}}
+
+
+/* O menu de categoria abre sobre o formulário, sempre dentro da área visível do modal. */
+.compact-entry-dialog .dialog-body .sphere-select{position:relative;z-index:2}
+.compact-entry-dialog .dialog-body .sphere-select:has(.sphere-select-menu){z-index:30}
+.compact-entry-dialog .dialog-body .sphere-select-menu{
+  position:absolute;left:0;right:0;width:100%;min-width:0;max-width:100%;
+  display:grid;grid-template-columns:minmax(0,1fr);gap:3px;
+  box-sizing:border-box;margin:6px 0 0;padding:6px;
+  overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;scrollbar-gutter:stable;
+  border:1px solid var(--glass-line);border-radius:18px;
+  background:var(--panel-raised,var(--panel));z-index:40;
+}
+.compact-entry-dialog .dialog-body .sphere-select-menu-bottom{top:100%;bottom:auto}
+.compact-entry-dialog .dialog-body .sphere-select-menu-top{bottom:100%;top:auto;margin:0 0 6px}
+.compact-entry-dialog .dialog-body .sphere-select-menu>button{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  width:100%;min-width:0;max-width:100%;min-height:44px;box-sizing:border-box;
+  padding:10px 12px;text-align:left;white-space:normal;overflow-wrap:anywhere;
+}
+.compact-entry-dialog .dialog-body .sphere-select-menu>button>*{min-width:0}
