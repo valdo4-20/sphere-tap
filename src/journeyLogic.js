@@ -1,7 +1,8 @@
 import {roleQuestionCount} from './roundRules.js';
 export {roleQuestionCount} from './roundRules.js';
 import {playableCorpusCandidates} from './questionCorpus.js';
-import {topicQuestions} from './quizTopics.js';
+import {selectQuestions,tierForLevel} from './questionSelection.js';
+import {themeFor,topicQuestions} from './quizTopics.js';
 import {personalQuestions} from './journeyDaily.js';
 export {localDate,availableDailyLevel} from './journeyDaily.js';
 import {countries} from './quizGeography.js';
@@ -30,7 +31,7 @@ const everydayQuestions=[
 ].map(([id,prompt,options,explanation])=>({id,prompt,options,explanation,correct:0,difficulty:1,everyday:true,category:'No dia a dia',source:null,sourceName:'Acervo autoral'}));
 export const questionBank=[...editorialQuestions,...topicQuestions,...geography,...everydayQuestions];
 function numericQuestion(level,tier,index,rng){
- const limit=[0,18,70,180,450][tier],a=2+Math.floor(rng()*limit),b=2+Math.floor(rng()*Math.min(limit,25)),kind=(level+index)%6;let answer,prompt,explanation;
+ const limit=[0,12,20,30,40][tier],a=2+Math.floor(rng()*limit),b=2+Math.floor(rng()*Math.min(limit,25)),kind=(level+index)%6;let answer,prompt,explanation;
  if(kind===0){answer=a+b;prompt=`Quanto é ${a} + ${b}?`;explanation=`${a} + ${b} = ${answer}.`}
  else if(kind===1){answer=a;prompt=`Qual número completa ${b} + ? = ${a+b}?`;explanation=`Basta subtrair: ${a+b} − ${b} = ${a}.`}
  else if(kind===2){answer=a*b;prompt=`Um conjunto tem ${a} peças. Quantas peças há em ${b} conjuntos iguais?`;explanation=`Multiplicando ${a} por ${b}, temos ${answer} peças.`}
@@ -45,21 +46,19 @@ export function questionPlan(difficultyLevel){
  {name:'Exploração',count:10,facts:10,tier:Math.min(4,base+1)},
  {name:'Desafio final',count:5,facts:4,tier:Math.min(4,base+2)}];
 }
-export function questionsFor(level,{difficultyLevel=level,mode='role',round=level}={}){
+export function questionsFor(level,{difficultyLevel=level,mode='role',round=level,history=[],golden=false}={}){
  if(!Number.isSafeInteger(level)||level<1)throw new RangeError('Nível inválido');
- if(mode==='personal')return personalQuestions(level,{difficultyLevel});
- const rng=random((level*2654435761+round*97+(mode==='personal'?1234567:0))>>>0),used=new Set(),items=[],categoryCounts=new Map();
+ if(mode==='personal')return personalQuestions(level,{difficultyLevel,history,golden});
+ const rng=random((level*2654435761+round*97+(golden?0x6a09e667:0)+(mode==='personal'?1234567:0))>>>0),used=new Set(),items=[],categoryCounts=new Map();
  for(const [phaseIndex,phase] of (level===1?[{name:'Aquecimento',count:3,facts:3,tier:1},{name:'Exploração',count:6,facts:6,tier:1},{name:'Desafio final',count:4,facts:4,tier:1}]:questionPlan(difficultyLevel)).entries()){
-  const available=[...questionBank,...playableCorpusCandidates(level)].filter(q=>!q.everyday&&(mode!=='personal'||q.everyday||/^(music-[1-4]|logic-[1-4]|space-[1-3])$/.test(q.id))&&(q.difficulty<=phase.tier||q.sourced)&&!used.has(q.prompt));
-  const preferred=shuffle(available.filter(q=>q.difficulty>=Math.max(1,phase.tier-1)),rng);
-  const candidates=[...preferred,...shuffle(available.filter(q=>!preferred.includes(q)),rng)],selected=[];
-  for(let i=0;i<phase.facts;i++){candidates.sort((a,b)=>(categoryCounts.get(a.category)||0)-(categoryCounts.get(b.category)||0));const q=candidates.shift();if(!q)break;selected.push(q);categoryCounts.set(q.category,(categoryCounts.get(q.category)||0)+1)}
+  const selected=selectQuestions([...questionBank,...playableCorpusCandidates(level)].filter(q=>!q.everyday),phase.facts,{history,golden,used:items,tier:Math.min(phase.tier,tierForLevel(difficultyLevel)),themeFor,shuffle:a=>shuffle(a,rng)});
   for(const q of selected){used.add(q.prompt);items.push({...q,phase:phase.name,phaseIndex})}
   for(let i=selected.length;i<phase.count;i++){
-   let q;do{q=numericQuestion(level,phase.tier,items.length,rng)}while(used.has(q.prompt));
+   let q;do{q=numericQuestion(level,Math.min(phase.tier,tierForLevel(difficultyLevel)),items.length,rng)}while(used.has(q.prompt));
    used.add(q.prompt);items.push({...q,phase:phase.name,phaseIndex});
   }
  }
  return items.map(q=>{const indexed=shuffle(q.options.map((text,i)=>({text,correct:i===q.correct})),rng);return {...q,options:indexed.map(x=>x.text),correct:indexed.findIndex(x=>x.correct)}})
 }
 export {starsFor,visibleLevels,migrateJourney,completeJourney,starRanks,starRankFor,earnedXP,playerProgress,validJourney} from './journeyProgression.js';
+

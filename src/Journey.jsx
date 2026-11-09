@@ -1,3 +1,4 @@
+import {rememberQuestion} from './questionSelection.js';
 import RoleQuestion from './RoleQuestion.jsx';
 import {answerRoleQuestion} from './roleRound.js';
 import {deferQuestion} from './quizQueue.js';
@@ -126,6 +127,11 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  useEffect(()=>{if(unlock===null)return;const timer=setTimeout(()=>setUnlock(null),1100);return()=>clearTimeout(timer)},[unlock]);
  useEffect(()=>{if(advance===null)return;const timer=setTimeout(()=>setAdvance(null),1000);return()=>clearTimeout(timer)},[advance]);
  const readyQuiz=React.useCallback(()=>setQuiz(q=>q?{...q,entering:false}:q),[]);
+ const historyChange=useRef(onChange);historyChange.current=onChange;
+ useEffect(()=>{
+  const question=quiz?.answers[quiz.index];if(!question||quiz.entering||quiz.finished)return;
+  historyChange.current(d=>({...d,questionHistory:rememberQuestion(d.questionHistory,question)}));
+ },[quiz?.answers,quiz?.index,quiz?.entering,quiz?.finished]);
  function cue(kind){levelFeedback({kind,sound:account?.preferences?.journeySound!==false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})}
  function select(n){if(n!==level||!playable||quiz)return;setSelectedLevel(`${mode}:${n}`);setFeedback(v=>v+1);cue('button')}
  async function launch(n,players){
@@ -133,7 +139,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   entering.current=true;setLoading(true);setLoadError('');
   try{await loadQuestionCorpus()}catch{setLoadError('Não foi possível preparar as perguntas. Tente novamente.');setLoading(false);entering.current=false;return}
   setLoading(false);completion.current=false;cue('question');setChoosing(false);
-  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',voter:null,draft:null,votes:{},opinionResults:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
+  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n,history:data.questionHistory||[],golden:planetFor(n,personal?dailyLevelDate(owner,n,clock):undefined).golden}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',voter:null,draft:null,votes:{},opinionResults:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
  }
  function begin(n=level){if(personal)launch(n,[]);else{setManaging(false);setChoosing(true)}}
  function closeQuiz(){entering.current=false;setQuiz(null);if(quiz?.finished){setAdvance(level);setReward({id:Date.now(),xp:quiz.xp,from:quiz.previousXP});}}
@@ -185,3 +191,4 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   {quiz&&<Quiz quiz={quiz} onVote={vote} onConfirm={confirmAnswer} onClose={closeQuiz} onAnswer={answer} onNext={next} onDefer={defer} onReady={readyQuiz} onCue={cue} mode={mode}/>}
  </section>;
 }
+
