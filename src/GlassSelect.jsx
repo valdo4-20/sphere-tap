@@ -28,7 +28,7 @@ export default function GlassSelect({children,value,defaultValue,name,onChange,d
       const above=Math.max(0,rect.top-visibleTop-10);
       const side=below>=Math.min(180,options.length*48+12)||below>=above?"bottom":"top";
       const room=side==="bottom"?below:above;
-      setPlacement({side,maxHeight:Math.max(88,Math.min(260,room))});
+      setPlacement({side,maxHeight:Math.max(1,Math.min(260,room))});
     };
     const frame=requestAnimationFrame(measure);
     window.addEventListener("resize",measure);
