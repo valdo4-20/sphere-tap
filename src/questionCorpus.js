@@ -20,5 +20,14 @@ function question(g,row,index){
 export function corpusCandidates(level,countPerGroup=24){return corpus.flatMap(g=>Array.from({length:Math.min(countPerGroup,g.rows.length)},(_,i)=>{const index=((level-1)*countPerGroup+i)%g.rows.length;return question(g,g.rows[index],index)}))}
 export function corpusCount(){return corpus.reduce((n,g)=>n+g.rows.length,0)}
 
-// Bibliographic import remains auditable, but specialist titles are not suitable for normal rounds.
-export function playableCorpusCandidates(level){return corpusCandidates(level).filter(q=>!q.id.startsWith("catalog-books-author-"))}
+// Only explicitly curated familiar subjects enter general rounds. The full archive remains auditable.
+const familiar={
+ 'cities-country':new Set(['Shanghai','Paris','London','Tokyo','Rome','Madrid','Barcelona','Lisbon','Berlin','Amsterdam','Buenos Aires','Rio de Janeiro','São Paulo','New York City','Los Angeles','Sydney','Toronto','Cairo','Athens','Lima','Santiago','Mexico City','Beijing']),
+ 'cinema-director':new Set(['Titanic','Avatar','Jurassic Park','O Castelo no Céu','O Conto da Princesa Kaguya','Spirited Away','A Viagem de Chihiro','The Matrix','Jaws','E.T. the Extra-Terrestrial','Finding Nemo','Toy Story','Pulp Fiction']),
+ 'pokemon-types':new Set(['Pikachu','Bulbasaur','Charmander','Squirtle','Charizard','Eevee','Snorlax','Gengar','Meowth','Psyduck'])
+};
+export function playableCorpusCandidates(level){return corpus.flatMap(g=>{
+ const rows=g.rows.filter(row=>familiar[g.id]?.has(row[0])),answers=[...new Set(rows.map(row=>row[1]))];
+ if(answers.length<4)return [];
+ return rows.map((row,index)=>({...question({...g,answers},row,index),difficulty:2,subjectKey:`catalog:${g.id}:${row[2]}`}));
+})}

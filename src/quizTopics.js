@@ -1,3 +1,4 @@
+import {selectQuestions,tierForLevel,factKey,subjectKey} from './questionSelection.js';
 import {accessibleArtQuestions} from './quizArt.js';
 import {playableCorpusCandidates} from './questionCorpus.js';
 import {editorialQuestions} from './quizEditorial.js';
@@ -7,7 +8,7 @@ export const quizThemes={
 };
 export function themeFor(question){
  const c=question.category||'',id=question.id||'';
- const key=question.theme||(/Cinema/.test(c)||id.startsWith('cinema-')?'cinema':/Geek/.test(c)||id.startsWith('geek-')?'geek':id.startsWith('body-')?'biology':id.startsWith('art-')?'art':id.startsWith('sport-')?'sport':id.startsWith('brhistory-')||/História/.test(c)?'history':/Mundo|Geografia/.test(c)?'geography':/Música/.test(c)?'music':/Ciência/.test(c)?'science':/Esporte/.test(c)?'sport':/Cultura|Cinema|Literatura/.test(c)?'culture':/números|orçamento|Tempo|dia a dia/.test(c)?'math':'logic');
+ const key=question.theme||(/Cinema/.test(c)||id.startsWith('cinema-')?'cinema':/Geek/.test(c)||id.startsWith('geek-')?'geek':id.startsWith('body-')?'biology':id.startsWith('art-')?'art':id.startsWith('sport-')?'sport':id.startsWith('brhistory-')||/História/.test(c)?'history':/Mundo|Geografia/.test(c)?'geography':/Música/.test(c)?'music':/Ciência|Ciências/.test(c)?'science':/Esporte/.test(c)?'sport':/Cultura|Literatura/.test(c)?'culture':/números|orçamento|Tempo|dia a dia/.test(c)?'math':'logic');
  return {id:key,...(quizThemes[key]||quizThemes.logic)};
 }
 export const praise=['Bom trabalho!','Fenomenal!','Muito bem!','Você mandou bem!','Excelente descoberta!','Brilhante!','É isso aí!','Que acerto!'];
@@ -27,13 +28,13 @@ const facts=[
  ['cinema-5','Cinema',2,'My Heart Will Go On faz parte de qual filme?',['Titanic','Avatar','Star Wars','Matrix'],'A canção de Titanic venceu o Oscar em 1998.','https://www.oscars.org/oscars/ceremonies/1998/memorable-moments'],
  ['geek-5','Geek',1,'Qual é o nome do irmão de Mario?',['Luigi','Link','Sonic','Kirby'],'Mario e Luigi são irmãos.','https://play.nintendo.com/news-tips/news/learn-more-mushroom-kingdom-friends/'],
  ['geek-6','Geek',1,'Qual criatura de Minecraft é conhecida por se aproximar e explodir?',['Creeper','Vaca','Galinha','Aldeão'],'O creeper é uma das criaturas mais conhecidas de Minecraft.','https://www.minecraft.net/pt-pt/article/meet-creeper'],
- ['geek-1','Geek',1,'Em Star Wars, Yoda é um mestre de qual ordem?',['Jedi','Sith','Vingadores','X-Men'],'Yoda é um dos mestres da Ordem Jedi.',yoda],
- ['geek-2','Geek',1,'Qual destes personagens é treinado por Yoda?',['Luke Skywalker','Bruce Wayne','Tony Stark','Peter Parker'],'Yoda participa do treinamento Jedi de Luke Skywalker.',yoda],
+ ['geek-1','Geek',1,'Em Star Wars, Yoda é um mestre de qual ordem?',['Jedi','Sith','Mandalorianos','Caçadores de recompensas'],'Yoda é um dos mestres da Ordem Jedi.',yoda],
+ ['geek-2','Geek',1,'Qual destes personagens é treinado por Yoda?',['Luke Skywalker','Han Solo','Leia Organa','Padmé Amidala'],'Yoda participa do treinamento Jedi de Luke Skywalker.',yoda],
  ['geek-3','Geek',2,'Em Star Wars, como se chama a energia com a qual os Jedi se conectam?',['A Força','A Matrix','O Multiverso','O Éter'],'Os Jedi, como Yoda, se conectam com a Força.','https://www.starwars.com/databank/the-force'],
  ['geek-4','Geek',1,'Qual destas franquias tem o personagem Darth Vader?',['Star Wars','Star Trek','Pokémon','Minecraft'],'Darth Vader é um personagem da saga Star Wars.','https://www.starwars.com/databank/darth-vader'],
  ['body-1','Corpo humano',1,'Qual vaso leva o sangue para fora do coração?',['Artéria','Veia','Ureter','Traqueia'],'Artérias conduzem o sangue para fora do coração.',vessels],
  ['body-2','Corpo humano',1,'Qual vaso traz o sangue de volta ao coração?',['Veia','Artéria','Brônquio','Ureter'],'Veias conduzem o sangue de volta ao coração.',vessels],
- ['body-3','Corpo humano',2,'Onde ocorre a principal troca de substâncias entre o sangue e os tecidos?',['Nos capilares','Na traqueia','No esôfago','Nos tendões'],'Os capilares têm paredes finas que permitem essas trocas.',vessels],
+ ['body-3','Corpo humano',2,'Onde ocorre a principal troca de substâncias entre o sangue e os tecidos?',['Nos capilares','Nas grandes artérias','Nas grandes veias','Nas válvulas cardíacas'],'Os capilares têm paredes finas que permitem essas trocas.',vessels],
  ['body-4','Corpo humano',2,'Quantas câmaras tem o coração humano?',['Quatro','Duas','Três','Cinco'],'São dois átrios e dois ventrículos.',heart],
  ['brhistory-1','História',1,'Em que ano foi proclamada a Independência do Brasil?',['1822','1889','1500','1988'],'A Independência foi proclamada em 7 de setembro de 1822.',constitution],
  ['brhistory-2','História',2,'Qual foi a primeira Constituição do Brasil?',['A de 1824','A de 1889','A de 1988','A de 1500'],'A Constituição de 1824 foi a primeira do país, durante o Império.',constitution],
@@ -45,19 +46,15 @@ const facts=[
  ['art-4','Arte',2,'Em que ano a Mona Lisa foi roubada do Louvre?',['1911','1822','1969','2001'],'O roubo aconteceu em 21 de agosto de 1911.',louvre],
  ['sport-1','Esportes',1,'Quantos anéis formam o símbolo olímpico?',['Cinco','Quatro','Seis','Sete'],'O símbolo olímpico tem cinco anéis entrelaçados.',olympics],
  ['sport-2','Esportes',1,'Qual destas cores faz parte dos anéis olímpicos?',['Verde','Roxo','Rosa','Laranja'],'As cores dos anéis são azul, amarelo, preto, verde e vermelho.',olympics],
- ['sport-3','Esportes',2,'Quem criou o símbolo dos anéis olímpicos?',['Pierre de Coubertin','Leonardo da Vinci','Albert Einstein','Isaac Newton'],'Pierre de Coubertin desenhou o símbolo em 1913.',olympics],
+ ['sport-3','Esportes',2,'Quem criou o símbolo dos anéis olímpicos?',['Pierre de Coubertin','Avery Brundage','Juan Antonio Samaranch','Thomas Bach'],'Pierre de Coubertin desenhou o símbolo em 1913.',olympics],
  ['sport-4','Esportes',2,'Os anéis olímpicos aparecem de qual forma no símbolo?',['Entrelaçados','Empilhados sem se tocar','Em uma espiral','Dentro de um quadrado'],'Os cinco anéis aparecem entrelaçados no símbolo olímpico.',olympics]
 ];
 export const topicQuestions=[...accessibleArtQuestions,...facts.filter(q=>q[0]!=='art-4').map(([id,category,difficulty,prompt,options,explanation,source])=>({id,category,difficulty,prompt,options,correct:0,explanation,source,sourceName:id.startsWith('body')?'OpenStax · Rice University':id.startsWith('brhistory')?'STF':id.startsWith('art')?'Museu do Louvre':id.startsWith('cinema')?'Academia do Oscar':id.startsWith('geek')?(source.includes('nintendo')?'Nintendo':source.includes('minecraft')?'Mojang · Minecraft':'Star Wars · Lucasfilm'):'Comitê Olímpico Internacional'}))];
-const geography=countries.map((c,i)=>({id:`daily-world-${c.id}`,category:'Geografia',difficulty:1,prompt:`Em qual país fica ${c.capital}?`,options:[c.country,...countries.filter(x=>x.country!==c.country).slice(i%5,i%5+3).map(x=>x.country)],correct:0,explanation:`${c.capital} é a capital de ${c.country}.`,source:c.source,sourceName:'Wikidata · CC0'}));
+const geography=countries.map((c,i)=>({id:`daily-world-${c.id}`,subjectKey:`capital:${c.id}`,category:'Geografia',difficulty:1,prompt:`Em qual país fica ${c.capital}?`,options:[c.country,...countries.filter(x=>x.country!==c.country).slice(i%5,i%5+3).map(x=>x.country)],correct:0,explanation:`${c.capital} é a capital de ${c.country}.`,source:c.source,sourceName:'Wikidata · CC0'}));
 const dailyBank=[...topicQuestions,...editorialQuestions,...geography];
-export function mixDailyTopics(items,level,shuffle){
- const pool=[...dailyBank,...playableCorpusCandidates(level)],themes=['biology','history','art','sport','science','geography','music','cinema','geek'],used=new Set(),chosen=[];
- // Twenty-eight facts; two short practical challenges remain optional variety.
- for(let i=0;i<28;i++){
-  const theme=themes[(i+level)%themes.length],candidates=pool.filter(q=>themeFor(q).id===theme&&!used.has(q.prompt));
-  const q=candidates[(level*7+i)%candidates.length];if(!q)continue;used.add(q.prompt);chosen.push(q);
- }
+export function mixDailyTopics(items,level,shuffle,{history=[],difficultyLevel=level,golden=false}={}){
+ const pool=[...dailyBank,...playableCorpusCandidates(level)],chosen=selectQuestions(pool,28,{history,golden,tier:tierForLevel(difficultyLevel),themeFor,shuffle});
+ if(chosen.length<28)throw new Error('Acervo editorial insuficiente para esta faixa');
  const order=shuffle(chosen);let at=0;
- return items.map((q,i)=>{if(i===9||i===24||at>=order.length)return q;const fact=order[at++],right=fact.options[fact.correct],options=shuffle(fact.options);return {...fact,id:`personal-fact-${level}-${fact.id}`,theme:themeFor(fact).id,phase:q.phase,phaseIndex:q.phaseIndex,options,correct:options.indexOf(right)}});
+ return items.map((q,i)=>{if(i===9||i===24)return {...q,difficulty:1};const fact=order[at++],right=fact.options[fact.correct],options=shuffle(fact.options);return {...fact,factKey:factKey(fact),subjectKey:subjectKey(fact),id:`personal-fact-${level}-${fact.id}`,theme:themeFor(fact).id,phase:q.phase,phaseIndex:q.phaseIndex,options,correct:options.indexOf(right)}});
 }

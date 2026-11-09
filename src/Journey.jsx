@@ -1,3 +1,4 @@
+import {rememberQuestion} from './questionSelection.js';
 import RoleQuestion from './RoleQuestion.jsx';
 import {answerRoleQuestion} from './roleRound.js';
 import {deferQuestion} from './quizQueue.js';
@@ -17,7 +18,7 @@ import {Star,Lock,LockOpen,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown
 import JourneyMotion from './JourneyMotion.jsx';
 import JourneyPlanet from './JourneyPlanet.jsx';
 import {planetFor,planetIsVisible} from './journeyPlanets';
-import {questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,earnedXP} from './journeyLogic.js';
+import {MAX_ROLE_LEVEL,questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,earnedXP} from './journeyLogic.js';
 import {dailyStatus,enrollDaily,dailyEdition,dailyLevelDate,weeklyColor} from './journeyDaily.js';
 import {themeFor,praiseFor} from './quizTopics.js';
 import {completeGroupRound,groupRanking,warmFriendColor} from './localFriends.js';
@@ -109,7 +110,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  const entering=useRef(false),completion=useRef(false),busyCallback=useRef(onBusy);
  busyCallback.current=onBusy;
  const data=owner,mode=data.mode,personal=mode==='personal',done=data[mode],level=done+1;
- const daily=dailyStatus(owner,clock),playable=!personal||daily.canPlay,edition=dailyEdition(level),nodes=visibleLevels(done);
+ const daily=dailyStatus(owner,clock),playable=personal?daily.canPlay:done<MAX_ROLE_LEVEL,edition=dailyEdition(level),nodes=visibleLevels(done,{limit:personal?Infinity:MAX_ROLE_LEVEL});
  const selected=selectedLevel===`${mode}:${level}`,challengeLevel=personal?data.role+1:level;
  const roster=(account?.localFriends||[]).filter(f=>participants.includes(f.id));
  useEffect(()=>{busyCallback.current?.(Boolean(quiz)||choosing||Boolean(inspection));return()=>busyCallback.current?.(false)},[Boolean(quiz),choosing,Boolean(inspection)]);
@@ -126,6 +127,11 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  useEffect(()=>{if(unlock===null)return;const timer=setTimeout(()=>setUnlock(null),1100);return()=>clearTimeout(timer)},[unlock]);
  useEffect(()=>{if(advance===null)return;const timer=setTimeout(()=>setAdvance(null),1000);return()=>clearTimeout(timer)},[advance]);
  const readyQuiz=React.useCallback(()=>setQuiz(q=>q?{...q,entering:false}:q),[]);
+ const historyChange=useRef(onChange);historyChange.current=onChange;
+ useEffect(()=>{
+  const question=quiz?.answers[quiz.index];if(!question||quiz.entering||quiz.finished)return;
+  historyChange.current(d=>({...d,questionHistory:rememberQuestion(d.questionHistory,question)}));
+ },[quiz?.answers,quiz?.index,quiz?.entering,quiz?.finished]);
  function cue(kind){levelFeedback({kind,sound:account?.preferences?.journeySound!==false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})}
  function select(n){if(n!==level||!playable||quiz)return;setSelectedLevel(`${mode}:${n}`);setFeedback(v=>v+1);cue('button')}
  async function launch(n,players){
@@ -133,7 +139,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   entering.current=true;setLoading(true);setLoadError('');
   try{await loadQuestionCorpus()}catch{setLoadError('Não foi possível preparar as perguntas. Tente novamente.');setLoading(false);entering.current=false;return}
   setLoading(false);completion.current=false;cue('question');setChoosing(false);
-  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',voter:null,draft:null,votes:{},opinionResults:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
+  setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n,history:data.questionHistory||[],golden:planetFor(n,personal?dailyLevelDate(owner,n,clock):undefined).golden}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',voter:null,draft:null,votes:{},opinionResults:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
  }
  function begin(n=level){if(personal)launch(n,[]);else{setManaging(false);setChoosing(true)}}
  function closeQuiz(){entering.current=false;setQuiz(null);if(quiz?.finished){setAdvance(level);setReward({id:Date.now(),xp:quiz.xp,from:quiz.previousXP});}}
@@ -157,6 +163,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   <JourneyMotion/>
   <header className='journey-heading'><h1>Descubra pelo caminho.</h1><JourneyProgress progress={owner} reward={reward}/></header>
   <div className='journey-switch' aria-label='Escolher modo'><button aria-pressed={personal} onClick={()=>{onChange(d=>({...enrollDaily(d),mode:'personal'}))}}><UserRound size={17}/><span>Modo Pessoal</span></button><button aria-pressed={!personal} onClick={()=>onChange(d=>({...d,mode:'role'}))}><Users size={18}/><span>Modo Rolê</span></button></div>
+  {!personal&&done>=MAX_ROLE_LEVEL&&<p role='status'>Você concluiu os 100 níveis disponíveis do Rolê. Seu progresso está salvo.</p>}
   {personal?<div className='journey-daily-card' role='status'><h2>{playable?edition.title:'Por hoje, você chegou lá.'}</h2>{!playable&&<p className='journey-next-date'>Próximo dia: {new Date(dailyLevelDate(owner,level,clock)+'T12:00:00').toLocaleDateString('pt-BR')}</p>}</div>
   :null}
   {choosing&&<Dialog title={managing?'Amigos':'Quem vem para o Rolê?'} onClose={()=>setChoosing(false)} className='journey-players-dialog'>
@@ -185,3 +192,4 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   {quiz&&<Quiz quiz={quiz} onVote={vote} onConfirm={confirmAnswer} onClose={closeQuiz} onAnswer={answer} onNext={next} onDefer={defer} onReady={readyQuiz} onCue={cue} mode={mode}/>}
  </section>;
 }
+
