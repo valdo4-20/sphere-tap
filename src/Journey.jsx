@@ -1,3 +1,4 @@
+import RankingBoard from './RankingBoard';
 import {rememberQuestion} from './questionSelection.js';
 import RoleQuestion from './RoleQuestion.jsx';
 import {answerRoleQuestion} from './roleRound.js';
@@ -85,7 +86,7 @@ function Quiz({quiz,onClose,onAnswer,onNext,onDefer,onReady,mode,onCue,onVote,on
     {quiz.performance&&<p className='journey-performance-result'>Melhor sequência: {quiz.performance.maxStreak} · Tempo respondendo: {clockText(quiz.performance.totalMs)}</p>}
     <p className='journey-earned-xp'>+{quiz.xp} XP</p><JourneyXP from={quiz.previousXP} to={quiz.previousXP+quiz.xp}/>
     {quiz.friendIds&&<section className='opinion-round-summary' aria-label='Acertos de cada participante'><h3>Suas escolhas</h3><ul>{quiz.players.map(p=>{const result=quiz.opinionResults[p.id]||{answered:0,correct:0};return <li key={p.id}><FriendEmblem friend={p}/><span>{p.name}</span><b>{result.answered?`${result.correct} ${result.correct===1?'acerto':'acertos'} em ${result.answered} ${result.answered===1?'escolha':'escolhas'}`:'Sem escolhas registradas'}</b></li>})}</ul></section>}
-    {quiz.friendIds&&<section className='match-ranking' aria-label='Ranking do Rolê'><h3>Ranking do Rolê</h3><ol>{quiz.ranking.map(r=><li key={r.id}><b>{r.place}</b><FriendEmblem friend={r}/><span>{r.name}</span><strong>{r.journey.xp} XP</strong></li>)}</ol></section>}
+    {quiz.friendIds&&<RankingBoard rows={quiz.ranking} title='Ranking do Rolê' className='match-ranking'/>}
     <button className='journey-primary' disabled={leaving} onClick={leave}>Continuar a jornada</button>
    </>:<>
     {quiz.friendIds?<RoleQuestion quiz={quiz} answerTime={answerTime} onAnswer={onAnswer} onNext={onNext} onDefer={onDefer} onVoter={onVote} disabled={quiz.entering||leaving}/>:<>

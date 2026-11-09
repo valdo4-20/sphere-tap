@@ -1,3 +1,4 @@
+import RankingBoard from './RankingBoard';
 import FriendEmblem from './FriendEmblem';
 import {emblemIds,emblemNames,emblemFor} from './friendEmblems';
 import React,{useState} from 'react';
@@ -7,7 +8,7 @@ import {uid} from './model.js';
 import './journeyPlay.css';
 export function LocalRanking({data,active='self',onSelect,onManage}){
  const rows=localRanking(data);
- return <section className='local-ranking' aria-label='Ranking'><header><div><h2><Trophy size={17}/>Ranking</h2></div>{onManage&&<button className='quiet-button' onClick={onManage}><Users size={15}/>Amigos</button>}</header><ol>{rows.map(f=><li key={f.id} className={active===f.id?'is-player':''} style={{'--friend-color':warmFriendColor(f.color)}}>{onSelect?<button aria-pressed={active===f.id} onClick={()=>onSelect(f.id)}><span className='rank-place'>{f.place}</span><FriendEmblem friend={f}/><span className='rank-name'>{f.name}{f.id==='self'&&<small>Você</small>}</span><span className='rank-score'>{f.journey.xp} XP<small>{f.journey.stars} ★ · Nv. {f.level}</small></span></button>:<div className='rank-row'><span className='rank-place'>{f.place}</span><FriendEmblem friend={f}/><span className='rank-name'>{f.name}{f.id==='self'&&<small>Você</small>}</span><span className='rank-score'>{f.journey.xp} XP<small>{f.journey.stars} ★ · Nv. {f.level}</small></span></div>}</li>)}</ol></section>
+ return <RankingBoard rows={rows} className='local-ranking' active={active} onSelect={onSelect} onManage={onManage}/>;
 }
 export default function LocalFriends({data,onChange,onNotify=()=>{},compact=false}){
  const [editing,setEditing]=useState(null),[name,setName]=useState(''),[color,setColor]=useState(friendColors[0]),[emblem,setEmblem]=useState('sun'),[removing,setRemoving]=useState(null),[ranking,setRanking]=useState(false);

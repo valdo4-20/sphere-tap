@@ -1,0 +1,30 @@
+/* Shared presentation only: ranking order and XP remain in localFriends.js. */
+.ranking-board{--ranking-aura:var(--active-aura,#b79be8);box-sizing:border-box;width:100%;max-width:470px;margin:24px auto;padding:22px 16px 14px;border:1px solid var(--glass-line);border-radius:28px;background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--ranking-aura) 22%,transparent),transparent 65%),var(--glass);color:var(--text);text-align:left;isolation:isolate}
+.ranking-board .ranking-board-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 3px}
+.ranking-board .ranking-eyebrow{font-size:9px;letter-spacing:1.8px;color:var(--muted)}
+.ranking-board .ranking-board-header h2{display:flex;align-items:center;gap:8px;font-family:inherit!important;text-transform:none!important;font-size:23px!important;letter-spacing:-.5px;margin:7px 0 0!important;line-height:1.3}
+.ranking-board .ranking-board-header h2 svg{color:#e9c465}
+.ranking-board .ranking-podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;min-height:235px;padding:25px 0 0}
+.ranking-podium-person{flex:1;max-width:125px;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;color:var(--person-color)}
+.ranking-board .ranking-podium-avatar{width:55px;height:55px;display:grid;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--person-color) 13%,var(--page));border:1px solid color-mix(in srgb,var(--person-color) 60%,transparent);box-shadow:0 5px 18px color-mix(in srgb,var(--person-color) 12%,transparent);z-index:1}
+.ranking-board .ranking-podium-avatar .friend-emblem{width:41px;height:41px;flex:none}
+.ranking-board .ranking-podium-name{font-size:12px;font-weight:500;line-height:1.4;margin:8px 0;max-width:100%;overflow-wrap:anywhere;color:var(--text)}
+.ranking-board .ranking-pedestal{position:relative;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;height:var(--podium-height);padding:13px 3px;background:linear-gradient(180deg,color-mix(in srgb,var(--person-color) 27%,var(--page)),color-mix(in srgb,var(--person-color) 5%,var(--page)));border:1px solid color-mix(in srgb,var(--person-color) 35%,transparent);border-bottom:0;border-radius:13px 13px 0 0;box-shadow:inset 0 2px 0 #ffffff18}
+.ranking-board .ranking-medal{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--person-color);color:#17221e;font-size:15px;font-weight:700;box-shadow:0 0 0 3px color-mix(in srgb,var(--person-color) 15%,transparent)}
+.ranking-board .is-first .ranking-medal{background:#edca75;color:#392c10}
+.ranking-board .ranking-podium-xp{font-size:10px;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--text)}
+.ranking-board ol.ranking-board-list{list-style:none;margin:0;padding:8px 0 0;display:grid;gap:0;border-top:1px solid var(--glass-line)}
+.ranking-board .ranking-board-list>li{display:block;padding:0;margin:0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent}
+.ranking-board .ranking-board-row,.ranking-board .ranking-board-list>li>button{display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;padding:14px 4px;min-height:62px;text-align:left;color:var(--text);background:transparent;border:0;border-radius:10px}
+.ranking-board .ranking-place{font-size:13px;color:var(--muted);min-width:20px;font-variant-numeric:tabular-nums}
+.ranking-board .ranking-board-list .friend-emblem{width:32px;height:32px;flex:none}
+.ranking-board .ranking-person-name{flex:1;min-width:0;font-size:13px;overflow-wrap:anywhere}
+.ranking-board .ranking-person-name small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.ranking-board .ranking-person-xp{flex:none;white-space:nowrap;font-size:12px;font-weight:500;font-variant-numeric:tabular-nums}
+.ranking-board .ranking-board-list .is-player{background:color-mix(in srgb,var(--person-color) 7%,transparent)}
+.ranking-board .ranking-tie-note{font-size:11px;line-height:1.4;margin:14px 3px 0;color:var(--muted);text-align:center}
+.ranking-board button:focus-visible{outline:2px solid var(--person-color,var(--text));outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.ranking-board .ranking-podium-person{animation:ranking-podium-arrive .55s ease-out both}.ranking-board .ranking-board-list>li{animation:ranking-row-arrive .3s ease-out both}}
+@keyframes ranking-podium-arrive{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ranking-row-arrive{from{opacity:0}to{opacity:1}}
+@media(max-width:360px){.ranking-board{padding:18px 10px 12px}.ranking-board .ranking-board-row{gap:7px}.ranking-board .ranking-podium{gap:5px}.ranking-board .ranking-person-xp{font-size:11px}}
