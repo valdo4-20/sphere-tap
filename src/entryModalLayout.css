@@ -12,3 +12,22 @@
 .compact-entry-dialog .sphere-select{position:relative;max-width:100%;min-width:0}
 .compact-entry-dialog .sphere-select>button{width:100%;min-width:0;max-width:100%;box-sizing:border-box;font-size:16px}
 @media(max-width:600px){.compact-entry-dialog .form-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* iPhone/WebKit hardening: constrain every nested sizing context, not only the controls. */
+.tap-dialog.compact-entry-dialog[open]{inline-size:min(500px,calc(var(--entry-view-width,100vw) - 24px));max-inline-size:calc(var(--entry-view-width,100vw) - 24px);min-inline-size:0;padding:0}
+.tap-dialog.compact-entry-dialog>.dialog-header,
+.tap-dialog.compact-entry-dialog>.dialog-body{inline-size:100%;min-inline-size:0;max-inline-size:100%;box-sizing:border-box}
+.compact-entry-dialog>.dialog-body{contain:inline-size;overflow-x:clip}
+.compact-entry-dialog .dialog-body form,
+.compact-entry-dialog .dialog-body form>*,
+.compact-entry-dialog .dialog-body label,
+.compact-entry-dialog .dialog-body .entry-datetime,
+.compact-entry-dialog .dialog-body .native-datetime,
+.compact-entry-dialog .dialog-body .native-datetime>label,
+.compact-entry-dialog .dialog-body .sphere-select{inline-size:100%;min-inline-size:0;max-inline-size:100%;box-sizing:border-box}
+.compact-entry-dialog .dialog-body .native-datetime{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.compact-entry-dialog .dialog-body :is(input:not([type=hidden]),textarea,select,.sphere-select>button){inline-size:100%;min-inline-size:0;max-inline-size:100%;box-sizing:border-box}
+.compact-entry-dialog .dialog-body .native-datetime input:is([type=date],[type=time]){display:block;inline-size:100%;min-inline-size:0;max-inline-size:100%;padding-inline:10px}
+.compact-entry-dialog .dialog-body .sphere-select>button{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.compact-entry-dialog .dialog-body .sphere-select>button>span{min-inline-size:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@supports not (overflow:clip){.compact-entry-dialog>.dialog-body{overflow-x:hidden}}
