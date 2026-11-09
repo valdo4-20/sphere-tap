@@ -1,0 +1,8 @@
+.native-datetime.tap-datetime{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:10px;width:100%;min-width:0}
+.native-datetime>label{display:flex;flex-direction:column;gap:7px;min-width:0;margin:0;font-size:12px;color:var(--muted)}
+.native-datetime input:is([type=date],[type=time]){display:block;box-sizing:border-box;width:100%;min-width:0;max-width:100%;min-height:48px;margin:0;padding:12px 10px;font-family:inherit;font-size:16px;color:var(--text);background:var(--panel);border:1px solid var(--glass-line);border-radius:16px;color-scheme:dark}
+[data-theme=light] .native-datetime input{color-scheme:light}
+.native-datetime input::-webkit-date-and-time-value{min-height:1.4em;text-align:left}
+.entry-datetime{border:0;padding:0;margin:0 0 18px;min-width:0}
+.entry-datetime legend{padding:0;margin-bottom:10px;font-size:14px;color:var(--text)}
+.native-datetime input:focus-visible{outline:2px solid var(--active-aura);outline-offset:2px}

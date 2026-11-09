@@ -237,8 +237,8 @@ export function EntryForm({ entry, categories, onSave, onDelete }) {
         });
       }}
     >
-      <label>
-        Data e horário
+      <fieldset className="entry-datetime">
+        <legend>Data e horário</legend>
         <DateTimePicker
           name="time"
           type="datetime-local"
@@ -246,7 +246,7 @@ export function EntryForm({ entry, categories, onSave, onDelete }) {
           defaultValue={localTime(entry.time)}
           max={localTime(new Date().toISOString())}
         />
-      </label>
+      </fieldset>
       <label>
         O que foi consumido
         <GlassSelect

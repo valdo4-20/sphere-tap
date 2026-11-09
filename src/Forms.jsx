@@ -133,8 +133,8 @@ export function CravingForm({ craving, onSave, onDelete }) {
         Observar uma vontade é diferente de registrar consumo. Este diário é
         opcional.
       </p>
-      <label>
-        Data e horário
+      <fieldset className="entry-datetime">
+        <legend>Data e horário</legend>
         <DateTimePicker
           name="time"
           type="datetime-local"
@@ -142,7 +142,7 @@ export function CravingForm({ craving, onSave, onDelete }) {
           max={localTime(new Date().toISOString())}
           defaultValue={localTime(craving?.time || new Date().toISOString())}
         />
-      </label>
+      </fieldset>
       <label>
         Intensidade
         <GlassSelect name="intensity" defaultValue={craving?.intensity || 3}>
