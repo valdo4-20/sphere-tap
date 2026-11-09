@@ -1,5 +1,7 @@
 import {lockQuizScroll as lockDocumentScroll} from "./quizScroll";
 import DateTimePicker from "./DateTimePicker";
+import "./entryModalLayout.css";
+import {trackEntryViewport} from "./entryViewport.js";
 import GlassSelect from "./GlassSelect";
 import React, { useEffect, useRef, useState } from "react";
 import { X, Check, ChevronDown, Pencil, Leaf } from "lucide-react";
@@ -29,6 +31,10 @@ export function Dialog({ title, onClose, children, className = "", style }) {
       if(opener?.isConnected)opener.focus({preventScroll:true});
     };
   }, []);
+  useEffect(() => {
+    if (!className.split(' ').includes('compact-entry-dialog')) return;
+    return trackEntryViewport(ref.current);
+  }, [className]);
   return (
     <dialog
       className={`tap-dialog ${className}`}
@@ -237,8 +243,8 @@ export function EntryForm({ entry, categories, onSave, onDelete }) {
         });
       }}
     >
-      <fieldset className="entry-datetime">
-        <legend>Data e horário</legend>
+      <div className="entry-datetime" role="group" aria-label="Data e horário">
+        <p className="entry-datetime-title">Data e horário</p>
         <DateTimePicker
           name="time"
           type="datetime-local"
@@ -246,7 +252,7 @@ export function EntryForm({ entry, categories, onSave, onDelete }) {
           defaultValue={localTime(entry.time)}
           max={localTime(new Date().toISOString())}
         />
-      </fieldset>
+      </div>
       <label>
         O que foi consumido
         <GlassSelect

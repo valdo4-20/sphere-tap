@@ -4,5 +4,13 @@
 [data-theme=light] .native-datetime input{color-scheme:light}
 .native-datetime input::-webkit-date-and-time-value{min-height:1.4em;text-align:left}
 .entry-datetime{border:0;padding:0;margin:0 0 18px;min-width:0}
-.entry-datetime legend{padding:0;margin-bottom:10px;font-size:14px;color:var(--text)}
+.entry-datetime .entry-datetime-title{padding:0;margin-bottom:10px;font-size:14px;color:var(--text)}
 .native-datetime input:focus-visible{outline:2px solid var(--active-aura);outline-offset:2px}
+
+/* Native iOS date controls must never impose an intrinsic width on the form. */
+.tap-dialog .native-datetime{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));box-sizing:border-box}
+.tap-dialog .native-datetime>label{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+.tap-dialog .native-datetime input:is([type=date],[type=time]){width:100%;min-width:0;max-width:100%;font-size:16px!important;box-sizing:border-box}
+.tap-dialog .native-datetime input::-webkit-datetime-edit{min-width:0;padding:0}
+.tap-dialog .native-datetime input::-webkit-date-and-time-value{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:600px){.tap-dialog .native-datetime{grid-template-columns:minmax(0,1fr)}}
