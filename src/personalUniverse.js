@@ -31,7 +31,7 @@ export function buildPlanetChallenges(planetId, count = PLANET_CHALLENGE_COUNT) 
       questionCount: STANDARD_QUESTION_COUNT,
       requiredAccuracy: isGuardian ? GUARDIAN_PASS_PERCENT : STANDARD_PASS_PERCENT,
       prerequisites,
-      reveals: isGuardian ? [] : Array.from({ length: 2 }, (_, childIndex) => number * 2 + childIndex + 1)
+      reveals: isGuardian ? [] : Array.from({ length: 2 }, (_, childIndex) => number * 2 + childIndex)
         .filter(child => child <= count && child !== count)
         .map(child => `${planetId}-node-${child}`),
     };
