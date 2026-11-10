@@ -1,14 +1,15 @@
 import React,{Suspense,useEffect,useMemo,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {RotateCcw,RotateCw,X} from 'lucide-react';
-import {planetFor,planetSVG} from './journeyPlanets';
+import {planetFor,planetSVG,islandIndexForLevel} from './journeyPlanets';
 import {biomeEnergy} from './islandScenery';
 import './islandPreview.css';
 
 const IslandScene=React.lazy(()=>import('./IslandScene'));
 
-export default function IslandPreview({level,scheduledDate,onClose,onEnter}){
- const asset=useMemo(()=>planetFor(level,scheduledDate),[level,scheduledDate]);
+export default function IslandPreview({level,scheduledDate,islandMode=false,onClose,onEnter}){
+ const assetLevel=islandMode?islandIndexForLevel(level):level;
+ const asset=useMemo(()=>planetFor(assetLevel,islandMode?undefined:scheduledDate),[assetLevel,scheduledDate,islandMode]);
  const energy=biomeEnergy[asset.biome];
  const controlsRef=useRef(null),dialogRef=useRef(null),closeRef=useRef(null);
  const [rotation,setRotation]=useState(45),[phase,setPhase]=useState('day'),[entering,setEntering]=useState(false);
@@ -39,7 +40,7 @@ export default function IslandPreview({level,scheduledDate,onClose,onEnter}){
   };
  },[onClose]);
 
- const placeholder=<span className='island-scene-loading' dangerouslySetInnerHTML={{__html:planetSVG(level,{scheduledDate,instanceId:'inspect-loading',animated:false})}}/>;
+ const placeholder=<span className='island-scene-loading' dangerouslySetInnerHTML={{__html:planetSVG(assetLevel,{scheduledDate:islandMode?undefined:scheduledDate,instanceId:'inspect-loading',animated:false})}}/>;
  const enterPlanet=()=>{
   if(entering||!onEnter)return;
   setEntering(true);
