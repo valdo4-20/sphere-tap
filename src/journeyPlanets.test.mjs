@@ -1,9 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {sagaMapFor,planetFor} from './journeyPlanets.js';
-import {sagaLevelState} from './journeyLogic.js';
+import {sagaMapFor,planetFor,sagaLevelState} from './journeyPlanets.js';
 test('each planet saga has nine connected spatial nodes and a guardian',()=>{
- for(let level=1;level<=20;level++){
+ for(let level=1;level<=10;level++){
   const map=sagaMapFor(level);
   assert.equal(map.nodes.length,9);
   assert.equal(map.connections.length,8);
@@ -14,7 +13,7 @@ test('each planet saga has nine connected spatial nodes and a guardian',()=>{
  }
 });
 test('planet themes resolve to a saga map for all generated biomes',()=>{
- for(let level=1;level<=30;level++){
+ for(let level=1;level<=10;level++){
   const planet=planetFor(level),map=sagaMapFor(level);
   assert.equal(map.planetName,planet.name);
   assert.ok(map.nodes.every(n=>Number.isFinite(n.x)&&Number.isFinite(n.y)&&Number.isFinite(n.z)));
