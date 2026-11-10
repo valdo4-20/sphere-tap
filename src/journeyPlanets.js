@@ -34,3 +34,9 @@ export function sagaMapFor(level,scheduledDate){
  const nodes=coords.map(([x,y],index)=>({id:index+1,x:x+(planet.seed%7-3)*.035,y,z:Math.sin(index*.9+(planet.seed%13))*.24,kind:index===8?'guardian':index%3===0?'trial':'level'}));
  return {...theme,planetName:planet.name,seed:planet.seed,nodes,connections:nodes.slice(1).map((node,index)=>[nodes[index].id,node.id])};
 }
+
+export function sagaLevelState(node,completed,current,playable){
+ if(node<=completed)return 'complete';
+ if(node===current&&playable)return 'current';
+ return 'locked';
+}
