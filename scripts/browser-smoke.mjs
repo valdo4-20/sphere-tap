@@ -2,6 +2,7 @@ import {profileBanners} from '../src/profileBanners.js';
 import {loadQuestionCorpus} from '../src/questionCorpus.js';
 import {chromium} from '@playwright/test';
 import {spawn} from 'node:child_process';
+import {createServer} from 'node:net';
 import {mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {initial} from '../src/model.js';
@@ -9,7 +10,15 @@ import {questionsFor} from '../src/journeyLogic.js';
 import {localDate} from '../src/journeyDaily.js';
 
 const DEFAULT_TIMEOUT = 90_000;
-const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', '4173'], { stdio: 'ignore' });
+const portProbe = createServer();
+await new Promise((resolve, reject) => {
+  portProbe.once('error', reject);
+  portProbe.listen(0, '127.0.0.1', resolve);
+});
+const previewPort = portProbe.address().port;
+await new Promise((resolve, reject) => portProbe.close(error => error ? reject(error) : resolve()));
+const previewUrl = `http://127.0.0.1:${previewPort}`;
+const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', String(previewPort), '--strictPort'], { stdio: 'ignore' });
 let browser;
 const results = [];
 
@@ -18,7 +27,7 @@ await loadQuestionCorpus();
 try {
   for (let i = 0; i < 80; i++) {
     try {
-      if ((await fetch('http://127.0.0.1:4173')).ok) break;
+      if ((await fetch(previewUrl)).ok) break;
     } catch {}
     await new Promise(r => setTimeout(r, 100));
   }
@@ -45,7 +54,7 @@ try {
       localStorage.setItem('sphere-tap-intro-seen', 'yes');
       sessionStorage.setItem('sphere-tap-opened', 'yes');
     }, { ...data, welcomeDone: true, width });
-    await page.goto('http://127.0.0.1:4173');
+    await page.goto(previewUrl);
     return { context, page, errors };
   }
 
@@ -141,7 +150,7 @@ try {
     let saved = await page.evaluate(() => JSON.parse(localStorage.getItem('sphere-tap-v1')));
     assert.equal(saved.journey.personal, 1);
     assert.equal(saved.journey.xp, 400);
-    assert.equal(saved.journey.performance.maxStreak, 3);
+    assert.equal(saved.journey.performance.maxStreak, questions.length);
     await page.reload();
     await page.locator('.journey-entry').click();
     await page.getByText('Por hoje, você chegou lá.').waitFor();
@@ -202,7 +211,8 @@ try {
     let saved = await page.evaluate(() => JSON.parse(localStorage.getItem('sphere-tap-v1')));
     assert.equal(saved.localFriends[0].emblem, 'flame');
     assert.equal(saved.journey.xp, 230);
-    assert.equal(saved.local[0].score, 1);
+    assert.equal(saved.journey.role, 1);
+    assert.equal(saved.localFriends[0].journey.role, 1);
     assert.equal(await page.locator('[data-planet-level="2"]').getAttribute('data-biome'), 'water');
     assert.equal(await page.locator('[data-planet-level="3"]').count(), 0);
     const next = page.getByRole('button', { name: 'Nível 2, atual', exact: true });
@@ -213,20 +223,22 @@ try {
     await page.getByRole('button', { name: 'Adicionar', exact: true }).click();
     await page.getByRole('textbox', { name: 'Nome do amigo' }).fill('Greg');
     await page.getByRole('button', { name: 'Salvar amigo', exact: true }).click();
+    await page.getByRole('button', { name: 'Voltar à partida', exact: true }).click();
     await page.getByRole('checkbox', { name: 'Alexandre', exact: true }).uncheck();
     await page.getByRole('checkbox', { name: 'Greg', exact: true }).check();
     await page.getByRole('button', { name: 'Adicionar ou editar amigos', exact: true }).click();
     await page.getByRole('button', { name: 'Remover Alexandre', exact: true }).click();
     await page.getByRole('button', { name: 'Manter amigo', exact: true }).click();
-    assert.equal(await page.locator('.friend-management').count(), 0);
+    assert.equal(await page.locator('.friend-remove-confirm').count(), 0);
     await page.getByRole('button', { name: 'Remover Alexandre', exact: true }).click();
     await page.getByRole('button', { name: 'Remover amigo', exact: true }).click();
-    assert.equal(await page.locator('.friend-management').count(), 0);
+    assert.equal(await page.locator('.friend-remove-confirm').count(), 0);
     await page.getByRole('button', { name: 'Voltar à partida', exact: true }).click();
     assert.equal(await page.getByRole('checkbox', { name: 'Greg', exact: true }).isChecked(), true);
     await page.getByRole('button', { name: 'Fechar', exact: true }).click();
     assert.equal(await page.locator('.nav-glass button').last().evaluate(el => getComputedStyle(el).pointerEvents), 'auto');
-    await page.locator('.nav-glass').getByRole('button', { name: 'Conquistas', exact: true }).click();
+    await page.locator('.nav-glass').getByRole('button', { name: 'Perfil', exact: true }).click();
+    await page.getByRole('button', { name: 'Conquistas', exact: true }).click();
     await page.getByRole('heading', { name: 'Suas conquistas.' }).waitFor();
     assert.deepEqual(errors, []);
     results.push({ localFriendsPersist: true, sharedRoundXP: true, roleRequiresFriends: true, participantsEditableAtLevel: true, rankingOnlyAfterMatch: true, explicitRemoval: true, conquestMap: true });
@@ -277,7 +289,7 @@ try {
       const registration = { waiting: worker, active: null, addEventListener() {}, removeEventListener() {}, update: async () => {} };
       Object.defineProperty(navigator, 'serviceWorker', { configurable: true, value: { controller: {}, register: async () => registration, addEventListener() {}, removeEventListener() {} } });
     }, data);
-    await page.goto('http://127.0.0.1:4173');
+    await page.goto(previewUrl);
     const modal = page.getByRole('dialog', { name: 'Atualização disponível', exact: true });
     await modal.waitFor();
     const colors = await modal.locator('.dialog-header').evaluate(el => {
@@ -300,10 +312,11 @@ try {
     const today = localDate();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    data.journey = { ...data.journey, mode: 'personal', personal: 1, personalStart: localDate() };
+    data.journey = { ...data.journey, mode: 'personal', personal: 1, personalStart: localDate(yesterday) };
     const { context, page } = await contextFor(390, data, 'reduce');
     await page.locator('.journey-entry').click();
     await page.getByRole('button', { name: 'Ilha 1, atual', exact: true }).waitFor();
+    await page.waitForFunction(date => JSON.parse(localStorage.getItem('sphere-tap-v1')).journey.personalUnlockSeen === date, today);
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('sphere-tap-v1')));
     assert.equal(saved.journey.personalUnlockSeen, today);
     assert.equal(await page.locator('[data-planet-level="1"]').count(), 1);
@@ -336,15 +349,18 @@ try {
     await page.getByRole('button', { name: 'Banner Coroa solar, bloqueado', exact: true }).click();
     const detail = page.getByRole('dialog', { name: '10 desafios em companhia', exact: true });
     await detail.waitFor();
+    await detail.getByRole('button', { name: 'Fechar', exact: true }).click();
     await page.getByRole('button', { name: 'Conquistas', exact: true }).click();
     const map = page.getByRole('group', { name: 'Constelação de conquistas', exact: true });
     await map.waitFor();
     await map.scrollIntoViewIfNeeded();
     await page.screenshot({ path: `browser-checks/rewards-${width}.png` });
     await map.getByRole('button', { name: 'Seu espaço, conquistada', exact: true }).click();
-    await page.getByRole('dialog', { name: 'Seu espaço', exact: true }).waitFor();
+    const earnedDetail = page.getByRole('dialog', { name: 'Seu espaço', exact: true });
+    await earnedDetail.waitFor();
+    await earnedDetail.getByRole('button', { name: 'Usar banner', exact: true }).click();
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('sphere-tap-v1')));
-    assert.equal(saved.profileDetails.banner, 'voyager');
+    assert.equal(saved.profileDetails.banner, 'dawn');
     assert.equal(saved.journey.xp, 500);
     assert.deepEqual(errors, []);
     await context.close();

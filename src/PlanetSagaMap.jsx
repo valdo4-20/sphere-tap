@@ -1,4 +1,5 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
+import {createPortal} from 'react-dom';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {X,Lock,Check,Play,Shield,Star} from 'lucide-react';
@@ -77,11 +78,11 @@ export default function PlanetSagaMap({level,scheduledDate,completed=0,current=1
  useEffect(()=>{const previous=document.activeElement,old=document.body.style.overflow;document.body.style.overflow='hidden';const key=e=>{if(e.key==='Escape')onClose()};window.addEventListener('keydown',key);return()=>{document.body.style.overflow=old;window.removeEventListener('keydown',key);if(previous?.isConnected)previous.focus?.({preventScroll:true})}},[onClose]);
  const state=sagaLevelState(selected,completed,current,playable),canPlay=state==='current',selectedNode=map.nodes[selected-1],goldenCount=map.nodes.filter(n=>n.golden).length;
  const pointStyle=node=>({'--node-index':node.id,left:(50+node.x/8.3*100)+'%',top:(node.y/8.4*100)+'%'});
- return <main className="planet-saga" style={{'--saga-glow':map.glow}} role="dialog" aria-modal="true" aria-labelledby="saga-title">
+ return createPortal(<main className="planet-saga" style={{'--saga-glow':map.glow}} role="dialog" aria-modal="true" aria-labelledby="saga-title">
   <div className="planet-saga-stars" aria-hidden="true"/><SagaWebGL map={map}/>
   <header className="planet-saga-header"><div><span className="planet-saga-kicker">{nodeCount===50?'CIRCUITO DE ASCENSÃO · 50 NÍVEIS':'MUNDO · TRILHA DE ASCENSÃO'}</span><h1 id="saga-title">{map.planetName}</h1><p>Ilha {map.islandIndex} · Guardião: {map.boss}</p></div><button className="planet-saga-close" onClick={onClose} aria-label="Fechar mapa"><X size={21}/></button></header>
   <div className="planet-saga-guardian"><Shield size={13}/><span>{map.boss}</span><small>{completed}/{nodeCount} CONCLUÍDOS</small></div>
   <nav className="planet-saga-levels" aria-label="Níveis do circuito">{map.nodes.map(node=>{const status=sagaLevelState(node.id,completed,current,playable);return <button key={node.id} type="button" disabled={status==='locked'} style={pointStyle(node)} className={'planet-saga-node '+status+(selected===node.id?' selected':'')+(node.golden?' golden':'')} onClick={()=>setSelected(node.id)} aria-label={'Nível '+node.id+(node.golden?', nível dourado':'')+', '+status}><span>{status==='complete'?<Check size={12}/>:status==='locked'?<Lock size={11}/>:node.golden?<Star size={12} fill="currentColor"/>:node.id}</span></button>})}</nav>
   <footer className="planet-saga-footer"><div><b>{selectedNode?.golden?'✦ Nível dourado · ':''}{selected===nodeCount?map.boss:'Nível '+selected+' / '+nodeCount}</b><small>{state==='complete'?'Desafio concluído':state==='current'?(selectedNode?.golden?'Marco dourado disponível':'Próximo desafio disponível'):'Ainda bloqueado'} · {goldenCount} marcos dourados nesta ilha</small></div>{canPlay&&<button onClick={onPlay}><Play size={16} fill="currentColor"/> Entrar no desafio</button>}</footer>
- </main>;
+ </main>,document.body);
 }
