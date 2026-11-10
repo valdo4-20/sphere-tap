@@ -20,6 +20,8 @@ jobs:
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:planet-pack
       - run: node scripts/browser-smoke.mjs
+        env:
+          DEBUG: pw:api
       - run: npm run test:flows
       - run: npm run test:visual
       - run: npm run audit:questions
