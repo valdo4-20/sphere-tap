@@ -71,17 +71,21 @@ try {
       const p = document.querySelector('.journey-path').getBoundingClientRect();
       const s = getComputedStyle(b);
       return {
-        overflow: document.documentElement.scrollHeight > window.innerHeight,
+        horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
+        nodeInsideViewport: r.left >= 0 && r.right <= window.innerWidth,
         offset: Math.abs(r.left - p.left),
-        down: s.bottom,
-        scale: s.transform,
+        bottom: s.bottom,
+        scale: s.scale,
+        transform: s.transform,
         left: r.left
       };
     });
-    assert.equal(geometry.overflow, false, `${width}: overflow`);
+    assert.equal(geometry.horizontalOverflow, false, `${width}: horizontal overflow`);
+    assert.equal(geometry.nodeInsideViewport, true, `${width}: island node outside viewport`);
     assert.ok(geometry.offset < 2);
-    assert.equal(geometry.down, undefined);
+    assert.equal(geometry.bottom, 'auto');
     assert.equal(geometry.scale, '1');
+    assert.equal(geometry.transform, 'none');
     const nodePaint = await node.evaluate(el => {
       const style = getComputedStyle(el);
       return { transform: style.transform, borderRadius: style.borderRadius };
