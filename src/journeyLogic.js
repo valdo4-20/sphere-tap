@@ -63,8 +63,4 @@ export function questionsFor(level,{difficultyLevel=level,mode='role',round=leve
 export {MAX_ROLE_LEVEL,starsFor,visibleLevels,migrateJourney,completeJourney,starRanks,starRankFor,earnedXP,playerProgress,validJourney} from './journeyProgression.js';
 
 
-export function sagaLevelState(node,completed,current,playable){
- if(node<=completed)return 'complete';
- if(node===current&&playable)return 'current';
- return 'locked';
-}
+export {sagaLevelState} from './journeyPlanets.js';
