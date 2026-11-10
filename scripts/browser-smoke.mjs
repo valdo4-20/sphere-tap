@@ -66,21 +66,18 @@ try{
  const questions=questionsFor(1,{mode:'role'});
  for(let i=0;i<questions.length;i++){
   if(i===0){
-   await page.getByRole('button',{name:'Opinião de Alexandre',exact:true}).click();
-   await page.locator('.journey-answers button').nth((questions[i].correct+1)%4).click();
-   await page.getByRole('button',{name:'Opinião de Você',exact:true}).click();
-   await page.locator('.journey-answers button').nth(questions[i].correct).click();
-   assert.equal(await page.locator('.answer-voters i').count(),2);
-   await page.getByRole('button',{name:'Grupo',exact:true}).click();
+   assert.equal(await page.getByText('Resposta do grupo',{exact:true}).count(),1);
+   assert.equal(await page.getByText('Todos participam',{exact:true}).count(),1);
+   assert.equal(await page.getByRole('button',{name:/Opinião de/}).count(),0);
   }
   await page.locator('.journey-answers button').nth(questions[i].correct).click();
   await page.locator('.role-feedback').waitFor();
   assert.equal(await page.getByRole('button',{name:'Confirmar resposta',exact:true}).count(),0);
-  assert.equal(await page.locator('.role-voters>button').count(),3);
+  assert.equal(await page.locator('.answer-voters i').count(),0);
   await page.getByRole('button',{name:i===questions.length-1?'Concluir':'Próxima',exact:true}).click();
  }
  assert.equal(await page.getByRole('button',{name:/Passar para/}).count(),0);
- const summary=page.getByRole('region',{name:'Acertos de cada participante'});await summary.waitFor();await summary.getByText('1 acerto em 1 escolha',{exact:true}).waitFor();await summary.getByText('0 acertos em 1 escolha',{exact:true}).waitFor();await page.getByRole('region',{name:'Ranking do Rolê'}).waitFor();assert.equal(await page.locator('.match-ranking li').count(),2);await page.screenshot({path:'browser-checks/match-ranking.png'});
+ const summary=page.getByRole('region',{name:'Acertos de cada participante'});await summary.waitFor();await summary.getByText('Sem escolhas registradas',{exact:true}).waitFor();assert.equal(await summary.getByText('Sem escolhas registradas',{exact:true}).count(),2);await page.getByRole('region',{name:'Ranking do Rolê'}).waitFor();assert.equal(await page.locator('.match-ranking li').count(),2);await page.screenshot({path:'browser-checks/match-ranking.png'});
  await page.getByRole('button',{name:'Continuar a jornada',exact:true}).click();await page.locator('.journey-overlay').waitFor({state:'detached'});assert.equal(await page.locator('.local-ranking,.match-ranking').count(),0);
  let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.localFriends[0].emblem,'flame');assert.equal(saved.journey.xp,230);assert.equal(saved.localFriends[0].journey.xp,230);
  assert.equal(await page.locator('[data-planet-level="2"]').getAttribute('data-biome'),'water');assert.equal(await page.locator('[data-planet-level="3"]').count(),0);
