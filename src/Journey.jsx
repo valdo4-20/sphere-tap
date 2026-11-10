@@ -5,6 +5,7 @@ import {answerRoleQuestion} from './roleRound.js';
 import {deferQuestion} from './quizQueue.js';
 import IslandNode from './IslandNode';
 import IslandPreview from './IslandPreview';
+import PlanetSagaMap from './PlanetSagaMap.jsx';
 import {journeyPositions} from './journeyLayout';
 import {answerPerformance,completePerformance,clockText} from './quizPerformance.js';
 import JourneyProgress from './JourneyProgress';
@@ -107,14 +108,14 @@ function Quiz({quiz,onClose,onAnswer,onNext,onDefer,onReady,mode,onCue,onVote,on
 export default function Journey({progress,onChange,account,onAccountChange,onBusy}){
  const owner=progress||migrateJourney(null);
  const [quiz,setQuiz]=useState(null),[selectedLevel,setSelectedLevel]=useState(null),[feedback,setFeedback]=useState(0),[participants,setParticipants]=useState([]),[choosing,setChoosing]=useState(false),[managing,setManaging]=useState(false),[unlock,setUnlock]=useState(null),[advance,setAdvance]=useState(null),[clock,setClock]=useState(()=>new Date()),[loading,setLoading]=useState(false),[loadError,setLoadError]=useState('');
- const [reward,setReward]=useState(null),[inspection,setInspection]=useState(null);
+ const [reward,setReward]=useState(null),[inspection,setInspection]=useState(null),[sagaMap,setSagaMap]=useState(null);
  const entering=useRef(false),completion=useRef(false),busyCallback=useRef(onBusy);
  busyCallback.current=onBusy;
  const data=owner,mode=data.mode,personal=mode==='personal',done=data[mode],level=done+1;
  const daily=dailyStatus(owner,clock),playable=personal?daily.canPlay:done<MAX_ROLE_LEVEL,edition=dailyEdition(level),nodes=visibleLevels(done,{limit:personal?Infinity:MAX_ROLE_LEVEL});
  const selected=selectedLevel===`${mode}:${level}`,challengeLevel=personal?data.role+1:level;
  const roster=(account?.localFriends||[]).filter(f=>participants.includes(f.id));
- useEffect(()=>{busyCallback.current?.(Boolean(quiz)||choosing||Boolean(inspection));return()=>busyCallback.current?.(false)},[Boolean(quiz),choosing,Boolean(inspection)]);
+ useEffect(()=>{busyCallback.current?.(Boolean(quiz)||choosing||Boolean(inspection)||Boolean(sagaMap));return()=>busyCallback.current?.(false)},[Boolean(quiz),choosing,Boolean(inspection),Boolean(sagaMap)]);
  useEffect(()=>{
   const refresh=()=>setClock(new Date()),timer=setInterval(refresh,30000);
   window.addEventListener('focus',refresh);document.addEventListener('visibilitychange',refresh);
@@ -135,8 +136,8 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  },[quiz?.answers,quiz?.index,quiz?.entering,quiz?.finished]);
  function cue(kind){levelFeedback({kind,sound:account?.preferences?.journeySound!==false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})}
  function select(n){if(n!==level||!playable||quiz)return;setSelectedLevel(`${mode}:${n}`);setFeedback(v=>v+1);cue('button')}
- async function launch(n,players){
-  if(n!==level||!selected||!playable||entering.current||quiz||(!personal&&players.length<2))return;
+ async function launch(n,players,fromSaga=false){
+  if(n!==level||(!selected&&!fromSaga)||!playable||entering.current||quiz||(!personal&&players.length<2))return;
   entering.current=true;setLoading(true);setLoadError('');
   try{await loadQuestionCorpus()}catch{setLoadError('Não foi possível preparar as perguntas. Tente novamente.');setLoading(false);entering.current=false;return}
   setLoading(false);completion.current=false;cue('question');setChoosing(false);
@@ -189,7 +190,8 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
     <div className='journey-horizon' aria-hidden='true'><ChevronDown size={16}/></div>
    </div>
   </div>
-  {inspection&&<IslandPreview {...inspection} onClose={()=>setInspection(null)}/>}
+  {inspection&&<IslandPreview {...inspection} onClose={()=>setInspection(null)} onEnter={()=>{setSagaMap(inspection);setInspection(null)}}/>}
+  {sagaMap&&<PlanetSagaMap level={sagaMap.level} scheduledDate={sagaMap.scheduledDate} completed={sagaMap.level<level?8:0} current={1} playable={sagaMap.level===level&&playable} onClose={()=>setSagaMap(null)} onPlay={()=>{setSagaMap(null);if(personal)launch(level,[],true);else{setSelectedLevel(`${mode}:${level}`);setChoosing(true)}}}/>}
   {quiz&&<Quiz quiz={quiz} onVote={vote} onConfirm={confirmAnswer} onClose={closeQuiz} onAnswer={answer} onNext={next} onDefer={defer} onReady={readyQuiz} onCue={cue} mode={mode}/>}
  </section>;
 }
