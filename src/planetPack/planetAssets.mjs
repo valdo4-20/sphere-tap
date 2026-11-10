@@ -39,9 +39,9 @@ export function geometryFor(a){
  const box=(x,y,z,w,d,h,c,k='stone')=>{for(let i=0;i<w;i++)for(let j=0;j<d;j++)for(let q=0;q<h;q++)add(x+i,y+j,z+q,c,k)};
  const shape=(x,y)=>{const r=x*x+y*y;switch(a.form){case'cube':return Math.abs(x)<=3&&Math.abs(y)<=3;case'terraces':return r<=18;case'island':return r<=19&&!(x===-4&&y<0);case'split':return Math.abs(x)<=3&&Math.abs(y)<=3&&!(x===0&&y!==3);case'bridge':return ((x<=-2||x>=2)&&Math.abs(y)<=2&&Math.abs(x)<=4)||(Math.abs(y)<=0&&Math.abs(x)<=4);case'ring':return r>=5&&r<=20;case'crater':return r<=19;case'arch':return Math.abs(x)<=3&&Math.abs(y)<=2;case'shards':return r<=15||((x===4||x===-4)&&Math.abs(y)<=1);case'twin':return ((x+2)**2+(y+1)**2<=6)||((x-2)**2+(y-1)**2<=6);default:return false}};
  for(let x=-4;x<=4;x++)for(let y=-4;y<=4;y++)if(shape(x,y)){
- const r=x*x+y*y;let zTop=0,bottom=-4;
+ const r=x*x+y*y;let zTop=0,bottom=-Math.max(1,Math.round(1+(4-Math.sqrt(r))*.8));
  if(a.form==='terraces')zTop=r<3?2:r<10?1:0;
- if(a.form==='island')bottom=-Math.max(1,5-Math.floor(Math.sqrt(r)));
+ if(a.form==='island')bottom=-Math.max(1,Math.round(1+(4-Math.sqrt(r))*.8));
  if(a.form==='bridge'){if(Math.abs(x)<2)bottom=0;else bottom=-4;}
  if(a.form==='crater')zTop=r>=9?1:r<=2?-1:0;
  if(a.form==='arch'&&Math.abs(x)<=1)bottom=-1;
@@ -50,7 +50,7 @@ export function geometryFor(a){
  if(a.cycle&&random()<.14)zTop+=1;
  top.set(xy(x,y),zTop);
  for(let z=bottom;z<=zTop;z++){
- let c=z===zTop?p.top:z>=zTop-1?p.earth:p.rock,k=z===zTop?'ground':'stone';
+ const depth=zTop-z;let c=depth===0?p.top:depth===1?p.earth:depth===2?shade(p.earth,.82):shade(p.rock,depth%2?.92:1.08),k=depth===0?'ground':'stone';
  if(z<zTop&&random()<.13)c=shade(c,random()<.5?.9:1.09);
  const river=y===Math.round(Math.sin((x+a.seed%3)*.8));
  if(z===zTop&&(a.biome==='water'&&(x>0||y>0)||a.biome==='swamp'&&river||a.biome==='forest'&&river||a.biome==='lava'&&river||a.biome==='desert'&&x<-1&&y>0||a.biome==='snow'&&river)){c=p.fluid;k=a.biome==='lava'?'lava':'water'}
@@ -70,7 +70,7 @@ export function geometryFor(a){
  switch(a.biome){
  case'forest':tree(-2,-1,2+a.cycle%2);tree(2,-2,1);break;
  case'water':{const [x,y,z]=anchor(-2,-2);box(x,y,z,2,1,1,'#dbad6b','wood');box(x,y,z+1,1,1,3,'#d3bd8c','wood');box(x+1,y,z+2,1,1,2,'#f3edcb','sail');break}
- case'desert':{const [x,y,z]=anchor(2,-2);box(x,y,z,1,1,3,'#7aa45f','cactus');box(x+1,y,z+1,1,1,2,'#8fbd6c','cactus');break}
+ case'desert':{const [x,y,z]=anchor(2,-2);details.push({x:x-.08,y:y-.08,z,s:1.12,h:3.1,c:'#648e50',k:'cactus',shape:'cactus'});details.push({x:x-1.55,y:y+.8,z,s:.62,h:1.55,c:'#789f5b',k:'cactus',shape:'cactus'});details.push({x:x+1.45,y:y+.55,z,s:.52,h:1.25,c:'#8eae68',k:'cactus',shape:'cactus'});break}
  case'crystal':gem(-2,-1,3);gem(2,-2,2);gem(2,2,1);break;
  case'lava':{const [x,y,z]=anchor(-2,-2);box(x,y,z,2,2,1,'#73545e');box(x,y,z+1,1,1,2,'#51414b');add(x,y,z+3,'#ffbd63','lava');break}
  case'moon':{const [x,y,z]=anchor(2,-2);box(x,y,z,2,1,1,'#a7bec7');add(x,y,z+1,'#e2e9dd');box(x+1,y,z+1,1,1,2,'#7a919e');add(x+1,y,z+3,'#e4ecdf');break}
@@ -119,7 +119,7 @@ export function geometryFor(a){
     small(cx-.17,cy,z+.2,.22,leaf,'leaf',.25);small(cx+.19,cy+.12,z+.3,.24,shade(leaf,1.2),'leaf',.22);
     small(cx+.02,cy+.02,z+.5,.16,a.biome==='fungal'?'#ffe294':'#f1d69b','flower',.12);
    }else if(a.biome==='desert'){
-    small(cx,cy,z,.28,'#699c6c','cactus',.65);small(cx+.25,cy,z+.25,.2,'#86b779','cactus',.25);
+    small(cx,cy,z,.52,'#699c6c','cactus',.9,'cactus');small(cx+.32,cy+.18,z+.12,.34,'#86b779','cactus',.62,'cactus');
     small(cx,cy,z+.65,.16,'#f6a4a0','flower',.12);
    }else if(a.biome==='golden'){
     small(cx,cy,z,.48,'#bb8435','gold',.2);small(cx+.06,cy+.06,z+.2,.35,'#ffe79b','gold',.26);
