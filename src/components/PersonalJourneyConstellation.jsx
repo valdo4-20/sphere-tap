@@ -45,7 +45,7 @@ export default function PersonalJourneyConstellation({
    <path d={basePath} className={`personal-constellation-edge ${baseActive?'is-lit':''}`} pathLength="1" style={{'--edge-delay':'40ms'}}/>
    {edges.map((edge,i)=>{
     const lit=edge.from.n<=done;
-    const animating=advance===edge.from.n;
+    const animating=advance===edge.to.n;
     return <g key={edge.id}>
      <path id={edge.id} d={edge.d} pathLength="1" className={`personal-constellation-edge ${lit?'is-lit':''}`} style={{'--edge-delay':`${100+i*75}ms`}}/>
      {animating&&<circle r="3.2" className="personal-constellation-traveller">
@@ -60,7 +60,7 @@ export default function PersonalJourneyConstellation({
    const complete=n<=done,current=n===level,available=current&&playable;
    const inspectable=planetIsVisible(n,done,playable);
    const scheduledDate=scheduledDateFor(n);
-   const arriving=advance===n-1;
+   const arriving=advance===n;
    const state=complete?'complete':available?'available':'locked';
    const world=inspectable?planetFor(n,scheduledDate):null;
    return <div key={n} className={`personal-constellation-node ${state}${unlock===n?' is-unlocking':''}${arriving?' is-arriving':''}`} style={{left:`${x/360*100}%`,top:`${y/360*100}%`,'--node-delay':`${i*65}ms`}}>
