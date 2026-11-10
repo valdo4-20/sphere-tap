@@ -39,6 +39,7 @@ try {
 
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
+    // Start browser QA after both the intro splash and first-run welcome have been completed.
     await page.addInitScript(data => {
       if (!localStorage.getItem('sphere-tap-v1')) localStorage.setItem('sphere-tap-v1', JSON.stringify(data));
       localStorage.setItem('sphere-tap-intro-seen', 'yes');
