@@ -26,12 +26,10 @@ try{
   const {context,page,errors}=await contextFor(width,data);
   await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Pessoal',exact:true}).click();
   await page.getByRole('heading',{name:'Pequenas descobertas'}).waitFor();await page.getByRole('region',{name:'Seu progresso na Jornada'}).getByText('Nível 1',{exact:true}).waitFor();
-  const node=page.getByRole('button',{name:'Dia 1, selecionar',exact:true});await node.scrollIntoViewIfNeeded();
-  for(let i=0;i<6;i++){if(width<768)await node.tap();else await node.click()}
-  await page.waitForTimeout(300);
-  const geometry=await node.evaluate(b=>{const r=b.getBoundingClientRect(),p=document.querySelector('.journey-path').getBoundingClientRect(),s=getComputedStyle(b);return {overflow:document.documentElement.scrollWidth>innerWidth,offset:Math.abs(r.x+r.width/2-p.x-p.width/2),down:b.dataset.down,scale:s.scale}});
-  assert.equal(geometry.overflow,false,`${width}: overflow`);assert.ok(geometry.offset<2);assert.equal(geometry.down,undefined);assert.equal(geometry.scale,'1');const nodePaint=await node.evaluate(el=>({background:getComputedStyle(el).backgroundColor,shadow:getComputedStyle(el).boxShadow}));assert.equal(nodePaint.background,'rgba(0, 0, 0, 0)');assert.equal(nodePaint.shadow,'none');
-  assert.equal(await page.locator('[data-planet-level]').count(),1);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);assert.ok(await page.locator('.journey-planet .mat-ground').count()>0);await page.screenshot({path:`browser-checks/planets-${width}.png`});
+  const node=page.locator('.planetary-level.active button').first();await node.waitFor();await node.scrollIntoViewIfNeeded();
+  const mapChecks=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,canvas:!!document.querySelector('.planetary-map-canvas'),scroll:!!document.querySelector('.planetary-map-scroll'),islandCount:document.querySelectorAll('.planetary-level').length,lockedCount:document.querySelectorAll('.planetary-level.locked').length}));
+  assert.equal(mapChecks.overflow,false,`${width}: viewport overflow`);assert.equal(mapChecks.canvas,true);assert.equal(mapChecks.scroll,true);assert.ok(mapChecks.islandCount>=5);assert.ok(mapChecks.lockedCount>=4);
+  assert.equal(await page.locator('[data-planet-level="1"]').count(),2);assert.equal(await page.locator('[data-planet-level="2"]').count(),0);const planetWidth=await page.locator('.planetary-level.active .journey-planet').evaluate(el=>el.getBoundingClientRect().width);assert.ok(planetWidth<=112);await page.screenshot({path:`browser-checks/planets-${width}.png`});
   assert.equal(await page.getByText('O XP depende dos acertos.').count(),0);assert.equal(await page.getByText('Conquistas da Jornada',{exact:true}).count(),0);
   const enter=page.getByRole('button',{name:'Entrar no dia 1',exact:true});assert.equal(await enter.locator('svg').count(),0);await enter.scrollIntoViewIfNeeded();assert.equal(await enter.evaluate(el=>getComputedStyle(el,'::before').animationName),'journey-invite-shine');const mapY=await page.evaluate(()=>scrollY);await enter.click();
   assert.equal(await page.locator('.journey-entry-scene').count(),0);await page.locator('.journey-answers button').first().waitFor();
@@ -99,7 +97,7 @@ try{
  // Fade into the actual question and fade out while confirming an unfinished round.
  {
  const {context,page,errors}=await contextFor(390,initial);
- await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Pessoal',exact:true}).click();await page.getByRole('button',{name:'Dia 1, selecionar',exact:true}).click();await page.getByRole('button',{name:'Entrar no dia 1',exact:true}).click();await page.locator('.journey-answers button').first().waitFor();
+ await page.locator('.journey-entry').click();await page.getByRole('button',{name:'Modo Pessoal',exact:true}).click();await page.locator('.planetary-level.active button').first().click();await page.getByRole('button',{name:'Entrar no dia 1',exact:true}).click();await page.locator('.journey-answers button').first().waitFor();
  assert.equal(await page.locator('.journey-entry-rings').count(),0);assert.equal(await page.locator('.journey-question-body').innerText().then(t=>/DE 30|faltam/i.test(t)),false);
  await page.getByRole('button',{name:'Fechar quiz',exact:true}).click();await page.getByRole('button',{name:'Sair da rodada',exact:true}).click();await page.locator('.journey-overlay.is-leaving').waitFor();await page.locator('.journey-overlay').waitFor({state:'detached'});
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('sphere-tap-v1')));assert.equal(saved.journey.personal,0);assert.deepEqual(errors,[]);results.push({entryHasNoLogo:true,exitFades:true,unfinishedRoundNotCredited:true});await context.close();
