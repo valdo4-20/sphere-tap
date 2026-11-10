@@ -13,6 +13,17 @@ test('todos os 152 planetas têm detalhes, cristais facetados e fragmentos',()=>
  }
 });
 
+test('ilhas têm base afunilada em camadas e cactos com silhueta de saguaro',()=>{
+ const desert=NORMAL_ASSETS.find(a=>a.biome==='desert');
+ const cacti=geometryFor(desert).filter(v=>v.k==='cactus'&&v.shape==='cactus');
+ assert.ok(cacti.length>=3,'deserto precisa de um grupo de cactos, não colunas isoladas');
+ assert.ok(cacti.some(v=>v.s>=1&&v.h>=2.5),'cacto principal precisa de tronco largo e braços reconhecíveis');
+ const island=NORMAL_ASSETS.find(a=>a.form==='island'),voxels=geometryFor(island).filter(v=>!v.s);
+ const bottoms=new Map();
+ for(const v of voxels){const k=v.x+','+v.y;bottoms.set(k,Math.min(bottoms.get(k)??Infinity,v.z));}
+ assert.ok(Math.max(...bottoms.values())-Math.min(...bottoms.values())>=2,'a base da ilha deve afunilar, sem fundo plano');
+});
+
 test('catálogo tem 100 comuns, 52 dourados e 12 meses consecutivos',()=>{
  assert.equal(NORMAL_ASSETS.length,100);assert.equal(GOLDEN_ASSETS.length,52);
  assert.equal(TROPHY_MONTHS.length,12);assert.equal(TROPHY_MONTHS[0].month,'2026-11');assert.equal(TROPHY_MONTHS.at(-1).month,'2027-10');
