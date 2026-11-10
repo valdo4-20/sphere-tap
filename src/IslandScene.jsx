@@ -4,11 +4,38 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {sceneryFor,biomeEnergy} from './islandScenery.js';
 import {renderIslandSvg} from './islandSvg.js';
-export default function IslandScene({asset,controlsRef,onRotation}){
+function voxelPlanetFor(asset){
+ const radius=7,voxels=[],seed=(asset.seed||1)>>>0;
+ const palette=asset.theme||{},colors=[palette.top||'#65a86c',palette.earth||'#8b6d50',palette.rock||'#64717c'];
+ const rand=(n)=>{let x=(seed+n*2654435761)>>>0;x^=x<<13;x^=x>>>17;x^=x<<5;return (x>>>0)/4294967296};
+ for(let x=-radius;x<=radius;x++)for(let y=-radius;y<=radius;y++)for(let z=-radius;z<=radius;z++){
+  const d=Math.sqrt(x*x+y*y+z*z);
+  if(d>radius+.25||d<radius-1.25)continue;
+  const band=z>2?0:z>-2?1:2,noise=rand((x+12)*37+(y+12)*71+(z+12)*113);
+  const color=band===0?(noise>.83?colors[1]:colors[0]):band===1?colors[1]:colors[2];
+  voxels.push({x:x-.45,y:y-.45,z:z-.45,s:.9,h:.9,k:'stone',c:color});
+ }
+ // Small surface biomes are built from the same integer grid as the shell.
+ let treeCount=0,crystalCount=0;
+ for(let x=-5;x<=5;x++)for(let y=-5;y<=5;y++){
+  const d2=x*x+y*y;if(d2>25||d2<5)continue;
+  const roll=rand(700+x*29+y*43),surface=Math.floor(Math.sqrt(Math.max(0,radius*radius-d2)));
+  if(roll>.955&&treeCount<5){
+   treeCount++;const trunk=2+Math.floor(roll*3);
+   for(let h=0;h<trunk;h++)voxels.push({x,y,z:surface+h,s:1,h:1,k:'leaf',c:'#8b6848'});
+   for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)for(let dz=trunk-1;dz<=trunk+1;dz++)
+    if(Math.abs(dx)+Math.abs(dy)+Math.abs(dz-trunk)<4)voxels.push({x:x+dx,y:y+dy,z:surface+dz,s:1,h:1,k:'leaf',c:roll>.98?'#b5d78b':'#4e9566'});
+  }else if(roll<.035&&crystalCount<5){
+   crystalCount++;for(let h=0;h<3;h++)voxels.push({x,y,z:surface+h,s:1,h:1,k:'crystal',c:h===2?'#c4e8f4':'#77b9d0'});
+  }
+ }
+ return voxels;
+}
+export default function IslandScene({asset,controlsRef,onRotation,mode='island'}){
  const host=useRef(null),[failed,setFailed]=useState(false),rotationCallback=useRef(onRotation);rotationCallback.current=onRotation;
  useEffect(()=>{
   if(failed)return;
-  const el=host.current,voxels=sceneryFor(asset),energy=biomeEnergy[asset.biome],reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const el=host.current,voxels=mode==='planet'?voxelPlanetFor(asset):sceneryFor(asset),energy=biomeEnergy[asset.biome],reduced=matchMedia('(prefers-reduced-motion: reduce)');
   let renderer,controls,frame,observer,alive=true,dirty=true,last=0,start=performance.now();
   const geometries=[],materials=[],shaderTimes=[],meshes=[],scene=new T.Scene(),island=new T.Group(),camera=new T.PerspectiveCamera(36,1,.1,150);
   const cube=new T.BoxGeometry(1,1,1),gem=new T.OctahedronGeometry(1,0),canopy=new T.DodecahedronGeometry(.78,0),cactusParts=[new T.CylinderGeometry(.34,.42,1,7,2),new T.CylinderGeometry(.16,.18,.52,6).translate(.34,.02,0),new T.CylinderGeometry(.16,.18,.38,6).rotateZ(Math.PI/2).translate(.22,-.16,0),new T.CylinderGeometry(.14,.16,.4,6).translate(-.3,.22,0),new T.CylinderGeometry(.14,.16,.3,6).rotateZ(Math.PI/2).translate(-.16,.04,0)],cactus=mergeGeometries(cactusParts,false),pebble=new T.DodecahedronGeometry(.62,0),mushroom=new T.SphereGeometry(.62,1,6,5);cactusParts.forEach(g=>g.dispose());geometries.push(cube,gem,canopy,cactus,pebble,mushroom);scene.add(island);
@@ -48,7 +75,7 @@ export default function IslandScene({asset,controlsRef,onRotation}){
    const visibility=()=>{cancelAnimationFrame(frame);if(!document.hidden){last=0;frame=requestAnimationFrame(render)}};document.addEventListener('visibilitychange',visibility);frame=requestAnimationFrame(render);
    return()=>{alive=false;cancelAnimationFrame(frame);document.removeEventListener('visibilitychange',visibility);observer?.disconnect();controlsRef.current=null;controls?.dispose();renderer.domElement.removeEventListener('webglcontextlost',contextLost);geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());meshes.forEach(({mesh})=>mesh.dispose());renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove()};
   }catch{setFailed(true);renderer?.dispose();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());return()=>{alive=false;cancelAnimationFrame(frame);observer?.disconnect();controls?.dispose();renderer?.domElement?.remove()}}
- },[asset,failed,controlsRef]);
+ },[asset,failed,controlsRef,mode]);
  if(failed)return <div className='island-scene-fallback'><span dangerouslySetInnerHTML={{__html:renderIslandSvg(asset,{instanceId:'fallback'})}}/><p>A prévia 3D não está disponível neste navegador.</p></div>;
  return <div ref={host} className='island-scene' data-renderer='loading'/>;
 }
