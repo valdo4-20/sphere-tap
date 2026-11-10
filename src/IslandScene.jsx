@@ -50,7 +50,7 @@ export default function IslandScene({asset,controlsRef,onRotation,mode='island'}
    m.customProgramCacheKey=()=>`island-${kind}`;return m;
   }
   for(const values of groups.values()){
-   const kind=values[0].k,geometry=values[0].shape==='gem'?gem:kind==='leaf'?canopy:kind==='cactus'?cactus:kind==='pebble'?pebble:kind==='mushroom'?mushroom:cube;const mesh=new T.InstancedMesh(geometry,material(kind),values.length);mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);mesh.frustumCulled=false;
+   const kind=values[0].k,geometry=mode==='planet'?cube:values[0].shape==='gem'?gem:kind==='leaf'?canopy:kind==='cactus'?cactus:kind==='pebble'?pebble:kind==='mushroom'?mushroom:cube;const mesh=new T.InstancedMesh(geometry,material(kind),values.length);mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);mesh.frustumCulled=false;
    const rows=values.map(v=>{const s=v.s||1,h=v.h||1;return {v,order:order++,position:new T.Vector3(v.x+s/2,v.z+h/2,v.y+s/2),scale:new T.Vector3(s,h,s).multiplyScalar(v.shape==='gem'?.5:1)}});
    rows.forEach((r,i)=>{matrix.compose(r.position,quaternion,r.scale);mesh.setMatrixAt(i,matrix);mesh.setColorAt(i,new T.Color(r.v.c))});island.add(mesh);meshes.push({mesh,rows});
   }
