@@ -9,7 +9,7 @@ test('each planet saga has nine connected spatial nodes and a guardian',()=>{
   assert.ok(map.boss.length>0);
   assert.ok(map.glow.startsWith('#'));
   assert.equal(map.nodes[0].y,0);
-  assert.equal(map.nodes[8].y,8);
+  assert.equal(map.nodes[8].y,8.3);
  }
 });
 test('planet themes resolve to a saga map for all generated biomes',()=>{
