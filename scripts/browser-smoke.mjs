@@ -73,7 +73,7 @@ try {
       return {
         horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
         nodeInsideViewport: r.left >= 0 && r.right <= window.innerWidth,
-        offset: Math.abs(r.left - p.left),
+        centerOffset: Math.abs((r.left + r.right) / 2 - (p.left + p.right) / 2),
         bottom: s.bottom,
         scale: s.scale,
         transform: s.transform,
@@ -82,7 +82,7 @@ try {
     });
     assert.equal(geometry.horizontalOverflow, false, `${width}: horizontal overflow`);
     assert.equal(geometry.nodeInsideViewport, true, `${width}: island node outside viewport`);
-    assert.ok(geometry.offset < 2);
+    assert.ok(geometry.centerOffset < 2);
     assert.equal(geometry.bottom, 'auto');
     assert.equal(geometry.scale, '1');
     assert.equal(geometry.transform, 'none');
