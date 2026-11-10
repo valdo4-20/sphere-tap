@@ -45,7 +45,7 @@ export default function PlanetaryIslandWorlds({done,level,playable,loading,sched
           {positioned.map(({level:item,x,y},index)=>{
             const visible=item.status!=='locked',isActive=item.status==='active',isSelected=preview?.id===item.id;
             return <div key={item.id} className={`planetary-level ${item.status}${isSelected?' is-selected':''}`} style={{left:x,top:y,'--float-delay':index*-.73+'s','--node-index':index}}>
-              {visible?<IslandNode inspectable onInspect={()=>inspect(item)} aria-label={`Dia ${item.dayNumber}: ${item.title}, ${item.status==='completed'?'concluído':'disponível'}`} aria-expanded={isSelected} className={`journey-node ${item.status==='completed'?'complete':'current'} planetary-island`} onActivate={()=>inspect(item)}><JourneyPlanet level={item.id} scheduledDate={item.date||undefined} reveal={isActive}/></IslandNode>:<div className="planetary-locked" aria-label={`Dia ${item.dayNumber}, bloqueado`}><Lock size={17}/></div>}
+              {visible?<IslandNode inspectable onInspect={()=>inspect(item)} aria-label={`Dia ${item.dayNumber}, selecionar`} aria-expanded={isSelected} className={`journey-node ${item.status==='completed'?'complete':'current'} planetary-island`} onActivate={()=>inspect(item)}><JourneyPlanet level={item.id} scheduledDate={item.date||undefined} reveal={isActive}/></IslandNode>:<div className="planetary-locked" aria-label={`Dia ${item.dayNumber}, bloqueado`}><Lock size={17}/></div>}
               <div className="planetary-level-caption"><b>Dia {item.dayNumber}</b><span>{item.title}</span><small>{dateLabel(item.date)}</small></div>
             </div>;
           })}
