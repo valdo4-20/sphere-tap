@@ -41,8 +41,9 @@ try {
     page.on('pageerror', e => errors.push(e.message));
     await page.addInitScript(data => {
       if (!localStorage.getItem('sphere-tap-v1')) localStorage.setItem('sphere-tap-v1', JSON.stringify(data));
+      localStorage.setItem('sphere-tap-intro-seen', 'yes');
       sessionStorage.setItem('sphere-tap-opened', 'yes');
-    }, { ...data, width });
+    }, { ...data, welcomeDone: true, width });
     await page.goto('http://127.0.0.1:4173');
     return { context, page, errors };
   }
