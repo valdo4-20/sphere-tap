@@ -18,7 +18,7 @@ import {createPortal} from 'react-dom';
 import {Star,Lock,LockOpen,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown,Sparkles} from 'lucide-react';
 import JourneyMotion from './JourneyMotion.jsx';
 import JourneyPlanet from './JourneyPlanet.jsx';
-import PersonalJourneyConstellation from './PersonalJourneyConstellation.jsx';
+import PersonalJourneyConstellation from './components/PersonalJourneyConstellation.jsx';
 import {planetFor,planetIsVisible} from './journeyPlanets';
 import {MAX_ROLE_LEVEL,questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,earnedXP} from './journeyLogic.js';
 import {dailyStatus,enrollDaily,dailyEdition,dailyLevelDate,weeklyColor} from './journeyDaily.js';
