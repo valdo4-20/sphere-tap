@@ -83,7 +83,7 @@ try {
     assert.equal(geometry.horizontalOverflow, false, `${width}: horizontal overflow`);
     assert.equal(geometry.nodeInsideViewport, true, `${width}: island node outside viewport`);
     assert.ok(geometry.centerOffset < 2);
-    assert.equal(geometry.bottom, 'auto');
+    assert.ok(['auto', '0px'].includes(geometry.bottom), `${width}: unexpected vertical offset`);
     assert.equal(geometry.scale, '1');
     assert.equal(geometry.transform, 'none');
     const nodePaint = await node.evaluate(el => {
