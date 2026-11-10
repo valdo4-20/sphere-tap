@@ -5,6 +5,7 @@ import {answerRoleQuestion} from './roleRound.js';
 import {deferQuestion} from './quizQueue.js';
 import IslandNode from './IslandNode';
 import IslandPreview from './IslandPreview';
+import PlanetSagaMap from './PlanetSagaMap.jsx';
 import {journeyPositions} from './journeyLayout';
 import {answerPerformance,completePerformance,clockText} from './quizPerformance.js';
 import JourneyProgress from './JourneyProgress';
@@ -18,7 +19,7 @@ import {createPortal} from 'react-dom';
 import {Star,Lock,LockOpen,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown,Sparkles} from 'lucide-react';
 import JourneyMotion from './JourneyMotion.jsx';
 import JourneyPlanet from './JourneyPlanet.jsx';
-import {planetFor,planetIsVisible} from './journeyPlanets';
+import {planetFor,planetIsVisible,islandIndexForLevel,islandStartForLevel} from './journeyPlanets';
 import {MAX_ROLE_LEVEL,questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,earnedXP} from './journeyLogic.js';
 import {dailyStatus,enrollDaily,dailyEdition,dailyLevelDate,weeklyColor} from './journeyDaily.js';
 import {themeFor,praiseFor} from './quizTopics.js';
@@ -107,14 +108,16 @@ function Quiz({quiz,onClose,onAnswer,onNext,onDefer,onReady,mode,onCue,onVote,on
 export default function Journey({progress,onChange,account,onAccountChange,onBusy}){
  const owner=progress||migrateJourney(null);
  const [quiz,setQuiz]=useState(null),[selectedLevel,setSelectedLevel]=useState(null),[feedback,setFeedback]=useState(0),[participants,setParticipants]=useState([]),[choosing,setChoosing]=useState(false),[managing,setManaging]=useState(false),[unlock,setUnlock]=useState(null),[advance,setAdvance]=useState(null),[clock,setClock]=useState(()=>new Date()),[loading,setLoading]=useState(false),[loadError,setLoadError]=useState('');
- const [reward,setReward]=useState(null),[inspection,setInspection]=useState(null);
+ const [reward,setReward]=useState(null),[inspection,setInspection]=useState(null),[sagaMap,setSagaMap]=useState(null);
  const entering=useRef(false),completion=useRef(false),busyCallback=useRef(onBusy);
  busyCallback.current=onBusy;
  const data=owner,mode=data.mode,personal=mode==='personal',done=data[mode],level=done+1;
- const daily=dailyStatus(owner,clock),playable=personal?daily.canPlay:done<MAX_ROLE_LEVEL,edition=dailyEdition(level),nodes=visibleLevels(done,{limit:personal?Infinity:MAX_ROLE_LEVEL});
- const selected=selectedLevel===`${mode}:${level}`,challengeLevel=personal?data.role+1:level;
+ const daily=dailyStatus(owner,clock),playable=personal?daily.canPlay:done<MAX_ROLE_LEVEL,edition=dailyEdition(level);
+ const personalIsland=islandIndexForLevel(level),personalIslandDone=done%50,mapDone=personal?personalIsland-1:done,mapCurrent=personal?personalIsland:level;
+ const nodes=visibleLevels(mapDone,{limit:personal?Infinity:MAX_ROLE_LEVEL});
+ const selected=selectedLevel===`${mode}:${mapCurrent}`,challengeLevel=personal?data.role+1:level;
  const roster=(account?.localFriends||[]).filter(f=>participants.includes(f.id));
- useEffect(()=>{busyCallback.current?.(Boolean(quiz)||choosing||Boolean(inspection));return()=>busyCallback.current?.(false)},[Boolean(quiz),choosing,Boolean(inspection)]);
+ useEffect(()=>{busyCallback.current?.(Boolean(quiz)||choosing||Boolean(inspection)||Boolean(sagaMap));return()=>busyCallback.current?.(false)},[Boolean(quiz),choosing,Boolean(inspection),Boolean(sagaMap)]);
  useEffect(()=>{
   const refresh=()=>setClock(new Date()),timer=setInterval(refresh,30000);
   window.addEventListener('focus',refresh);document.addEventListener('visibilitychange',refresh);
@@ -123,7 +126,7 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
  useEffect(()=>{if(owner.mode==='personal'&&!owner.personalStart)onChange(d=>enrollDaily(d))},[owner.mode,owner.personalStart,onChange]);
  useEffect(()=>{
   if(!personal||!playable||owner.personalUnlockSeen===daily.today)return;
-  setUnlock(level);onChange(d=>({...d,personalUnlockSeen:daily.today}));
+  setUnlock(personal?personalIsland:level);onChange(d=>({...d,personalUnlockSeen:daily.today}));
  },[personal,playable,daily.today,owner.personalUnlockSeen,level,onChange]);
  useEffect(()=>{if(unlock===null)return;const timer=setTimeout(()=>setUnlock(null),1100);return()=>clearTimeout(timer)},[unlock]);
  useEffect(()=>{if(advance===null)return;const timer=setTimeout(()=>setAdvance(null),1000);return()=>clearTimeout(timer)},[advance]);
@@ -134,15 +137,15 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   historyChange.current(d=>({...d,questionHistory:rememberQuestion(d.questionHistory,question)}));
  },[quiz?.answers,quiz?.index,quiz?.entering,quiz?.finished]);
  function cue(kind){levelFeedback({kind,sound:account?.preferences?.journeySound!==false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches})}
- function select(n){if(n!==level||!playable||quiz)return;setSelectedLevel(`${mode}:${n}`);setFeedback(v=>v+1);cue('button')}
- async function launch(n,players){
-  if(n!==level||!selected||!playable||entering.current||quiz||(!personal&&players.length<2))return;
+ function select(n){const target=personal?personalIsland:level;if(n!==target||!playable||quiz)return;setSelectedLevel(`${mode}:${n}`);setFeedback(v=>v+1);cue('button')}
+ async function launch(n,players,fromSaga=false){
+  if(n!==level||(!selected&&!fromSaga)||!playable||entering.current||quiz||(!personal&&players.length<2))return;
   entering.current=true;setLoading(true);setLoadError('');
   try{await loadQuestionCorpus()}catch{setLoadError('Não foi possível preparar as perguntas. Tente novamente.');setLoading(false);entering.current=false;return}
   setLoading(false);completion.current=false;cue('question');setChoosing(false);
   setQuiz({previousXP:data.xp||0,level:n,index:0,answers:questionsFor(n,{difficultyLevel:challengeLevel,mode,round:n,history:data.questionHistory||[],golden:planetFor(n,personal?dailyLevelDate(owner,n,clock):undefined).golden}),selected:null,score:0,challengeLevel,finished:false,entering:true,playerId:'self',playerName:account?.displayName||'Você',voter:null,draft:null,votes:{},opinionResults:{},...(personal?{}:{players,friendIds:players.filter(p=>p.id!=='self').map(p=>p.id),matchId:uid()})});
  }
- function begin(n=level){if(personal)launch(n,[]);else{setManaging(false);setChoosing(true)}}
+ function begin(n=level){if(personal){setInspection({level,scheduledDate:dailyLevelDate(owner,level,clock),islandMode:true});return;}else{setManaging(false);setChoosing(true)}}
  function closeQuiz(){entering.current=false;setQuiz(null);if(quiz?.finished){setAdvance(level);setReward({id:Date.now(),xp:quiz.xp,from:quiz.previousXP});}}
  function answer(i,ms){cue('button');setQuiz(q=>!q||q.entering||q.selected!==null||q.finished?q:q.friendIds?answerRoleQuestion(q,i,ms):{...q,selected:i,score:q.score+(i===q.answers[q.index].correct?1:0),performance:answerPerformance(q.performance,i===q.answers[q.index].correct,ms)})}
  function vote(id){cue('button');setQuiz(q=>!q||q.selected!==null?q:{...q,voter:id===null||q.players?.some(p=>p.id===id)?id:null})}
@@ -158,14 +161,14 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
    setQuiz(q=>({...q,finished:true,stars:starsFor(q.score,q.answers.length),xp:earnedXP(q.score,q.challengeLevel,q.answers.length),...(q.friendIds?{ranking}:{})}));
   }else{cue('question');setQuiz(q=>({...q,index:q.index+1,selected:null,voter:null,draft:null,votes:{}}))}
  }
- const positions=journeyPositions(nodes,{current:level,selected,done,playable}),pathHeight=positions.reduce((sum,p)=>sum+p.height,0);
+ const positions=journeyPositions(nodes,{current:mapCurrent,selected,done:mapDone,playable}),pathHeight=positions.reduce((sum,p)=>sum+p.height,0);
  const path='M '+positions.map(p=>`${p.x},${p.y}`).join(' L ');
  return <section className={'journey-page'+(quiz?' is-playing':'')} style={personal?{'--journey-tint':weeklyColor(level),'--journey-tint-ink':weeklyColor(level),'--journey-trail':weeklyColor(level)}:undefined}>
   <JourneyMotion/>
   <header className='journey-heading'><h1>Descubra pelo caminho.</h1><JourneyProgress progress={owner} reward={reward}/></header>
   <div className='journey-switch' aria-label='Escolher modo'><button aria-pressed={personal} onClick={()=>{onChange(d=>({...enrollDaily(d),mode:'personal'}))}}><UserRound size={17}/><span>Modo Pessoal</span></button><button aria-pressed={!personal} onClick={()=>onChange(d=>({...d,mode:'role'}))}><Users size={18}/><span>Modo Rolê</span></button></div>
   {!personal&&done>=MAX_ROLE_LEVEL&&<p role='status'>Você concluiu os 100 níveis disponíveis do Rolê. Seu progresso está salvo.</p>}
-  {personal?<div className='journey-daily-card' role='status'><h2>{playable?edition.title:'Por hoje, você chegou lá.'}</h2>{!playable&&<p className='journey-next-date'>Próximo dia: {new Date(dailyLevelDate(owner,level,clock)+'T12:00:00').toLocaleDateString('pt-BR')}</p>}</div>
+  {personal?<div className='journey-daily-card' role='status'><h2>{playable?edition.title:'Por hoje, você chegou lá.'}</h2><p>Ilha {personalIsland} · Nível {personalIslandDone+1} de 50</p>{!playable&&<p className='journey-next-date'>Próximo dia: {new Date(dailyLevelDate(owner,level,clock)+'T12:00:00').toLocaleDateString('pt-BR')}</p>}</div>
   :null}
   {choosing&&<Dialog title={managing?'Amigos':'Quem vem para o Rolê?'} onClose={()=>setChoosing(false)} className='journey-players-dialog'>
   {managing?<><button className='quiet-button' onClick={()=>setManaging(false)}>Voltar à partida</button><LocalFriends compact data={account} onChange={onAccountChange}/></>:<>
@@ -180,16 +183,17 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   <div className='journey-world' key={`${mode}-${Math.floor(done/7)}`}>
    <div className='journey-path' aria-label={personal?'Caminho dos seus dias':'Trecho do seu caminho'}>
     <svg className='journey-trail' style={{height:pathHeight}} viewBox={`0 0 360 ${pathHeight}`} preserveAspectRatio='none' aria-hidden='true'><defs><linearGradient id='trailGradient' x1='0' y1='0' x2='0' y2='1'><stop stopColor='currentColor' stopOpacity='.6'/><stop offset='1' stopColor='currentColor' stopOpacity='.16'/></linearGradient></defs><path d={path} fill='none' stroke='url(#trailGradient)' strokeWidth='2' strokeDasharray='2 9' strokeLinecap='round'/></svg>
-    {positions.map(({n,x,height},i)=>{const complete=n<=done,current=n===level,unlocked=current&&playable,opening=unlocked&&unlock===n;return <div className={'journey-stop'+(advance===n?' journey-advanced':'')} key={n} style={{'--stop-x':`${x/360*100}%`,'--stop-index':i,...(personal?{'--journey-tint':weeklyColor(n),'--journey-tint-ink':weeklyColor(n)}:{}),height}}><div className='journey-stop-content'>
+    {positions.map(({n,x,height},i)=>{const complete=n<=mapDone,current=n===mapCurrent,unlocked=current&&playable,visible=personal?current||complete:planetIsVisible(n,done,playable),opening=unlocked&&unlock===n;const inspectLevel=personal?(current?level:n*50):n;const inspectDate=personal?dailyLevelDate(owner,inspectLevel,clock):undefined;return <div className={'journey-stop'+(advance===n?' journey-advanced':'')} key={n} style={{'--stop-x':`${x/360*100}%`,'--stop-index':i,...(personal?{'--journey-tint':weeklyColor(level),'--journey-tint-ink':weeklyColor(level)}:{}),height}}><div className='journey-stop-content'>
 
-     <IslandNode inspectable={planetIsVisible(n,done,playable)} onInspect={()=>setInspection({level:n,scheduledDate:personal?dailyLevelDate(owner,n,clock):undefined})} disabled={!planetIsVisible(n,done,playable)} aria-describedby={planetIsVisible(n,done,playable)?'island-inspect-hint':undefined} className={`journey-node ${complete?'complete':unlocked?'current':'locked'}${opening?' journey-unlocking':''}`} aria-label={`${personal?'Dia':'Nível'} ${n}, ${complete?'concluído':unlocked?'selecionar':'a descobrir'}`} aria-expanded={current?selected:undefined} data-feedback={current?feedback:undefined} onActivate={()=>complete?setInspection({level:n,scheduledDate:personal?dailyLevelDate(owner,n,clock):undefined}):select(n)}>{planetIsVisible(n,done,playable)?<JourneyPlanet level={n} scheduledDate={personal?dailyLevelDate(owner,n,clock):undefined} reveal={opening||(!personal&&current&&advance!==null)}/>:<Lock size={18}/>}</IslandNode>
-     <span className='journey-node-caption'>{personal?'Dia':'Nível'} {n}{planetIsVisible(n,done,playable)&&<strong className='journey-planet-name'>{planetFor(n,personal?dailyLevelDate(owner,n,clock):undefined).name}</strong>}{personal&&<small>{new Date(dailyLevelDate(owner,n,clock)+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</small>}</span>
-     {current&&selected&&playable&&<div className='journey-level-launch'><button className='journey-start-action' disabled={loading} onClick={()=>begin(n)}>{loading?'Preparando…':`Entrar no ${personal?'dia':'nível'} ${n}`}</button></div>}
+     <IslandNode inspectable={visible} onInspect={()=>setInspection({level:inspectLevel,scheduledDate:inspectDate,islandMode:personal})} disabled={!visible} aria-describedby={visible?'island-inspect-hint':undefined} className={`journey-node ${complete?'complete':current?'current':'locked'}${opening?' journey-unlocking':''}`} aria-label={`${personal?'Ilha':'Nível'} ${n}, ${complete?'concluída':current?'atual':'a descobrir'}`} aria-expanded={current?selected:undefined} data-feedback={current?feedback:undefined} onActivate={()=>complete||personal&&!playable?setInspection({level:inspectLevel,scheduledDate:inspectDate,islandMode:personal}):select(n)}>{visible?<JourneyPlanet level={n} scheduledDate={personal?dailyLevelDate(owner,inspectLevel,clock):undefined} reveal={opening||(!personal&&current&&advance!==null)}/>:<Lock size={18}/>}</IslandNode>
+     <span className='journey-node-caption'>{personal?`Ilha ${n}`:`Nível ${n}`}{visible&&<strong className='journey-planet-name'>{planetFor(n).name}</strong>}{personal&&<small>{complete?'50/50 níveis':current?`${personalIslandDone}/50 níveis concluídos`:'Bloqueada'}</small>}</span>
+     {current&&selected&&playable&&<div className='journey-level-launch'><button className='journey-start-action' disabled={loading} onClick={()=>begin(n)}>{loading?'Preparando…':personal?'Abrir circuito':'Entrar no nível '+n}</button></div>}
     </div></div>})}
     <div className='journey-horizon' aria-hidden='true'><ChevronDown size={16}/></div>
    </div>
   </div>
-  {inspection&&<IslandPreview {...inspection} onClose={()=>setInspection(null)}/>}
+  {inspection&&<IslandPreview {...inspection} onClose={()=>setInspection(null)} onEnter={()=>{setSagaMap(inspection);setInspection(null)}}/>}
+  {sagaMap&&<PlanetSagaMap level={sagaMap.level} scheduledDate={sagaMap.scheduledDate} nodeCount={personal?50:9} completed={personal?Math.min(50,Math.max(0,owner.personal-islandStartForLevel(sagaMap.level)+1)):sagaMap.level<level?8:0} current={personal?Math.min(50,Math.max(1,owner.personal-islandStartForLevel(sagaMap.level)+2)):1} playable={personal?sagaMap.level===level&&playable:sagaMap.level===level&&playable} onClose={()=>setSagaMap(null)} onPlay={()=>{setSagaMap(null);if(personal)launch(level,[],true);else{setSelectedLevel(`${mode}:${level}`);setChoosing(true)}}}/> }
   {quiz&&<Quiz quiz={quiz} onVote={vote} onConfirm={confirmAnswer} onClose={closeQuiz} onAnswer={answer} onNext={next} onDefer={defer} onReady={readyQuiz} onCue={cue} mode={mode}/>}
  </section>;
 }

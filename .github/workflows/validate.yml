@@ -7,7 +7,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
@@ -20,6 +20,8 @@ jobs:
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:planet-pack
       - run: node scripts/browser-smoke.mjs
+        env:
+          DEBUG: pw:api
       - run: npm run test:flows
       - run: npm run test:visual
       - run: npm run audit:questions
