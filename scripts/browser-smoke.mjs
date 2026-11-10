@@ -57,7 +57,7 @@ try {
     await page.getByRole('button', { name: 'Modo Pessoal', exact: true }).click();
     await page.getByRole('heading', { name: 'Pequenas descobertas' }).waitFor();
     await page.getByRole('region', { name: 'Seu progresso na Jornada' }).getByText('Nível 1', { exact: true }).waitFor();
-    const node = page.getByRole('button', { name: 'Dia 1, selecionar', exact: true });
+    const node = page.getByRole('button', { name: 'Ilha 1, atual', exact: true });
     await node.scrollIntoViewIfNeeded();
     for (let i = 0; i < 6; i++) {
       if (width < 768) await node.tap();
@@ -90,11 +90,19 @@ try {
     assert.ok(planetWidth > 0);
     assert.equal(await page.getByText('O XP depende dos acertos.').count(), 0);
     assert.equal(await page.getByText('Conquistas da Jornada', { exact: true }).count(), 0);
-    const enter = page.getByRole('button', { name: 'Entrar no dia 1', exact: true });
+    const enter = page.getByRole('button', { name: 'Abrir circuito', exact: true });
     assert.equal(await enter.locator('svg').count(), 0);
     await enter.scrollIntoViewIfNeeded();
     assert.equal(await enter.evaluate(el => getComputedStyle(el).pointerEvents), 'auto');
     assert.equal(await page.locator('.journey-entry-scene').count(), 0);
+    await enter.click();
+    const preview = page.locator('.island-fullscreen');
+    await preview.waitFor();
+    await preview.getByRole('button', { name: 'Entrar no planeta', exact: true }).click();
+    const circuit = page.locator('.planet-saga');
+    await circuit.waitFor();
+    assert.equal(await circuit.locator('.planet-saga-node').count(), 50, 'solo island exposes all 50 circuit levels');
+    await circuit.getByRole('button', { name: 'Entrar no desafio', exact: true }).click();
     await page.locator('.journey-answers button').first().waitFor();
     const lockedY = await page.evaluate(() => -parseFloat(document.body.style.top));
     console.log('map-entry', JSON.stringify({ width, mapY: lockedY, lockedY }));
@@ -154,7 +162,7 @@ try {
     await page.locator('.journey-entry').click();
     await page.getByRole('button', { name: 'Modo Rolê', exact: true }).click();
     assert.equal(await page.locator('.local-ranking').count(), 0);
-    const node = page.getByRole('button', { name: 'Nível 1, selecionar', exact: true });
+    const node = page.getByRole('button', { name: 'Nível 1, atual', exact: true });
     await node.scrollIntoViewIfNeeded();
     await node.click();
     await page.getByRole('button', { name: 'Entrar no nível 1', exact: true }).click();
@@ -191,7 +199,7 @@ try {
     assert.equal(saved.local[0].score, 1);
     assert.equal(await page.locator('[data-planet-level="2"]').getAttribute('data-biome'), 'water');
     assert.equal(await page.locator('[data-planet-level="3"]').count(), 0);
-    const next = page.getByRole('button', { name: 'Nível 2, selecionar', exact: true });
+    const next = page.getByRole('button', { name: 'Nível 2, atual', exact: true });
     await next.scrollIntoViewIfNeeded();
     await next.click();
     await page.getByRole('button', { name: 'Entrar no nível 2', exact: true }).click();
@@ -223,9 +231,16 @@ try {
     const { context, page, errors } = await contextFor(390, initial);
     await page.locator('.journey-entry').click();
     await page.getByRole('button', { name: 'Modo Pessoal', exact: true }).click();
-    await page.getByRole('button', { name: 'Dia 1, selecionar', exact: true }).click();
+    await page.getByRole('button', { name: 'Ilha 1, atual', exact: true }).click();
     assert.equal(await page.locator('.journey-entry-rings').count(), 0);
-    assert.equal(await page.locator('.journey-question-body').innerText().then(t => /DE 30|faltam/i.test(t)), false);
+    assert.equal(await page.locator('.journey-question-body').count(), 0);
+    await page.getByRole('button', { name: 'Abrir circuito', exact: true }).click();
+    const preview = page.locator('.island-fullscreen');
+    await preview.waitFor();
+    await preview.getByRole('button', { name: 'Entrar no planeta', exact: true }).click();
+    const circuit = page.locator('.planet-saga');
+    await circuit.waitFor();
+    await circuit.getByRole('button', { name: 'Entrar no desafio', exact: true }).click();
     await page.getByRole('button', { name: 'Fechar quiz', exact: true }).click();
     await page.getByRole('button', { name: 'Sair da rodada', exact: true }).click();
     await page.locator('.journey-overlay.is-leaving').waitFor();
@@ -282,13 +297,14 @@ try {
     data.journey = { ...data.journey, mode: 'personal', personal: 1, personalStart: localDate() };
     const { context, page } = await contextFor(390, data, 'reduce');
     await page.locator('.journey-entry').click();
-    await page.getByRole('button', { name: 'Dia 2, selecionar', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Ilha 1, atual', exact: true }).waitFor();
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('sphere-tap-v1')));
     assert.equal(saved.journey.personalUnlockSeen, today);
-    assert.equal(await page.locator('[data-planet-level="2"]').count(), 1);
-    assert.equal(await page.locator('[data-planet-level="3"]').count(), 0);
-    assert.equal(await page.locator('[data-planet-level="2"]').evaluate(el => el.getAttribute('data-biome')), 'water');
-    assert.equal(await page.locator('[data-planet-level="2"] .island-particle').first().evaluate(el => getComputedStyle(el).animationName), 'none');
+    assert.equal(await page.locator('[data-planet-level="1"]').count(), 1);
+    assert.equal(await page.locator('[data-planet-level="2"]').count(), 0);
+    assert.equal(await page.locator('[data-planet-level="1"]').evaluate(el => el.getAttribute('data-biome')), 'forest');
+    assert.equal(await page.locator('[data-planet-level="1"] .island-particle').first().evaluate(el => getComputedStyle(el).animationName), 'none');
+    await page.getByText('1/50 níveis concluídos', { exact: true }).waitFor();
     results.push({ nextDateUnlocks: true, reducedMotionHonored: true });
     await context.close();
   }
