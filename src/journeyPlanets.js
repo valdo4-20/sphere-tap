@@ -13,6 +13,9 @@ const SAGA_SHAPES={
  lava:{name:'Forja Vulcânica',boss:'Soberano Ígneo',form:'fork',glow:'#ff956d'},
  crystal:{name:'Catedral Prismática',boss:'Oráculo de Cristal',form:'constellation',glow:'#c5a5ff'},
  mist:{name:'Véu Nebuloso',boss:'Espectro do Véu',form:'spiral',glow:'#a7c8d9'},
+ swamp:{name:'Pântano Esmeralda',boss:'Devorador do Brejo',form:'wave',glow:'#83c59a'},
+ moon:{name:'Cratera Silenciosa',boss:'Arauto Lunar',form:'constellation',glow:'#a8b7d9'},
+ fungal:{name:'Reino Micelial',boss:'Monarca dos Esporos',form:'fork',glow:'#d99be8'},
  golden:{name:'Trono Solar',boss:'Sentinela Solar',form:'branch',glow:'#f2d27b'},
  mushroom:{name:'Jardim Micélio',boss:'Rei Micélio',form:'wave',glow:'#e4a4d0'},
  default:{name:'Caminho Estelar',boss:'Guardião do Mundo',form:'constellation',glow:'#9ebcff'}
