@@ -18,6 +18,7 @@ import {createPortal} from 'react-dom';
 import {Star,Lock,LockOpen,Check,ArrowRight,Users,UserRound,Trophy,X,ChevronDown,Sparkles} from 'lucide-react';
 import JourneyMotion from './JourneyMotion.jsx';
 import JourneyPlanet from './JourneyPlanet.jsx';
+import PersonalJourneyConstellation from './components/PersonalJourneyConstellation.jsx';
 import {planetFor,planetIsVisible} from './journeyPlanets';
 import {MAX_ROLE_LEVEL,questionsFor,visibleLevels,migrateJourney,completeJourney,starsFor,earnedXP} from './journeyLogic.js';
 import {dailyStatus,enrollDaily,dailyEdition,dailyLevelDate,weeklyColor} from './journeyDaily.js';
@@ -178,7 +179,12 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
   {loadError&&<p role='alert'>{loadError}</p>}
   <p id='island-inspect-hint' className='island-inspect-hint'>Toque para selecionar. Segure para explorar a ilha. No teclado, use Espaço para abrir a prévia.</p>
   <div className='journey-world' key={`${mode}-${Math.floor(done/7)}`}>
-   <div className='journey-path' aria-label={personal?'Caminho dos seus dias':'Trecho do seu caminho'}>
+   {personal?<PersonalJourneyConstellation
+    nodes={nodes} done={done} level={level} playable={playable} selected={selected}
+    loading={loading} unlock={unlock} advance={advance}
+    scheduledDateFor={n=>dailyLevelDate(owner,n,clock)}
+    onInspect={details=>setInspection(details)} onSelect={select} onBegin={begin}
+   />:   <div className='journey-path' aria-label={personal?'Caminho dos seus dias':'Trecho do seu caminho'}>
     <svg className='journey-trail' style={{height:pathHeight}} viewBox={`0 0 360 ${pathHeight}`} preserveAspectRatio='none' aria-hidden='true'><defs><linearGradient id='trailGradient' x1='0' y1='0' x2='0' y2='1'><stop stopColor='currentColor' stopOpacity='.6'/><stop offset='1' stopColor='currentColor' stopOpacity='.16'/></linearGradient></defs><path d={path} fill='none' stroke='url(#trailGradient)' strokeWidth='2' strokeDasharray='2 9' strokeLinecap='round'/></svg>
     {positions.map(({n,x,height},i)=>{const complete=n<=done,current=n===level,unlocked=current&&playable,opening=unlocked&&unlock===n;return <div className={'journey-stop'+(advance===n?' journey-advanced':'')} key={n} style={{'--stop-x':`${x/360*100}%`,'--stop-index':i,...(personal?{'--journey-tint':weeklyColor(n),'--journey-tint-ink':weeklyColor(n)}:{}),height}}><div className='journey-stop-content'>
 
@@ -187,7 +193,8 @@ export default function Journey({progress,onChange,account,onAccountChange,onBus
      {current&&selected&&playable&&<div className='journey-level-launch'><button className='journey-start-action' disabled={loading} onClick={()=>begin(n)}>{loading?'Preparando…':`Entrar no ${personal?'dia':'nível'} ${n}`}</button></div>}
     </div></div>})}
     <div className='journey-horizon' aria-hidden='true'><ChevronDown size={16}/></div>
-   </div>
+   </div>}
+
   </div>
   {inspection&&<IslandPreview {...inspection} onClose={()=>setInspection(null)}/>}
   {quiz&&<Quiz quiz={quiz} onVote={vote} onConfirm={confirmAnswer} onClose={closeQuiz} onAnswer={answer} onNext={next} onDefer={defer} onReady={readyQuiz} onCue={cue} mode={mode}/>}
